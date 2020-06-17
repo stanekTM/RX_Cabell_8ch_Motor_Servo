@@ -42,6 +42,12 @@
 void setup(void) {
   Serial.begin(74880);
   
+//  pinMode(PIN3, OUTPUT);
+  pinMode(PIN5, OUTPUT);
+  pinMode(PIN6, OUTPUT);
+  pinMode(PIN9, OUTPUT);
+  pinMode(PIN10, OUTPUT);
+  
   pinMode (BIND_BUTTON_PIN,INPUT_PULLUP);  // used for bind plug or button
 
   pinMode (LED_PIN, OUTPUT);     //status LED
@@ -54,6 +60,8 @@ void setup(void) {
   ADC_Processing();
  
   setupReciever();
+
+//  outputPWM();
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
