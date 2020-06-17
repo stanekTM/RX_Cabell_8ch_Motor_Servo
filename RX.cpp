@@ -32,6 +32,7 @@
 #include "Rx_Tx_Util.h"
 #include "RSSI.h" 
 #include "My_nRF24L01.h"
+#include "PWMFrequency.h" // https://github.com/TheDIYGuy999/PWMFrequency
 
 My_RF24 radio1(RADIO1_CE_PIN,RADIO1_CSN_PIN);  
 My_RF24 radio2(RADIO2_CE_PIN,RADIO2_CSN_PIN);  
@@ -373,29 +374,27 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM() {
 
-/****************************
-   Digital pin PWM frequency
-   PIN3  D3  //pwm 489HZ
-   PIN5  D5  //pwm 975Hz  
-   PIN6  D6  //pwm 975Hz     
-   PIN9  D9  //pwm 489HZ
-   PIN10 D10 //pwm 489HZ
-----------------------------
-   Digital pin
-   PIN2  D2
-   PIN4  D4
-   PIN7  D7
-   PIN8  D8
-----------------------------
-   Analog pin
-   PIN4  A4
-   PIN5  A5
-****************************/ 
-
   pinMode(PIN5, OUTPUT);
   pinMode(PIN6, OUTPUT);
   pinMode(PIN3, OUTPUT);
-  pinMode(PIN9, OUTPUT);      
+  pinMode(PIN9, OUTPUT);
+
+/****************************
+   Digital pin PWM frequency
+   PIN3  D3  //pwm 489HZ
+   PIN5  D5  //pwm 984Hz  
+   PIN6  D6  //pwm 984Hz     
+   PIN9  D9  //pwm 489HZ
+   PIN10 D10 //pwm 489HZ
+****************************/ 
+
+//PWM frequency: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
+  byte pwmPrescaler2 = 8; //3936Hz
+
+//PWM frequency PIN3
+  setPWMPrescaler(3, pwmPrescaler2);
+
+//*********************************************************************      
 
   int throttle = channelValues[PITCH]; //vyskovka
   int steering = channelValues[YAW];  //smerovka
@@ -418,10 +417,10 @@ void outputPWM() {
   else {
     digitalWrite(PIN5, LOW); //"HIGH" brake, "LOW" no brake
     digitalWrite(PIN6, LOW); //"HIGH" brake, "LOW" no brake
-//    analogWrite(PIN3, MotorA = 10); //adjustable brake
-//    analogWrite(PIN9, MotorA = 10); //adjustable brake
+//    analogWrite(PIN3, MotorA = 10); //adjustable brake (0-255)
+//    analogWrite(PIN9, MotorA = 10); //adjustable brake (0-255)
   }
-//******************************************************************************************
+//*********************************************************************
   if (steering < 1450) {
     MotorB = map(steering, 1450, 0, 0, 750);
     analogWrite(PIN3, MotorB); //pwm 489HZ
@@ -435,10 +434,22 @@ void outputPWM() {
   else {
 //    digitalWrite(PIN3, HIGH); //"HIGH" brake, "LOW" no brake
 //    digitalWrite(PIN9, HIGH); //"HIGH" brake, "LOW" no brake
-    analogWrite(PIN3, MotorB = 2); //adjustable brake
-    analogWrite(PIN9, MotorB = 2); //adjustable brake
+    analogWrite(PIN3, MotorB = 2); //adjustable brake (0-255)
+    analogWrite(PIN9, MotorB = 2); //adjustable brake (0-255)
   }
 }
+
+/**************
+   Digital pin
+   PIN2  D2
+   PIN4  D4
+   PIN7  D7
+   PIN8  D8
+---------------
+   Analog pin
+   PIN4  A4
+   PIN5  A5
+**************/
 
 //--------------------------------------------------------------------------------------------------------------------------
 void outputFailSafeValues(bool callOutputChannels) {
