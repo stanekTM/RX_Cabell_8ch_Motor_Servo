@@ -373,12 +373,7 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
 
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM() {
-
-  pinMode(PIN5, OUTPUT);
-  pinMode(PIN6, OUTPUT);
-  pinMode(PIN3, OUTPUT);
-  pinMode(PIN9, OUTPUT);
-
+    
 /****************************
    The base frequency for pins 3, 9, 10, 11 is 31250Hz.
    The base frequency for pins 5, 6 is 62500Hz.
@@ -388,21 +383,21 @@ void outputPWM() {
    Pins 9, 10 are paired on timer1
    Pins 3, 11 are paired on timer2
    
-   Digital pin PWM frequency
-   PIN3  D3  //pwm 489HZ
-   PIN9  D9  //pwm 489HZ
-   PIN10 D10 //pwm 489HZ
-   PIN10 D11 //pwm 489HZ
+   PWM frequency (default)
+   PIN3  D3  //pwm 489Hz, timer2
+   PIN11 D11 //SPI MOSI,  timer2
    
-   PIN5  D5  //pwm 984Hz  
-   PIN6  D6  //pwm 984Hz     
+   PIN5  D5  //pwm 975Hz, timer0 is used elsewhere!! 
+   PIN6  D6  //pwm 975Hz, timer0 is used elsewhere!!
+
+   PIN9  D9  //pwm 489Hz, timer1
+   PIN10 D10 //pwm 489Hz, timer1     
 ****************************/ 
 
-//PWM frequency: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
-  byte pwmPrescaler2 = 8; //3936Hz
-
-//PWM frequency PIN3
-  setPWMPrescaler(3, pwmPrescaler2);
+//PWM frequency: 32 = 984Hz(default), 8 = 3936Hz, 1 = 31488Hz
+  
+//MotorB (PIN9 or PIN10, prescaler 8)  
+  setPWMPrescaler(PIN9, 8);
 
 //*********************************************************************      
 
@@ -416,36 +411,36 @@ void outputPWM() {
 
   if (throttle < 1450) {
     MotorA = map(throttle, 1450, 0, 0, 750);
-    analogWrite(PIN5, MotorA); //pwm 975Hz
+    analogWrite(PIN5, MotorA); 
     digitalWrite(PIN6, LOW);
     }
   else if (throttle > 1550) { 
     MotorA = map(throttle, 1550, 2000, 0, 250);
-    analogWrite(PIN6, MotorA); //pwm 975Hz
+    analogWrite(PIN6, MotorA); 
     digitalWrite(PIN5, LOW);
     }
   else {
     digitalWrite(PIN5, LOW); //"HIGH" brake, "LOW" no brake
     digitalWrite(PIN6, LOW); //"HIGH" brake, "LOW" no brake
-//    analogWrite(PIN3, MotorA = 10); //adjustable brake (0-255)
-//    analogWrite(PIN9, MotorA = 10); //adjustable brake (0-255)
+//    analogWrite(PIN5, MotorA = 10); //adjustable brake (0-255)
+//    analogWrite(PIN6, MotorA = 10); //adjustable brake (0-255)
   }
 //*********************************************************************
   if (steering < 1450) {
     MotorB = map(steering, 1450, 0, 0, 750);
-    analogWrite(PIN3, MotorB); //pwm 489HZ
-    digitalWrite(PIN9, LOW);
+    analogWrite(PIN9, MotorB); 
+    digitalWrite(PIN10, LOW);
     }
   else if (steering > 1550) {
     MotorB = map(steering, 1550, 2000, 0, 250); 
-    analogWrite(PIN9, MotorB); //pwm 489HZ
-    digitalWrite(PIN3, LOW);
+    analogWrite(PIN10, MotorB); 
+    digitalWrite(PIN9, LOW);
     }
   else {
-//    digitalWrite(PIN3, HIGH); //"HIGH" brake, "LOW" no brake
 //    digitalWrite(PIN9, HIGH); //"HIGH" brake, "LOW" no brake
-    analogWrite(PIN3, MotorB = 2); //adjustable brake (0-255)
-    analogWrite(PIN9, MotorB = 2); //adjustable brake (0-255)
+//    digitalWrite(PIN10, HIGH); //"HIGH" brake, "LOW" no brake
+    analogWrite(PIN9, MotorB = 10); //adjustable brake (0-255)
+    analogWrite(PIN10, MotorB = 10); //adjustable brake (0-255)
   }
 }
 
