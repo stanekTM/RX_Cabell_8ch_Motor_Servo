@@ -30,7 +30,7 @@
 #include "RX.h"
 
 #define RADIO1_CSN_PIN            14     // AKA A0
-#define RADIO2_CSN_PIN            10     // Second radio for diversity.  Some older hardware used this pin as CE
+#define RADIO2_CSN_PIN            8      //10 Second radio for diversity.  Some older hardware used this pin as CE
 
 #define RADIO1_CE_PIN             RADIO1_CSN_PIN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
 #define RADIO2_CE_PIN             RADIO2_CSN_PIN
@@ -38,43 +38,18 @@
 #define SPI_MOSI                  11
 #define SPI_MISO                  12
 #define SPI_SCLK                  13
-
-#define ROLL_PIN                  2    
-#define PITCH_PIN                 3    
-#define THROTTLE_PIN              4    
-#define YAW_PIN                   5    
-#define AUX1_PIN                  6   
-#define AUX2_PIN                  7    
-#define AUX3_PIN                  8    
-#define AUX4_PIN                  9    
-
-#define PPM_OUTPUT_PIN            2
-#define PPM_OUTPUT_PIN_bit        2           //2 = PD2
-#define PPM_OUTPUT_port           PORTD
-#define PPM_OUTPUT_ipr            PIND
-#define PPM_OUTPUT_ddr            DDRD
-#define PPM_OUTPUT_PIN_MASK       _BV(PPM_OUTPUT_PIN_bit)
-#define PPM_OUTPUT_SET_INPUT      PPM_OUTPUT_ddr &= ~PPM_OUTPUT_PIN_MASK
-#define PPM_OUTPUT_SET_OUTPUT     PPM_OUTPUT_ddr |=  PPM_OUTPUT_PIN_MASK
-#define PPM_OUTPUT_SET_PULLUP     PPM_OUTPUT_port |= PPM_OUTPUT_PIN_MASK
-#define PPM_OUTPUT_SET_HIGH       PPM_OUTPUT_port |= PPM_OUTPUT_PIN_MASK
-#define PPM_OUTPUT_SET_LOW        PPM_OUTPUT_port &= ~PPM_OUTPUT_PIN_MASK
+    
+#define PIN3                      3  //pwm 489HZ    
+#define PIN5                      5  //pwm 975Hz  
+#define PIN6                      6  //pwm 975Hz     
+#define PIN9                      9  //pwm 489HZ
+//#define PIN10                     10 //pwm 489HZ   
 
 #define BIND_BUTTON_PIN           A3
 #define LED_PIN                   A1
 
 #define TELEMETRY_ANALOG_INPUT_1  6   // Pin A6
 #define TELEMETRY_ANALOG_INPUT_2  7   // Pin A7
-
-#ifdef TEST_HARNESS
-  // Pins for test harness LCD display
-  #define D4_PIN     9
-  #define D5_PIN     8
-  #define D6_PIN     7
-  #define D7_PIN     6
-  #define RS_PIN     5
-  #define EN_PIN     4
-#endif
 
 // configure A2 for radio IRQ 
 #define RADIO_IRQ_PIN          A2 
