@@ -380,12 +380,22 @@ void outputPWM() {
   pinMode(PIN9, OUTPUT);
 
 /****************************
+   The base frequency for pins 3, 9, 10, 11 is 31250Hz.
+   The base frequency for pins 5, 6 is 62500Hz.
+   The divisors available on pins 5, 6, 9, 10 are: 1, 8, 64, 256, and 1024.
+   The divisors available on pins 3, 11       are: 1, 8, 32, 64, 128, 256, and 1024.
+   Pins 5, 6  are paired on timer0
+   Pins 9, 10 are paired on timer1
+   Pins 3, 11 are paired on timer2
+   
    Digital pin PWM frequency
    PIN3  D3  //pwm 489HZ
-   PIN5  D5  //pwm 984Hz  
-   PIN6  D6  //pwm 984Hz     
    PIN9  D9  //pwm 489HZ
    PIN10 D10 //pwm 489HZ
+   PIN10 D11 //pwm 489HZ
+   
+   PIN5  D5  //pwm 984Hz  
+   PIN6  D6  //pwm 984Hz     
 ****************************/ 
 
 //PWM frequency: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
