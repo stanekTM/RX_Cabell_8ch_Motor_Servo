@@ -40,8 +40,8 @@
 #define SPI_SCLK                  13
     
 #define PIN3                      3  //pwm 489HZ    
-#define PIN5                      5  //pwm 975Hz  
-#define PIN6                      6  //pwm 975Hz     
+#define PIN5                      5  //pwm 984Hz  
+#define PIN6                      6  //pwm 984Hz     
 #define PIN9                      9  //pwm 489HZ
 //#define PIN10                     10 //pwm 489HZ   
 
