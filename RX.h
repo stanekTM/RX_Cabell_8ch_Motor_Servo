@@ -29,7 +29,7 @@
 
 #include "My_RF24.h"
 
-#define RX_NUM_CHANNELS            8
+#define RX_NUM_CHANNELS         8 //8
 
 #define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
 
@@ -47,8 +47,6 @@
 #define CABELL_OPTION_MASK_RECIEVER_OUTPUT_MODE  0x30
 #define CABELL_OPTION_SHIFT_RECIEVER_OUTPUT_MODE 4
 #define CABELL_RECIEVER_OUTPUT_PWM               0
-#define CABELL_RECIEVER_OUTPUT_PPM               1
-#define CABELL_RECIEVER_OUTPUT_SBUS              2
 
 #define CHANNEL_MIN_VALUE         1000
 #define CHANNEL_MAX_VALUE         2000
@@ -56,11 +54,14 @@
 
 #define THROTTLE_DISARM_VALUE     CHANNEL_MIN_VALUE   // If you have a reverse where mid throttle is the off state, this can be changed to the value that causes the motor to stop
 
-#define PITCH_CHANNEL             0
-#define ROLL_CHANNEL              1
-#define YAW_CHANNEL               2
-#define THROTTLE_CHANNEL          3
-#define AUX1_CHANNEL              4  // only AUX1 needs to be specified here.  All subsequence AUX channels follow in sequence
+#define PITCH             0 //vyskovka
+#define ROLL              1 //kridelka
+#define YAW               2 //smerovka
+#define THROTTLE          3 //plyn
+#define CHANNEL5          4
+#define CHANNEL6          5
+#define CHANNEL7          6
+#define CHANNEL8          7
 
 #define RX_CONNECTION_TIMEOUT     1000000     // If no packet received in this time frame apply failsafe settings. In microseconds
 #define RX_DISARM_TIMEOUT         3000000     // If no packet received in this time frame disarm the throttle. In microseconds
@@ -76,8 +77,6 @@
 
 #define DO_NOT_SOFT_REBIND              0xAA
 #define BOUND_WITH_FAILSAFE_NO_PULSES   0x99
-
-#define SERVO_OUTPUT_PINS         {PITCH_PIN,ROLL_PIN,YAW_PIN,THROTTLE_PIN,AUX1_PIN,AUX2_PIN,AUX3_PIN,AUX4_PIN}
 
 typedef struct {
    enum RxMode_t : uint8_t {  
@@ -108,14 +107,10 @@ typedef struct {
 } CABELL_RxTxPacket_t;   
 
 void setupReciever();
-void outputSumPPM();
 void outputPWM();
-void outputSbus();
 bool getPacket();
 void outputFailSafeValues(bool callOutputChannels);
 void outputChannels();
-void attachServoPins();
-void detachServoPins();
 void setNextRadioChannel(bool missedPacket);
 void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPacketRecieved);
 void unbindReciever();
