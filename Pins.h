@@ -29,8 +29,8 @@
 
 #include "RX.h"
 
-#define RADIO1_CSN_PIN            14     // AKA A0
-#define RADIO2_CSN_PIN            8      //10 Second radio for diversity.  Some older hardware used this pin as CE
+#define RADIO1_CSN_PIN            14     //14 AKA A0
+#define RADIO2_CSN_PIN            8      //Second radio for diversity.  Some older hardware used this pin as CE
 
 #define RADIO1_CE_PIN             RADIO1_CSN_PIN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
 #define RADIO2_CE_PIN             RADIO2_CSN_PIN
@@ -39,11 +39,11 @@
 #define SPI_MISO                  12
 #define SPI_SCLK                  13
     
-#define PIN3                      3  //pwm 489HZ    
-#define PIN5                      5  //pwm 984Hz  
-#define PIN6                      6  //pwm 984Hz     
-#define PIN9                      9  //pwm 489HZ
-//#define PIN10                     10 //pwm 489HZ   
+//#define PIN3                      3     
+#define PIN5                      5   
+#define PIN6                      6      
+#define PIN9                      9  
+#define PIN10                     10 
 
 #define BIND_BUTTON_PIN           A3
 #define LED_PIN                   A1
