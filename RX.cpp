@@ -374,7 +374,7 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM() {
     
-/****************************
+/************************************************************************************
    The base frequency for pins 3, 9, 10, 11 is 31250Hz.
    The base frequency for pins 5, 6 is 62500Hz.
    The divisors available on pins 5, 6, 9, 10 are: 1, 8, 64, 256, and 1024.
@@ -384,17 +384,17 @@ void outputPWM() {
    Pins 3, 11 are paired on timer2
    
    PWM frequency (default)
-   PIN3  D3  //pwm 489Hz, timer2
-   PIN11 D11 //SPI MOSI,  timer2
+   PIN3  D3  //pwm 488Hz, timer2
+   PIN11 D11 //pwm 488Hz, timer2, SPI MOSI
    
-   PIN5  D5  //pwm 984Hz, timer0 is used elsewhere!! 
-   PIN6  D6  //pwm 984Hz, timer0 is used elsewhere!!
+   PIN5  D5  //pwm 976Hz, timer0 is used elsewhere!! 
+   PIN6  D6  //pwm 976Hz, timer0 is used elsewhere!!
 
-   PIN9  D9  //pwm 489Hz, timer1
-   PIN10 D10 //pwm 489Hz, timer1     
-****************************/ 
+   PIN9  D9  //pwm 488Hz, timer1
+   PIN10 D10 //pwm 488Hz, timer1     
+************************************************************************************/ 
 
-//PWM frequency: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
+//PWM frequency PIN9 or PIN10: 1024 = 30Hz, 256= 122Hz, 64 = 488Hz(default), 8 = 3906Hz, 1 = 31250Hz
   
 //MotorB (PIN9 or PIN10, prescaler 8)  
   setPWMPrescaler(PIN9, 8);
