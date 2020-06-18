@@ -387,14 +387,14 @@ void outputPWM() {
    PIN3  D3  //pwm 489Hz, timer2
    PIN11 D11 //SPI MOSI,  timer2
    
-   PIN5  D5  //pwm 975Hz, timer0 is used elsewhere!! 
-   PIN6  D6  //pwm 975Hz, timer0 is used elsewhere!!
+   PIN5  D5  //pwm 984Hz, timer0 is used elsewhere!! 
+   PIN6  D6  //pwm 984Hz, timer0 is used elsewhere!!
 
    PIN9  D9  //pwm 489Hz, timer1
    PIN10 D10 //pwm 489Hz, timer1     
 ****************************/ 
 
-//PWM frequency: 32 = 984Hz(default), 8 = 3936Hz, 1 = 31488Hz
+//PWM frequency: 32 = 984Hz, 8 = 3936Hz, 1 = 31488Hz
   
 //MotorB (PIN9 or PIN10, prescaler 8)  
   setPWMPrescaler(PIN9, 8);
@@ -422,8 +422,8 @@ void outputPWM() {
   else {
     digitalWrite(PIN5, LOW); //"HIGH" brake, "LOW" no brake
     digitalWrite(PIN6, LOW); //"HIGH" brake, "LOW" no brake
-//    analogWrite(PIN5, MotorA = 10); //adjustable brake (0-255)
-//    analogWrite(PIN6, MotorA = 10); //adjustable brake (0-255)
+//    analogWrite(PIN5, MotorA = 127); //adjustable brake (0-255)
+//    analogWrite(PIN6, MotorA = 127); //adjustable brake (0-255)
   }
 //*********************************************************************
   if (steering < 1450) {
@@ -439,8 +439,8 @@ void outputPWM() {
   else {
 //    digitalWrite(PIN9, HIGH); //"HIGH" brake, "LOW" no brake
 //    digitalWrite(PIN10, HIGH); //"HIGH" brake, "LOW" no brake
-    analogWrite(PIN9, MotorB = 10); //adjustable brake (0-255)
-    analogWrite(PIN10, MotorB = 10); //adjustable brake (0-255)
+    analogWrite(PIN9, MotorB = 127); //adjustable brake (0-255)
+    analogWrite(PIN10, MotorB = 127); //adjustable brake (0-255)
   }
 }
 
