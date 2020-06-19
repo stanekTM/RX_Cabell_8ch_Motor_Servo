@@ -58,10 +58,10 @@
 #define ROLL              1 //kridelka
 #define YAW               2 //smerovka
 #define THROTTLE          3 //plyn
-#define CHANNEL5          4
-#define CHANNEL6          5
-#define CHANNEL7          6
-#define CHANNEL8          7
+#define AUX1              4
+#define AUX2              5
+#define AUX3              6
+#define AUX4              7
 
 #define RX_CONNECTION_TIMEOUT     1000000     // If no packet received in this time frame apply failsafe settings. In microseconds
 #define RX_DISARM_TIMEOUT         3000000     // If no packet received in this time frame disarm the throttle. In microseconds
@@ -107,6 +107,9 @@ typedef struct {
 } CABELL_RxTxPacket_t;   
 
 void setupReciever();
+void attachServoPins();
+//void detachServoPins();
+void outputServo();
 void outputPWM();
 bool getPacket();
 void outputFailSafeValues(bool callOutputChannels);
