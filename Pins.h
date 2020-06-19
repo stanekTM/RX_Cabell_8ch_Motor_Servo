@@ -38,12 +38,18 @@
 #define SPI_MOSI                  11
 #define SPI_MISO                  12
 #define SPI_SCLK                  13
-    
-//#define PIN3                      3     
-#define PIN5                      5   
-#define PIN6                      6      
-#define PIN9                      9  
-#define PIN10                     10 
+
+#define Servo_PIN2                2     
+#define Servo_PIN3                3 
+#define Servo_PIN4                4
+#define Servo_PIN7                7
+#define Servo_PinA4               A4
+#define Servo_PinA5               A5
+     
+#define MotorA_PIN5               5   
+#define MotorA_PIN6               6       
+#define MotorB_PIN9               9  
+#define MotorB_PIN10              10 
 
 #define BIND_BUTTON_PIN           A3
 #define LED_PIN                   A1
