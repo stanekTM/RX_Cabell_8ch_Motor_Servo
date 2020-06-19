@@ -33,6 +33,8 @@
 #include "RSSI.h" 
 #include "My_nRF24L01.h"
 #include "PWMFrequency.h" // https://github.com/TheDIYGuy999/PWMFrequency
+#include "ServoTimer2.h" 
+
 
 My_RF24 radio1(RADIO1_CE_PIN,RADIO1_CSN_PIN);  
 My_RF24 radio2(RADIO2_CE_PIN,RADIO2_CSN_PIN);  
@@ -76,6 +78,13 @@ int16_t analogValue[2] = {0,0};
 uint16_t initialTelemetrySkipPackets = 0;
 
 uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM;  // Initializes the channel sequence.
+
+ServoTimer2 servo1;
+ServoTimer2 servo2;
+ServoTimer2 servo3;
+ServoTimer2 servo4;
+ServoTimer2 servo5;
+ServoTimer2 servo6;
 
 RSSI rssi;
 
@@ -184,8 +193,10 @@ void outputChannels() {
       }
     
       if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM) {
-        outputPWM();                               // Do this first so we have something to send when PWM enabled
-        if (firstPacketOnMode) {                   // First time through attach pins to start output
+        outputServo();               // Do this first so we have something to send when PWM enabled
+        outputPWM();                 // Do this first so we have something to send when PWM enabled
+        if (firstPacketOnMode) {     // First time through attach pins to start output
+          attachServoPins();
         }
       }     
       currentOutputMode = nextOutputMode;
@@ -372,6 +383,28 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
+void attachServoPins() {
+  
+  servo1.attach(Servo_PIN2);
+  servo2.attach(Servo_PIN3);
+  servo3.attach(Servo_PIN4);
+  servo4.attach(Servo_PIN7);
+  servo5.attach(Servo_PinA4);
+  servo6.attach(Servo_PinA5);
+}
+
+//--------------------------------------------------------------------------------------------------------------------------
+void outputServo() {
+  
+  servo1.write(channelValues[ROLL]);     //kridelka
+  servo2.write(channelValues[THROTTLE]); //plyn
+  servo3.write(channelValues[AUX1]);
+  servo4.write(channelValues[AUX2]);
+  servo5.write(channelValues[AUX3]);
+  servo6.write(channelValues[AUX4]);
+}
+
+//--------------------------------------------------------------------------------------------------------------------------
 void outputPWM() {
     
 /******************************************************************************************
@@ -387,62 +420,60 @@ void outputPWM() {
    PIN3  D3  //pwm 488Hz, timer2, 8-bit
    PIN11 D11 //pwm 488Hz, timer2, 8-bit, SPI MOSI
    
-   PIN5  D5  //pwm 976Hz, timer0, 8-bit
-   PIN6  D6  //pwm 976Hz, timer0, 8-bit
+   MotorA_PIN5  D5  //pwm 976Hz, timer0, 8-bit
+   MotorA_PIN6  D6  //pwm 976Hz, timer0, 8-bit
 
-   PIN9  D9  //pwm 488Hz, timer1, 16-bit
-   PIN10 D10 //pwm 488Hz, timer1, 16-bit     
+   MotorB_PIN9  D9  //pwm 488Hz, timer1, 16-bit
+   MotorB_PIN10 D10 //pwm 488Hz, timer1, 16-bit     
 ******************************************************************************************/ 
-//PWM frequency PIN5 or PIN6:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default)
-//MotorA (PIN5 or PIN6, prescaler 64)  
-  setPWMPrescaler(PIN5, 64);
+//PWM frequency MotorA_PIN5 or MotorA_PIN6:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default)
+//MotorA (MotorA_PIN5 or MotorA_PIN6, prescaler 64)  
+  setPWMPrescaler(MotorA_PIN5, 64);
   
-//PWM frequency PIN9 or PIN10: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
-//MotorB (PIN9 or PIN10, prescaler 8)  
-  setPWMPrescaler(PIN9, 8);
+//PWM frequency MotorB_PIN9 or MotorB_PIN10: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
+//MotorB (MotorB_PIN9 or MotorB_PIN10, prescaler 8)  
+  setPWMPrescaler(MotorB_PIN9, 8);
 
 //****************************************************************************************      
 
-  int throttle = channelValues[PITCH]; //vyskovka
   int steering = channelValues[YAW];  //smerovka
-//  int throttle = channelValues[THROTTLE]; //plyn
-//  int throttle = channelValues[ROLL]; //kridelka
+  int throttle = channelValues[PITCH]; //vyskovka
 
   int MotorA = 0;
   int MotorB = 0;
 
-  if (throttle < 1450) {
-    MotorA = map(throttle, 1450, 0, 0, 750);
-    analogWrite(PIN5, MotorA); 
-    digitalWrite(PIN6, LOW);
+  if (steering < 1450) {
+    MotorA = map(steering, 1450, 0, 0, 750);
+    analogWrite(MotorA_PIN5, MotorA); 
+    digitalWrite(MotorA_PIN6, LOW);
     }
-  else if (throttle > 1550) { 
-    MotorA = map(throttle, 1550, 2000, 0, 250);
-    analogWrite(PIN6, MotorA); 
-    digitalWrite(PIN5, LOW);
+  else if (steering > 1550) { 
+    MotorA = map(steering, 1550, 2000, 0, 250);
+    analogWrite(MotorA_PIN6, MotorA); 
+    digitalWrite(MotorA_PIN5, LOW);
     }
   else {
-    digitalWrite(PIN5, LOW); //"HIGH" brake, "LOW" no brake
-    digitalWrite(PIN6, LOW); //"HIGH" brake, "LOW" no brake
-//    analogWrite(PIN5, MotorA = 127); //adjustable brake (0-255)
-//    analogWrite(PIN6, MotorA = 127); //adjustable brake (0-255)
+    digitalWrite(MotorA_PIN5, LOW); //"HIGH" brake, "LOW" no brake
+    digitalWrite(MotorA_PIN6, LOW); //"HIGH" brake, "LOW" no brake
+//    analogWrite(MotorA_PIN5, MotorA = 127); //adjustable brake (0-255)
+//    analogWrite(MotorA_PIN6, MotorA = 127); //adjustable brake (0-255)
   }
 //*********************************************************************
-  if (steering < 1450) {
-    MotorB = map(steering, 1450, 0, 0, 750);
-    analogWrite(PIN9, MotorB); 
-    digitalWrite(PIN10, LOW);
+  if (throttle < 1450) {
+    MotorB = map(throttle, 1450, 0, 0, 750);
+    analogWrite(MotorB_PIN9, MotorB); 
+    digitalWrite(MotorB_PIN10, LOW);
     }
-  else if (steering > 1550) {
-    MotorB = map(steering, 1550, 2000, 0, 250); 
-    analogWrite(PIN10, MotorB); 
-    digitalWrite(PIN9, LOW);
+  else if (throttle > 1550) {
+    MotorB = map(throttle, 1550, 2000, 0, 250); 
+    analogWrite(MotorB_PIN10, MotorB); 
+    digitalWrite(MotorB_PIN9, LOW);
     }
   else {
-//    digitalWrite(PIN9, HIGH); //"HIGH" brake, "LOW" no brake
-//    digitalWrite(PIN10, HIGH); //"HIGH" brake, "LOW" no brake
-    analogWrite(PIN9, MotorB = 127); //adjustable brake (0-255)
-    analogWrite(PIN10, MotorB = 127); //adjustable brake (0-255)
+//    digitalWrite(MotorB_PIN9, HIGH); //"HIGH" brake, "LOW" no brake
+//    digitalWrite(MotorB_PIN10, HIGH); //"HIGH" brake, "LOW" no brake
+    analogWrite(MotorB_PIN9, MotorB = 127); //adjustable brake (0-255)
+    analogWrite(MotorB_PIN10, MotorB = 127); //adjustable brake (0-255)
   }
 }
 
