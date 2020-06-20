@@ -79,6 +79,7 @@ uint16_t initialTelemetrySkipPackets = 0;
 
 uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM;  // Initializes the channel sequence.
 
+//Create servo object
 ServoTimer2 servo1;
 ServoTimer2 servo2;
 ServoTimer2 servo3;
@@ -436,7 +437,7 @@ void outputPWM() {
 
 //****************************************************************************************      
 
-  int steering = channelValues[YAW];  //smerovka
+  int steering = channelValues[YAW];   //smerovka
   int throttle = channelValues[PITCH]; //vyskovka
 
   int MotorA = 0;
@@ -470,9 +471,9 @@ void outputPWM() {
     digitalWrite(MotorB_PIN9, LOW);
     }
   else {
-//    digitalWrite(MotorB_PIN9, HIGH); //"HIGH" brake, "LOW" no brake
+//    digitalWrite(MotorB_PIN9, HIGH);  //"HIGH" brake, "LOW" no brake
 //    digitalWrite(MotorB_PIN10, HIGH); //"HIGH" brake, "LOW" no brake
-    analogWrite(MotorB_PIN9, MotorB = 127); //adjustable brake (0-255)
+    analogWrite(MotorB_PIN9, MotorB = 127);  //adjustable brake (0-255)
     analogWrite(MotorB_PIN10, MotorB = 127); //adjustable brake (0-255)
   }
 }
