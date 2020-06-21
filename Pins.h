@@ -59,7 +59,7 @@
 
 // configure A2 for radio IRQ 
 #define RADIO_IRQ_PIN          A2 
-#define RADIO_IRQ_PIN_bit      2           //A2 = PC2
+#define RADIO_IRQ_PIN_bit      2      //A2 = PC2
 #define RADIO_IRQ_port         PORTC
 #define RADIO_IRQ_ipr          PINC
 #define RADIO_IRQ_ddr          DDRC
