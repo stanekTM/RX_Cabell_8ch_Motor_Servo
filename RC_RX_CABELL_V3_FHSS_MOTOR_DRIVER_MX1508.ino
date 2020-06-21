@@ -60,7 +60,7 @@ void setup(void) {
  
   setupReciever();
 
-//  outputPWM();
+//  outputPWM();  //Activation of the brake after connecting the RX power supply. //: the brake is activated only after the start of TX transmission
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
