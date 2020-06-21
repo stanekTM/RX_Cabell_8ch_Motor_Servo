@@ -32,8 +32,8 @@
 #include "Rx_Tx_Util.h"
 #include "RSSI.h" 
 #include "My_nRF24L01.h"
-#include "PWMFrequency.h" // https://github.com/TheDIYGuy999/PWMFrequency
-#include "ServoTimer2.h" 
+#include "PWMFrequency.h" //https://github.com/TheDIYGuy999/PWMFrequency
+#include "ServoTimer2.h"  //https://github.com/nabontra/ServoTimer2 
 
 
 My_RF24 radio1(RADIO1_CE_PIN,RADIO1_CSN_PIN);  
@@ -426,7 +426,8 @@ void outputPWM() {
 
    MotorB_PIN9  D9  //pwm 488Hz, timer1, 16-bit
    MotorB_PIN10 D10 //pwm 488Hz, timer1, 16-bit     
-******************************************************************************************/ 
+******************************************************************************************/
+ 
 //PWM frequency MotorA_PIN5 or MotorA_PIN6:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default)
 //MotorA (MotorA_PIN5 or MotorA_PIN6, prescaler 64)  
   setPWMPrescaler(MotorA_PIN5, 64);
@@ -434,14 +435,16 @@ void outputPWM() {
 //PWM frequency MotorB_PIN9 or MotorB_PIN10: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
 //MotorB (MotorB_PIN9 or MotorB_PIN10, prescaler 8)  
   setPWMPrescaler(MotorB_PIN9, 8);
-
-//****************************************************************************************      
-
+  
+//*****************************************************************************************************
+     
   int steering = channelValues[YAW];   //smerovka
   int throttle = channelValues[PITCH]; //vyskovka
 
   int MotorA = 0;
   int MotorB = 0;
+
+//***************************** MotorA **********************************  
 
   if (steering < 1450) {
     MotorA = map(steering, 1450, 0, 0, 750);
@@ -459,7 +462,9 @@ void outputPWM() {
 //    analogWrite(MotorA_PIN5, MotorA = 127); //adjustable brake (0-255)
 //    analogWrite(MotorA_PIN6, MotorA = 127); //adjustable brake (0-255)
   }
-//*********************************************************************
+  
+//***************************** MotorB **********************************
+
   if (throttle < 1450) {
     MotorB = map(throttle, 1450, 0, 0, 750);
     analogWrite(MotorB_PIN9, MotorB); 
@@ -477,18 +482,6 @@ void outputPWM() {
     analogWrite(MotorB_PIN10, MotorB = 127); //adjustable brake (0-255)
   }
 }
-
-/**************
-   Digital pin
-   PIN2  D2
-   PIN4  D4
-   PIN7  D7
-   PIN8  D8
----------------
-   Analog pin
-   PIN4  A4
-   PIN5  A5
-**************/
 
 //--------------------------------------------------------------------------------------------------------------------------
 void outputFailSafeValues(bool callOutputChannels) {
