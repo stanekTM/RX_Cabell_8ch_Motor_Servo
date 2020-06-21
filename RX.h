@@ -108,7 +108,6 @@ typedef struct {
 
 void setupReciever();
 void attachServoPins();
-//void detachServoPins();
 void outputServo();
 void outputPWM();
 bool getPacket();
