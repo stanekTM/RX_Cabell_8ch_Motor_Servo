@@ -2,7 +2,9 @@
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
 The firmware will be used in the planned micro receivers of rc cars, tanks, ships, aircraft. The option to adjust the brake is included in the code.
 
-For other information, see below 
+Thank you to the author of the RC receiver project
+
+For other information, see below ... 
 
 # RC_RX_CABELL_V3_FHSS
 ## Background
