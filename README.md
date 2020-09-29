@@ -1,6 +1,29 @@
 ﻿# About the version
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
 The firmware will be used in the planned micro receivers of rc cars, tanks, ships, aircraft. The option to adjust the brake is included in the code.
+### Arduino pins:
+Motor A:
+* D5  - pwm1
+* D6  - pwm2
+#
+Motor B:
+* D9  - pwm3
+* D10 - pwm4
+#
+* D2  - LED
+#
+* A3  - bind button
+#
+* A6  - telemetry analog input 1
+* A7  - telemetry analog input 2
+#
+nRF24L01:
+* A0  - CE
+* A1  - CSN
+* A2  - IRQ
+* D13 - SCK
+* D11 - MOSI
+* D12 - MISO
 
 Thank you to the author of the RC receiver project
 
