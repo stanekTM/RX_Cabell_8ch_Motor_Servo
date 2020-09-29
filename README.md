@@ -1,7 +1,6 @@
 ﻿# About the version
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
 It is possible to use Arduino Nano, Pro or Pro Mini.
-It also includes a MX1508 motor driver with brake.
 The firmware will be used for racing micro cars and boats.
 The possibility of setting the brake is in the code.
 Telemetry sends the monitored voltage RX to TX using LED states. 
