@@ -1,7 +1,7 @@
 ﻿# About the version
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
 It is possible to use Arduino Nano, Pro or Pro Mini.
-It also includes a MX1508 motor driver with brake and a CMT2150A transponder for laps timing.
+It also includes a MX1508 motor driver with brake.
 Other versions of the RX firmware include servo outputs with 8 and 16 bit timers.
 The firmware will be used for racing micro cars and boats.
 After editing the code, it can control tanks and aircraft.
