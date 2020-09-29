@@ -29,11 +29,9 @@
 
 #include "My_RF24.h"
 
-#define RX_NUM_CHANNELS         8 //8
-
 #define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
 
-#define CABELL_NUM_CHANNELS     16                  // The maximum number of RC channels that can be sent in one packet
+#define CABELL_NUM_CHANNELS     12                  //16 The maximum number of RC channels that can be sent in one packet
 #define CABELL_MIN_CHANNELS     4                   // The minimum number of channels that must be included in a packet, the number of channels cannot be reduced any further than this
 #define CABELL_PAYLOAD_BYTES    24                  // 12 bits per value * 16 channels
 
