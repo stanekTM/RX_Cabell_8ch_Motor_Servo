@@ -24,7 +24,7 @@ nRF24L01:
 * D13 - SCK
 * D11 - MOSI
 * D12 - MISO
-
+#
 Thank you to the author of the RC receiver project
 
 For other information, see below ... 
