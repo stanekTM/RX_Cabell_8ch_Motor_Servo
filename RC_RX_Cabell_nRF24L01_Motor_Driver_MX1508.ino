@@ -59,16 +59,18 @@ void setup(void) {
   ADC_Processing();
  
   setupReciever();
-
-//  outputPWM();  //Activation of the brake after connecting the RX power supply. //: the brake is activated only after the start of TX transmission
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
 void loop() { 
   while (true) {               //loop forever without going back to Arduino core code
+    
     if (getPacket()) {
+      
       outputChannels();
+      }
+      
+      ADC_Processing();          // Process ADC to asynchronously read A6 and A7 for telemetry analog values.  Non-blocking read
     }
-    ADC_Processing();          // Process ADC to asynchronously read A6 and A7 for telemetry analog values.  Non-blocking read
-  }
 }
+ 
