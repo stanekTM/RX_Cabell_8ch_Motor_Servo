@@ -46,7 +46,7 @@ uint8_t radioConfigRegisterForTX = 0;
 uint8_t radioConfigRegisterForRX_IRQ_Masked = 0;
 uint8_t radioConfigRegisterForRX_IRQ_On = 0;
   
-uint16_t channelValues [CABELL_NUM_CHANNELS];
+uint16_t channelValues[CABELL_NUM_CHANNELS];
 uint8_t  currentModel = 0;
 uint64_t radioPipeID;
 uint64_t radioNormalRxPipeID;
@@ -194,12 +194,15 @@ void outputChannels() {
       }
     
       if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM) {
-        outputServo();               // Do this first so we have something to send when PWM enabled
+        
+        outputServo();               // Do this first so we have something to send when PWM enabled               
         outputPWM();                 // Do this first so we have something to send when PWM enabled
+        
         if (firstPacketOnMode) {     // First time through attach pins to start output
+          
           attachServoPins();
-        }
-      }     
+          }
+      }    
       currentOutputMode = nextOutputMode;
    }
  }
