@@ -1,7 +1,6 @@
 ﻿# About the version
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
 It is possible to use Arduino Nano, Pro or Pro Mini.
-The firmware will be used for racing micro cars and boats.
 The motor driver IC is based on MX1508, MX1208, MX1515, MX1616, TC1508S and others similar, using 4x pwm input control signals.
 The firmware will be used in the planned micro receivers of rc cars, tanks, ships, aircraft. The option to adjust the brake is included in the code.
 ### Arduino pins:
