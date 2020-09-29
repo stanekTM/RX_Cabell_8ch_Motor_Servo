@@ -5,7 +5,6 @@ The motor driver IC is based on MX1508, MX1208, MX1515, MX1616, TC1508S and othe
 The option to adjust the brake is included in the code.
 The firmware will be used in the planned micro receivers of rc cars, tanks, ships, aircraft.
 ### Arduino pins:
-Servo:
 * D3 - servo 1    
 * D4 - servo 2 
 * D7 - servo 3
