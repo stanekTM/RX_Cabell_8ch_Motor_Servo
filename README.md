@@ -12,16 +12,20 @@ Servo:
 * D8 - servo 4
 * A4 - servo 5
 * A5 - servo 6
+# 
 Motor A:
-* D5  - pwm1
-* D6  - pwm2
+* D5 - pwm1
+* D6 - pwm2
+#
 Motor B:
 * D9  - pwm3
 * D10 - pwm4
-* D2  - LED
-* A3  - bind button
-* A6  - telemetry analog input 1
-* A7  - telemetry analog input 2
+#
+* D2 - LED
+* A3 - bind button
+* A6 - telemetry analog input 1
+* A7 - telemetry analog input 2
+#
 nRF24L01:
 * A0  - CE
 * A1  - CSN
