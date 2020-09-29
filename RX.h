@@ -54,10 +54,10 @@
 
 #define THROTTLE_DISARM_VALUE     CHANNEL_MIN_VALUE   // If you have a reverse where mid throttle is the off state, this can be changed to the value that causes the motor to stop
 
-#define PITCH             0 //vyskovka
-#define ROLL              1 //kridelka
-#define YAW               2 //smerovka
-#define THROTTLE          3 //plyn
+#define AILERONS          0   //kridelka
+#define ELEVATOR          1   //vyskovka
+#define THROTTLE          2   //plyn
+#define RUDDER            3   //smerovka
 #define AUX1              4
 #define AUX2              5
 #define AUX3              6

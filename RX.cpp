@@ -397,8 +397,8 @@ void attachServoPins() {
 //--------------------------------------------------------------------------------------------------------------------------
 void outputServo() {
   
-  servo1.write(channelValues[ROLL]);     //kridelka
-  servo2.write(channelValues[THROTTLE]); //plyn
+  servo1.write(channelValues[THROTTLE]);  //plyn
+  servo2.write(channelValues[RUDDER]);    //smerovka
   servo3.write(channelValues[AUX1]);
   servo4.write(channelValues[AUX2]);
   servo5.write(channelValues[AUX3]);
@@ -437,8 +437,8 @@ void outputPWM() {
   
 //*****************************************************************************************************
      
-  int steering = channelValues[YAW];   //smerovka
-  int throttle = channelValues[PITCH]; //vyskovka
+  int steering = channelValues[AILERONS];  //kridelka
+  int throttle = channelValues[ELEVATOR];  //vyskovka
 
   int MotorA = 0;
   int MotorB = 0;

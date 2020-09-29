@@ -29,8 +29,8 @@
 
 #include "RX.h"
 
-#define RADIO1_CSN_PIN            14     //14 AKA A0
-#define RADIO2_CSN_PIN            8      //Second radio for diversity.  Some older hardware used this pin as CE
+#define RADIO1_CSN_PIN            14     // A0
+#define RADIO2_CSN_PIN            15     // A1 Second radio for diversity.  Some older hardware used this pin as CE
 
 #define RADIO1_CE_PIN             RADIO1_CSN_PIN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
 #define RADIO2_CE_PIN             RADIO2_CSN_PIN
@@ -39,10 +39,10 @@
 #define SPI_MISO                  12
 #define SPI_SCLK                  13
 
-#define Servo_PIN2                2     
-#define Servo_PIN3                3 
-#define Servo_PIN4                4
-#define Servo_PIN7                7
+#define Servo_PIN2                3     
+#define Servo_PIN3                4 
+#define Servo_PIN4                7
+#define Servo_PIN7                8
 #define Servo_PinA4               A4
 #define Servo_PinA5               A5
      
@@ -52,14 +52,14 @@
 #define MotorB_PIN10              10 
 
 #define BIND_BUTTON_PIN           A3
-#define LED_PIN                   A1
+#define LED_PIN                   2
 
-#define TELEMETRY_ANALOG_INPUT_1  6   // Pin A6
-#define TELEMETRY_ANALOG_INPUT_2  7   // Pin A7
+#define TELEMETRY_ANALOG_INPUT_1  6   // A6
+#define TELEMETRY_ANALOG_INPUT_2  7   // A7
 
 // configure A2 for radio IRQ 
 #define RADIO_IRQ_PIN          A2 
-#define RADIO_IRQ_PIN_bit      2      //A2 = PC2
+#define RADIO_IRQ_PIN_bit      2      // A2 = PC2
 #define RADIO_IRQ_port         PORTC
 #define RADIO_IRQ_ipr          PINC
 #define RADIO_IRQ_ddr          DDRC
