@@ -29,8 +29,8 @@
 
 #include "RX.h"
 
-#define RADIO1_CSN_PIN            14     // A0
-#define RADIO2_CSN_PIN            15     // A1 Second radio for diversity.  Some older hardware used this pin as CE
+#define RADIO1_CSN_PIN            15     // A1 CSN
+#define RADIO2_CSN_PIN            14     // A0 Second radio for diversity.  Some older hardware used this pin as CE
 
 #define RADIO1_CE_PIN             RADIO1_CSN_PIN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
 #define RADIO2_CE_PIN             RADIO2_CSN_PIN
