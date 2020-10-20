@@ -1,5 +1,6 @@
 ﻿# About the version
-It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the Mutiprotokol. SBUS and PPM output is removed.
+It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the [DIY-Multiprotocol-TX-Module](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
+SBUS and PPM output is removed.
 It is possible to use Arduino Nano, Pro or Pro Mini.
 The motor driver IC is based on MX1508, MX1208, MX1515, MX1616, TC1508S and others similar, using 4x pwm input control signals.
 The option to adjust the brake is included in the code.
@@ -30,7 +31,7 @@ nRF24L01:
 * D11 - MOSI
 * D12 - MISO
 #
-Thank you to the author of the RC receiver project
+Thank you to the author of the RC receiver project Dennis "soligen2010" [RC_RX_CABELL_V3_FHSS](https://github.com/soligen2010/RC_RX_CABELL_V3_FHSS).
 
 For other information, see below ... 
 
@@ -39,7 +40,7 @@ For other information, see below ...
 RC_RX_CABELL_V3_FHSS is an open source receiver for remote controlled vehicles.  Developed by Dennis Cabell (KE8FZX)
 The hardware for this receiver is an Arduino Pro Mini (using a 5V ATMEGA328P at 16 Mhz) and one or two NRF24L01+ modules.  Both are inexpensively available on-line.  Be sure to get the version of a Pro Mini that has pins A4, A5, A6 and A7 broken out.
 
-The transmitter side of this RC protocol is in the Multi-protocol TX Module project at [https://github.com/pascallanger/DIY-Multiprotocol-TX-Module]( https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+The transmitter side of this RC protocol is in the Multi-protocol TX Module project at [https://github.com/pascallanger/DIY-Multiprotocol-TX-Module](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
 Since there are on-going changes to the main Multi-protocol branch, if you have issues or are using experimental features please test with the solgen2010 fork, which is the latest version tested with the receiver [https://github.com/soligen2010/DIY-Multiprotocol-TX-Module]( https://github.com/soligen2010/DIY-Multiprotocol-TX-Module).
 
@@ -99,7 +100,7 @@ The output method is controlled via the option byte in the protocol header.  See
 ## Receiver Setup
 The receiver must be bound to the transmitter. There are several ways for the receiver to enter Bind Mode.  When a receiver is in bind mode the LED will be on.
 * A new Arduino will start in bind mode automatically.  Only an Arduino that was flashed for the first time (not previously bound) does this.  Re-flashing the software will retain the old binding unless the EEPROM has been erased.
-* Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here]( https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
+* Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
 * Connect the Bind Jumper, or press the Bind button while the receiver powers on.
 * The protocol has a Un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino. After an Unbind the LED will blink until the receiver is re-started.
 
