@@ -29,9 +29,9 @@ nRF24L01:
 * A0  - CE
 * A1  - CSN
 * A2  - IRQ
-* D13 - SCK
 * D11 - MOSI
 * D12 - MISO
+* D13 - SCK
 #
 Thank you to the author of the RC receiver project Dennis "soligen2010" [RC_RX_CABELL_V3_FHSS](https://github.com/soligen2010/RC_RX_CABELL_V3_FHSS).
 
