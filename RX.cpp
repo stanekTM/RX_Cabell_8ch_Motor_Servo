@@ -450,44 +450,40 @@ void outputPWM() {
 
   if (steering < 1450) // < 1500us, dead band of poor quality joysticks
   {
-    MotorA = map(steering, 1450, 1000, 0, 255);
+    MotorA = map(steering, 1450, CHANNEL_MIN_VALUE, 0, 255);
     analogWrite(MotorA_PIN5, MotorA); 
     digitalWrite(MotorA_PIN6, LOW);
   }
   else if (steering > 1550) // > 1500us, dead band of poor quality joysticks
   { 
-    MotorA = map(steering, 1550, 2000, 0, 255);
+    MotorA = map(steering, 1550, CHANNEL_MAX_VALUE, 0, 255);
     analogWrite(MotorA_PIN6, MotorA); 
     digitalWrite(MotorA_PIN5, LOW);
   }
   else
   {
-    digitalWrite(MotorA_PIN5, HIGH); //"HIGH" brake, "LOW" no brake
-    digitalWrite(MotorA_PIN6, HIGH); //"HIGH" brake, "LOW" no brake
-//    analogWrite(MotorA_PIN5, MotorA = 255); //adjustable brake (0-255)
-//    analogWrite(MotorA_PIN6, MotorA = 255); //adjustable brake (0-255)
+    analogWrite(MotorA_PIN5, motA_brake);
+    analogWrite(MotorA_PIN6, motA_brake);
   }
   
 //***************************** MotorB **********************************
 
   if (throttle < 1450) // < 1500us, dead band of poor quality joysticks
   {
-    MotorB = map(throttle, 1450, 1000, 0, 255);
+    MotorB = map(throttle, 1450, CHANNEL_MIN_VALUE, 0, 255);
     analogWrite(MotorB_PIN9, MotorB); 
     digitalWrite(MotorB_PIN10, LOW);
   }
   else if (throttle > 1550) // > 1500us, dead band of poor quality joysticks
   {
-    MotorB = map(throttle, 1550, 2000, 0, 255); 
+    MotorB = map(throttle, 1550, CHANNEL_MAX_VALUE, 0, 255); 
     analogWrite(MotorB_PIN10, MotorB); 
     digitalWrite(MotorB_PIN9, LOW);
   }
   else
   {
-    digitalWrite(MotorB_PIN9,  LOW); //"HIGH" brake, "LOW" no brake
-    digitalWrite(MotorB_PIN10, LOW); //"HIGH" brake, "LOW" no brake
-//    analogWrite(MotorB_PIN9,  MotorB = 127); //adjustable brake (0-255)
-//    analogWrite(MotorB_PIN10, MotorB = 127); //adjustable brake (0-255)
+    analogWrite(MotorB_PIN9,  motB_brake);
+    analogWrite(MotorB_PIN10, motB_brake);
   }
 }
 
