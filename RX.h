@@ -31,7 +31,7 @@
 
 #define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
 
-#define CABELL_NUM_CHANNELS     12                  //16 The maximum number of RC channels that can be sent in one packet
+#define CABELL_NUM_CHANNELS     16                  //min 12 max 16. The maximum number of RC channels that can be sent in one packet
 #define CABELL_MIN_CHANNELS     4                   // The minimum number of channels that must be included in a packet, the number of channels cannot be reduced any further than this
 #define CABELL_PAYLOAD_BYTES    24                  // 12 bits per value * 16 channels
 
@@ -60,6 +60,10 @@
 #define AUX2              5
 #define AUX3              6
 #define AUX4              7
+
+// Brake setting, adjustment (0-255), no brake 0, max brake 255
+#define motA_brake 255 //steering [AILERONS]
+#define motB_brake 0   //throttle [ELEVATOR]
 
 #define RX_CONNECTION_TIMEOUT     1000000     // If no packet received in this time frame apply failsafe settings. In microseconds
 #define RX_DISARM_TIMEOUT         3000000     // If no packet received in this time frame disarm the throttle. In microseconds
