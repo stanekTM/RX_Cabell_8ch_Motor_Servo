@@ -1,5 +1,5 @@
 ﻿# About the version
-It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the [DIY-Multiprotocol-TX-Module](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
+It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the RC transmitter [OpenAVRc](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [DIY-Multiprotocol-TX-Module](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
 SBUS and PPM output is removed.
 It is possible to use Arduino Nano, Pro or Pro Mini.
 The motor driver IC is based on MX1508, MX1208, MX1515, MX1616, TC1508S and others similar, using 4x pwm input control signals.
