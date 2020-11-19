@@ -29,6 +29,26 @@
 
 #include "My_RF24.h"
 
+// Brake setting, adjustment (0-255), no brake 0, max brake 255
+#define motA_brake 255 //steering[AILERONS]/MotorA/976Hz
+#define motB_brake 0   //throttle[ELEVATOR]/MotorB/3906Hz
+
+//setting the dead zone of poor quality joysticks TX for the motor controller
+#define dead_zone  10
+
+#define AILERONS   0   //kridelka
+#define ELEVATOR   1   //vyskovka
+#define THROTTLE   2   //plyn
+#define RUDDER     3   //smerovka
+#define AUX1       4
+#define AUX2       5
+#define AUX3       6
+#define AUX4       7
+
+#define CHANNEL_MIN_VALUE       1000
+#define CHANNEL_MAX_VALUE       2000
+#define CHANNEL_MID_VALUE       ((CHANNEL_MIN_VALUE + CHANNEL_MAX_VALUE)/2)
+
 #define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
 
 #define CABELL_NUM_CHANNELS     16                  //min 12 max 16. The maximum number of RC channels that can be sent in one packet
@@ -46,24 +66,7 @@
 #define CABELL_OPTION_SHIFT_RECIEVER_OUTPUT_MODE 4
 #define CABELL_RECIEVER_OUTPUT_PWM               0
 
-#define CHANNEL_MIN_VALUE         1000
-#define CHANNEL_MAX_VALUE         2000
-#define CHANNEL_MID_VALUE         ((CHANNEL_MIN_VALUE + CHANNEL_MAX_VALUE)/2)
-
 #define THROTTLE_DISARM_VALUE     CHANNEL_MIN_VALUE   // If you have a reverse where mid throttle is the off state, this can be changed to the value that causes the motor to stop
-
-#define AILERONS          0   //kridelka
-#define ELEVATOR          1   //vyskovka
-#define THROTTLE          2   //plyn
-#define RUDDER            3   //smerovka
-#define AUX1              4
-#define AUX2              5
-#define AUX3              6
-#define AUX4              7
-
-// Brake setting, adjustment (0-255), no brake 0, max brake 255
-#define motA_brake 255 //steering [AILERONS]
-#define motB_brake 0   //throttle [ELEVATOR]
 
 #define RX_CONNECTION_TIMEOUT     1000000     // If no packet received in this time frame apply failsafe settings. In microseconds
 #define RX_DISARM_TIMEOUT         3000000     // If no packet received in this time frame disarm the throttle. In microseconds
