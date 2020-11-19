@@ -438,7 +438,7 @@ void outputPWM() {
 //MotorB (MotorB_PIN9 or MotorB_PIN10, prescaler 8)  
   setPWMPrescaler(MotorB_PIN9, 8);
   
-//*****************************************************************************************************
+//---------------------------------------------------------------------------------------------
      
   int steering = channelValues[AILERONS];  //kridelka
   int throttle = channelValues[ELEVATOR];  //vyskovka
@@ -446,17 +446,17 @@ void outputPWM() {
   int MotorA = 0;
   int MotorB = 0;
 
-//***************************** MotorA **********************************  
+//MotorA/976Hz --------------------------------------------------------------------------------  
 
-  if (steering < 1450) // < 1500us, dead band of poor quality joysticks
+  if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
-    MotorA = map(steering, 1450, CHANNEL_MIN_VALUE, 0, 255);
+    MotorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
     analogWrite(MotorA_PIN5, MotorA); 
     digitalWrite(MotorA_PIN6, LOW);
   }
-  else if (steering > 1550) // > 1500us, dead band of poor quality joysticks
+  else if (steering > CHANNEL_MID_VALUE + dead_zone)
   { 
-    MotorA = map(steering, 1550, CHANNEL_MAX_VALUE, 0, 255);
+    MotorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
     analogWrite(MotorA_PIN6, MotorA); 
     digitalWrite(MotorA_PIN5, LOW);
   }
@@ -466,17 +466,17 @@ void outputPWM() {
     analogWrite(MotorA_PIN6, motA_brake);
   }
   
-//***************************** MotorB **********************************
+//MotorB/3906Hz -------------------------------------------------------------------------------
 
-  if (throttle < 1450) // < 1500us, dead band of poor quality joysticks
+  if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
-    MotorB = map(throttle, 1450, CHANNEL_MIN_VALUE, 0, 255);
+    MotorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
     analogWrite(MotorB_PIN9, MotorB); 
     digitalWrite(MotorB_PIN10, LOW);
   }
-  else if (throttle > 1550) // > 1500us, dead band of poor quality joysticks
+  else if (throttle > CHANNEL_MID_VALUE + dead_zone)
   {
-    MotorB = map(throttle, 1550, CHANNEL_MAX_VALUE, 0, 255); 
+    MotorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
     analogWrite(MotorB_PIN10, MotorB); 
     digitalWrite(MotorB_PIN9, LOW);
   }
