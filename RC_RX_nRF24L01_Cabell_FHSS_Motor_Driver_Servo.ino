@@ -42,10 +42,10 @@
 void setup(void) {
   Serial.begin(74880);
   
-  pinMode(MotorA_PIN5, OUTPUT);
-  pinMode(MotorA_PIN6, OUTPUT);
-  pinMode(MotorB_PIN9, OUTPUT);
-  pinMode(MotorB_PIN10, OUTPUT);
+  pinMode(MotorA_PIN5, OUTPUT);  //MotorA/976Hz
+  pinMode(MotorA_PIN6, OUTPUT);  //MotorA/976Hz
+  pinMode(MotorB_PIN9, OUTPUT);  //MotorB/3906Hz
+  pinMode(MotorB_PIN10, OUTPUT); //MotorB/3906Hz
   
   pinMode (BIND_BUTTON_PIN,INPUT_PULLUP);  // used for bind plug or button
 
