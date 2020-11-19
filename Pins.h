@@ -46,10 +46,10 @@
 #define Servo_PinA4               A4
 #define Servo_PinA5               A5
      
-#define MotorA_PIN5               5   
-#define MotorA_PIN6               6       
-#define MotorB_PIN9               9  
-#define MotorB_PIN10              10 
+#define MotorA_PIN5               5  //MotorA/976Hz 
+#define MotorA_PIN6               6  //MotorA/976Hz     
+#define MotorB_PIN9               9  //MotorB/3906Hz
+#define MotorB_PIN10              10 //MotorB/3906Hz
 
 #define BIND_BUTTON_PIN           A3
 #define LED_PIN                   2
