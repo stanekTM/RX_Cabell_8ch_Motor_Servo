@@ -42,15 +42,15 @@
 void setup(void) {
   Serial.begin(74880);
   
-  pinMode(MotorA_PIN5, OUTPUT);  //MotorA/976Hz
-  pinMode(MotorA_PIN6, OUTPUT);  //MotorA/976Hz
-  pinMode(MotorB_PIN9, OUTPUT);  //MotorB/3906Hz
-  pinMode(MotorB_PIN10, OUTPUT); //MotorB/3906Hz
+  pinMode(pin_pwm1, OUTPUT); //MotorA/976Hz
+  pinMode(pin_pwm2, OUTPUT); //MotorA/976Hz
+  pinMode(pin_pwm3, OUTPUT); //MotorB/3906Hz
+  pinMode(pin_pwm4, OUTPUT); //MotorB/3906Hz
   
-  pinMode (BIND_BUTTON_PIN,INPUT_PULLUP);  // used for bind plug or button
+  pinMode (pin_button_bind, INPUT_PULLUP);  // used for bind plug or button
 
-  pinMode (LED_PIN, OUTPUT);     //status LED
-  digitalWrite(LED_PIN, LOW);
+  pinMode (pin_LED, OUTPUT);     //status LED
+  digitalWrite(pin_LED, LOW);
 
   ADC_Processing();   // Initial analog reads for A6/A7.  Initial call returns bad value so call 3 times to get a good starting value from each pin
   while (!bit_is_clear(ADCSRA, ADSC));  // wait for conversion
