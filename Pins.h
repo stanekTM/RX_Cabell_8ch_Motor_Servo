@@ -29,37 +29,37 @@
 
 #include "RX.h"
 
-#define RADIO1_CSN_PIN            15     // A1 CSN
-#define RADIO2_CSN_PIN            14     // A0 Second radio for diversity.  Some older hardware used this pin as CE
+#define pin_radio1_CSN         15     // A1 CSN
+#define pin_radio2_CSN         14     // A0 Second radio for diversity.  Some older hardware used this pin as CE
 
-#define RADIO1_CE_PIN             RADIO1_CSN_PIN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
-#define RADIO2_CE_PIN             RADIO2_CSN_PIN
+#define pin_radio1_CE          pin_radio1_CSN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
+#define pin_radio2_CE          pin_radio2_CSN
 
-#define SPI_MOSI                  11
-#define SPI_MISO                  12
-#define SPI_SCLK                  13
+#define SPI_MOSI               11
+#define SPI_MISO               12
+#define SPI_SCLK               13
 
-#define Servo_PIN2                3     
-#define Servo_PIN3                4 
-#define Servo_PIN4                7
-#define Servo_PIN7                8
-#define Servo_PinA4               A4
-#define Servo_PinA5               A5
+#define pin_servo1             3     
+#define pin_servo2             4 
+#define pin_servo3             7
+#define pin_servo4             8
+#define pin_servo5             A4
+#define pin_servo6             A5
      
-#define MotorA_PIN5               5  //MotorA/976Hz 
-#define MotorA_PIN6               6  //MotorA/976Hz     
-#define MotorB_PIN9               9  //MotorB/3906Hz
-#define MotorB_PIN10              10 //MotorB/3906Hz
+#define pin_pwm1               5  //MotorA/976Hz 
+#define pin_pwm2               6  //MotorA/976Hz     
+#define pin_pwm3               9  //MotorB/3906Hz
+#define pin_pwm4               10 //MotorB/3906Hz
 
-#define BIND_BUTTON_PIN           A3
-#define LED_PIN                   2
+#define pin_button_bind        A3
+#define pin_LED                2
 
-#define TELEMETRY_ANALOG_INPUT_1  6   // A6
-#define TELEMETRY_ANALOG_INPUT_2  7   // A7
+#define pin_rxBatt_A1          6  // A6
+#define pin_rxBatt_A2          7  // A7
 
 // configure A2 for radio IRQ 
 #define RADIO_IRQ_PIN          A2 
-#define RADIO_IRQ_PIN_bit      2      // A2 = PC2
+#define RADIO_IRQ_PIN_bit      2  // A2 = PC2
 #define RADIO_IRQ_port         PORTC
 #define RADIO_IRQ_ipr          PINC
 #define RADIO_IRQ_ddr          DDRC
