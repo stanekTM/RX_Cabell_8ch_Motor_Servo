@@ -36,8 +36,8 @@
 #include "ServoTimer2.h"  //https://github.com/nabontra/ServoTimer2 
 
 
-My_RF24 radio1(RADIO1_CE_PIN,RADIO1_CSN_PIN);  
-My_RF24 radio2(RADIO2_CE_PIN,RADIO2_CSN_PIN);  
+My_RF24 radio1(pin_radio1_CE, pin_radio1_CSN);  
+My_RF24 radio2(pin_radio2_CE, pin_radio2_CSN);  
 
 My_RF24* primaryReciever = NULL;
 My_RF24* secondaryReciever = NULL;
@@ -103,10 +103,10 @@ void setupReciever() {
     failSafeNoPulses = true;
   }  
  
-  if ((digitalRead(BIND_BUTTON_PIN) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND)) {
+  if ((digitalRead(pin_button_bind) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND)) {
     bindMode = true;
     radioPipeID = CABELL_BIND_RADIO_ADDR;
-    digitalWrite(LED_PIN, HIGH);      // Turn on LED to indicate bind mode
+    digitalWrite(pin_LED, HIGH);      // Turn on LED to indicate bind mode
     radioNormalRxPipeID = 0x01<<43;   // This is a number bigger than the max possible pipe ID, which only uses 40 bits.  This makes sure the bind routine writes to EEPROM
   }
   else
@@ -118,15 +118,15 @@ void setupReciever() {
   getChannelSequence (radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
 
   //Need to set all CSN pins high before BEGIN so that only one device listens on SPI during the first initialization
-  pinMode(RADIO1_CSN_PIN,OUTPUT);    
-  pinMode(RADIO2_CSN_PIN,OUTPUT);   
-  digitalWrite(RADIO1_CSN_PIN,HIGH);
-  digitalWrite(RADIO2_CSN_PIN,HIGH);
+  pinMode(pin_radio1_CSN, OUTPUT);    
+  pinMode(pin_radio2_CSN, OUTPUT);   
+  digitalWrite(pin_radio1_CSN, HIGH);
+  digitalWrite(pin_radio2_CSN, HIGH);
   
-  pinMode(RADIO1_CE_PIN,OUTPUT);    
-  pinMode(RADIO2_CE_PIN,OUTPUT);   
-  digitalWrite(RADIO1_CE_PIN,HIGH);
-  digitalWrite(RADIO2_CE_PIN,HIGH);
+  pinMode(pin_radio1_CE, OUTPUT);    
+  pinMode(pin_radio2_CE, OUTPUT);   
+  digitalWrite(pin_radio1_CE, HIGH);
+  digitalWrite(pin_radio2_CE, HIGH);
   
   radio1.begin();
   radio2.begin();
@@ -138,7 +138,7 @@ void setupReciever() {
     secondaryReciever = &radio2;
   } else {
     secondaryReciever = &radio1;
-    digitalWrite(RADIO2_CSN_PIN,HIGH);   // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
+    digitalWrite(pin_radio2_CSN, HIGH);   // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
   }  
   if (radio1.isChipConnected()) {
     primaryReciever = &radio1;
@@ -389,12 +389,12 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
 //--------------------------------------------------------------------------------------------------------------------------
 void attachServoPins() {
   
-  servo1.attach(Servo_PIN2);
-  servo2.attach(Servo_PIN3);
-  servo3.attach(Servo_PIN4);
-  servo4.attach(Servo_PIN7);
-  servo5.attach(Servo_PinA4);
-  servo6.attach(Servo_PinA5);
+  servo1.attach(pin_servo1);
+  servo2.attach(pin_servo2);
+  servo3.attach(pin_servo3);
+  servo4.attach(pin_servo4);
+  servo5.attach(pin_servo5);
+  servo6.attach(pin_servo6);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -430,13 +430,11 @@ void outputPWM() {
  * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
 */
  
-//PWM frequency MotorA_PIN5 or MotorA_PIN6:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default)
-//MotorA (MotorA_PIN5 or MotorA_PIN6, prescaler 64)  
-  setPWMPrescaler(MotorA_PIN5, 64);
+//MotorA PWM frequency pin_pwm1 or pin_pwm2:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default) 
+  setPWMPrescaler(pin_pwm1, 64);
   
-//PWM frequency MotorB_PIN9 or MotorB_PIN10: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
-//MotorB (MotorB_PIN9 or MotorB_PIN10, prescaler 8)  
-  setPWMPrescaler(MotorB_PIN9, 8);
+//MotorB PWM frequency pin_pwm3 or pin_pwm4: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz  
+  setPWMPrescaler(pin_pwm3, 8);
   
 //---------------------------------------------------------------------------------------------
      
@@ -451,19 +449,19 @@ void outputPWM() {
   if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
     MotorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(MotorA_PIN5, MotorA); 
-    digitalWrite(MotorA_PIN6, LOW);
+    analogWrite(pin_pwm1, MotorA); 
+    digitalWrite(pin_pwm2, LOW);
   }
   else if (steering > CHANNEL_MID_VALUE + dead_zone)
   { 
     MotorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
-    analogWrite(MotorA_PIN6, MotorA); 
-    digitalWrite(MotorA_PIN5, LOW);
+    analogWrite(pin_pwm2, MotorA); 
+    digitalWrite(pin_pwm1, LOW);
   }
   else
   {
-    analogWrite(MotorA_PIN5, motA_brake);
-    analogWrite(MotorA_PIN6, motA_brake);
+    analogWrite(pin_pwm1, motA_brake);
+    analogWrite(pin_pwm2, motA_brake);
   }
   
 //MotorB/3906Hz -------------------------------------------------------------------------------
@@ -471,19 +469,19 @@ void outputPWM() {
   if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
     MotorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(MotorB_PIN9, MotorB); 
-    digitalWrite(MotorB_PIN10, LOW);
+    analogWrite(pin_pwm3, MotorB); 
+    digitalWrite(pin_pwm4, LOW);
   }
   else if (throttle > CHANNEL_MID_VALUE + dead_zone)
   {
     MotorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
-    analogWrite(MotorB_PIN10, MotorB); 
-    digitalWrite(MotorB_PIN9, LOW);
+    analogWrite(pin_pwm4, MotorB); 
+    digitalWrite(pin_pwm3, LOW);
   }
   else
   {
-    analogWrite(MotorB_PIN9,  motB_brake);
-    analogWrite(MotorB_PIN10, motB_brake);
+    analogWrite(pin_pwm3,  motB_brake);
+    analogWrite(pin_pwm4, motB_brake);
   }
 }
 
@@ -513,7 +511,7 @@ void unbindReciever() {
   outputFailSafeValues(true);
   bool ledState = false;
   while (true) {                                           // Flash LED forever indicating unbound
-    digitalWrite(LED_PIN, ledState);
+    digitalWrite(pin_LED, ledState);
     ledState =  !ledState;
     delay(250);                                            // Fast LED flash
   }  
@@ -532,7 +530,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     EEPROM.put(currentModelEEPROMAddress,modelNum);
     radioNormalRxPipeID = newRadioPipeID;
     EEPROM.put(radioPipeEEPROMAddress,radioNormalRxPipeID);
-    digitalWrite(LED_PIN, LOW);                              // Turn off LED to indicate successful bind
+    digitalWrite(pin_LED, LOW);                              // Turn off LED to indicate successful bind
     if (RxMode == CABELL_RxTxPacket_t::RxMode_t::bindFalesafeNoPulse) {
       EEPROM.put(softRebindFlagEEPROMAddress,(uint8_t)BOUND_WITH_FAILSAFE_NO_PULSES);
     } else {
@@ -542,7 +540,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     outputFailSafeValues(true);
     bool ledState = false;
     while (true) {                                           // Flash LED forever indicating bound
-      digitalWrite(LED_PIN, ledState);
+      digitalWrite(pin_LED, ledState);
       ledState =  !ledState;
       delay(2000);                                            // Slow flash
     }
@@ -673,7 +671,7 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
                                               
     case CABELL_RxTxPacket_t::RxMode_t::setFailSafe :
     if (modelNum == currentModel) {
-      digitalWrite(LED_PIN, HIGH);
+      digitalWrite(pin_LED, HIGH);
       if (!failSafeValuesHaveBeenSet) {      // only set the values first time through
         failSafeValuesHaveBeenSet = true;
         setFailSafeValues(tempHoldValues);
@@ -687,7 +685,7 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     case CABELL_RxTxPacket_t::RxMode_t::normalWithTelemetry : 
     case CABELL_RxTxPacket_t::RxMode_t::normal :
     if (modelNum == currentModel) {
-      digitalWrite(LED_PIN, LOW);
+      digitalWrite(pin_LED, LOW);
       failSafeValuesHaveBeenSet = false;             // Reset when not in setFailSafe mode so next time failsafe is to be set it will take
       if (!throttleArmed && (tempHoldValues[THROTTLE] <= THROTTLE_DISARM_VALUE + 10) && (tempHoldValues[THROTTLE] >= THROTTLE_DISARM_VALUE - 10)) {
         throttleArmed = true;
@@ -762,12 +760,12 @@ unsigned long sendTelemetryPacket() {
 //--------------------------------------------------------------------------------------------------------------------------
 // based on ADC Interrupt example from https://www.gammon.com.au/adc
 void ADC_Processing() {             //Reads ADC value then configures next conversion. Alternates between pins A6 and A7
-  static byte adcPin = TELEMETRY_ANALOG_INPUT_1;
+  static byte adcPin = pin_rxBatt_A1;
 
   if (bit_is_clear(ADCSRA, ADSC)) {
-    analogValue[(adcPin==TELEMETRY_ANALOG_INPUT_1) ? 0 : 1] = ADC;  
+    analogValue[(adcPin == pin_rxBatt_A1) ? 0 : 1] = ADC;  
   
-    adcPin = (adcPin==TELEMETRY_ANALOG_INPUT_2) ? TELEMETRY_ANALOG_INPUT_1 : TELEMETRY_ANALOG_INPUT_2;   // Choose next pin to read
+    adcPin = (adcPin == pin_rxBatt_A2) ? pin_rxBatt_A1 : pin_rxBatt_A2;   // Choose next pin to read
   
     ADCSRA =  bit (ADEN);                      // turn ADC on
     ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2);  // Pre-scaler of 128
@@ -783,7 +781,7 @@ bool failSafeButtonHeld() {
   
   static unsigned long heldTriggerTime = 0;
   
-  if(!bindMode && !digitalRead(BIND_BUTTON_PIN)) {  // invert because pin is pulled up so low means pressed
+  if(!bindMode && !digitalRead(pin_button_bind)) {  // invert because pin is pulled up so low means pressed
     if (heldTriggerTime == 0) {
       heldTriggerTime = micros() + 1000000ul;   // Held state achieved after button is pressed for 1 second
     }
