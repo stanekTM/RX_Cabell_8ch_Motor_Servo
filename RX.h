@@ -29,9 +29,18 @@
 
 #include "My_RF24.h"
 
-// Brake setting, adjustment (0-255), no brake 0, max brake 255
-#define motA_brake 255 //steering[AILERONS]/MotorA/976Hz
-#define motB_brake 0   //throttle[ELEVATOR]/MotorB/3906Hz
+
+//MotorA PWM frequency pin D5 or pin D6
+//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
+#define pwm_motorA 64
+
+//MotorB PWM frequency pin D9 or pin D10
+//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
+#define pwm_motorB 8
+
+//Brake setting, adjustment (0-255), no brake 0, max brake 255
+#define brake_motorA 255 //steering[AILERONS]
+#define brake_motorB 0   //throttle[ELEVATOR]
 
 //setting the dead zone of poor quality joysticks TX for the motor controller
 #define dead_zone  10
