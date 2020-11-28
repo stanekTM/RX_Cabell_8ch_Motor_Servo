@@ -430,58 +430,59 @@ void outputPWM() {
  * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
 */
  
-//MotorA PWM frequency pin_pwm1 or pin_pwm2:  1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default) 
-  setPWMPrescaler(pin_pwm1, 64);
+//MotorA PWM frequency pin D5 or pin D6
+//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
+  setPWMPrescaler(pin_pwm1_motorA, pwm_motorA);
   
-//MotorB PWM frequency pin_pwm3 or pin_pwm4: 1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz  
-  setPWMPrescaler(pin_pwm3, 8);
+//MotorB PWM frequency pin D9 or pin D10
+//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
+  setPWMPrescaler(pin_pwm3_motorB, pwm_motorB);
   
 //---------------------------------------------------------------------------------------------
      
-  int steering = channelValues[AILERONS];  //kridelka
-  int throttle = channelValues[ELEVATOR];  //vyskovka
+int steering = channelValues[AILERONS];  //kridelka
+int throttle = channelValues[ELEVATOR];  //vyskovka
 
-  int MotorA = 0;
-  int MotorB = 0;
+int motA_value = 0, motB_value = 0;
 
-//MotorA/976Hz --------------------------------------------------------------------------------  
+//MotorA --------------------------------------------------------------------------------------  
 
   if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
-    MotorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(pin_pwm1, MotorA); 
-    digitalWrite(pin_pwm2, LOW);
+    motA_value = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    analogWrite(pin_pwm1_motorA, motA_value); 
+    digitalWrite(pin_pwm2_motorA, LOW);
   }
   else if (steering > CHANNEL_MID_VALUE + dead_zone)
   { 
-    MotorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
-    analogWrite(pin_pwm2, MotorA); 
-    digitalWrite(pin_pwm1, LOW);
+    motA_value = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
+    analogWrite(pin_pwm2_motorA, motA_value); 
+    digitalWrite(pin_pwm1_motorA, LOW);
   }
   else
   {
-    analogWrite(pin_pwm1, motA_brake);
-    analogWrite(pin_pwm2, motA_brake);
+    analogWrite(pin_pwm1_motorA, brake_motorA);
+    analogWrite(pin_pwm2_motorA, brake_motorA);
   }
   
-//MotorB/3906Hz -------------------------------------------------------------------------------
+//MotorB --------------------------------------------------------------------------------------
 
   if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
-    MotorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(pin_pwm3, MotorB); 
-    digitalWrite(pin_pwm4, LOW);
+    motB_value = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    analogWrite(pin_pwm3_motorB, motB_value); 
+    digitalWrite(pin_pwm4_motorB, LOW);
   }
   else if (throttle > CHANNEL_MID_VALUE + dead_zone)
   {
-    MotorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
-    analogWrite(pin_pwm4, MotorB); 
-    digitalWrite(pin_pwm3, LOW);
+    motB_value = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
+    analogWrite(pin_pwm4_motorB, motB_value); 
+    digitalWrite(pin_pwm3_motorB, LOW);
   }
   else
   {
-    analogWrite(pin_pwm3,  motB_brake);
-    analogWrite(pin_pwm4, motB_brake);
+    analogWrite(pin_pwm3_motorB, brake_motorB);
+    analogWrite(pin_pwm4_motorB, brake_motorB);
   }
 }
 
