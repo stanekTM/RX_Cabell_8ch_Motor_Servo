@@ -46,10 +46,10 @@
 #define pin_servo5             A4
 #define pin_servo6             A5
      
-#define pin_pwm1               5  //MotorA/976Hz 
-#define pin_pwm2               6  //MotorA/976Hz     
-#define pin_pwm3               9  //MotorB/3906Hz
-#define pin_pwm4               10 //MotorB/3906Hz
+#define pin_pwm1_motorA        5
+#define pin_pwm2_motorA        6
+#define pin_pwm3_motorB        9
+#define pin_pwm4_motorB        10
 
 #define pin_button_bind        A3
 #define pin_LED                2
