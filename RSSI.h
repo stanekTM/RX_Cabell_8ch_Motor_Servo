@@ -60,7 +60,5 @@ class RSSI {
       int8_t sequentialMissTrack = 0;
 };
 
-
 #endif
-
-
+ 

@@ -32,11 +32,11 @@
 
 //MotorA PWM frequency pin D5 or pin D6
 //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
-#define pwm_motorA 64
+#define pwm_motorA 256
 
 //MotorB PWM frequency pin D9 or pin D10
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
-#define pwm_motorB 8
+#define pwm_motorB 256
 
 //Brake setting, adjustment (0-255), no brake 0, max brake 255
 #define brake_motorA 255 //steering[AILERONS]
@@ -117,7 +117,7 @@ typedef struct {
    uint8_t  modelNum;
    uint8_t  checkSum_LSB;   // Checksum least significant byte
    uint8_t  checkSum_MSB;   // Checksum most significant byte
-   uint8_t  payloadValue [CABELL_PAYLOAD_BYTES] = {0}; //12 bits per channel value, unsigned
+   uint8_t  payloadValue[CABELL_PAYLOAD_BYTES] = {0}; //12 bits per channel value, unsigned
 } CABELL_RxTxPacket_t;   
 
 void setupReciever();
@@ -147,3 +147,4 @@ void initializeRadio(My_RF24* radio);
 void swapRecievers();
 
 #endif
+ 

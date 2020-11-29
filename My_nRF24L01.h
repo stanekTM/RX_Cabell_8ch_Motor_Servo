@@ -3,7 +3,6 @@
 // operations specific to this application
 //
 
-
 /*
     Copyright (c) 2007 Stefan Engelke <mbox@stefanengelke.de>
 	Portions Copyright (C) 2011 Greg Copeland
@@ -131,3 +130,4 @@
 #define RF_DR_HIGH  3
 #define RF_PWR_LOW  1
 #define RF_PWR_HIGH 2
+ 

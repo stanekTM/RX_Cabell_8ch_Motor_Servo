@@ -54,7 +54,7 @@ uint64_t radioNormalRxPipeID;
 const int currentModelEEPROMAddress = 0;
 const int radioPipeEEPROMAddress = currentModelEEPROMAddress + sizeof(currentModel);
 const int softRebindFlagEEPROMAddress = radioPipeEEPROMAddress + sizeof(radioNormalRxPipeID);
-const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t);       // uint8_t is the sifr of the rebind flag
+const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t); // uint8_t is the sifr of the rebind flag
 
 uint16_t failSafeChannelValues [CABELL_NUM_CHANNELS];
 
@@ -67,8 +67,8 @@ uint32_t packetInterval = DEFAULT_PACKET_INTERVAL;
 
 uint8_t radioChannel[CABELL_RADIO_CHANNELS];
 
-volatile uint8_t currentOutputMode = 255;    // initialize to an unused mode
-volatile uint8_t nextOutputMode = 255;       // initialize to an unused mode
+volatile uint8_t currentOutputMode = 255; // initialize to an unused mode
+volatile uint8_t nextOutputMode = 255;    // initialize to an unused mode
 
 volatile bool packetReady = false;
 
@@ -107,7 +107,7 @@ void setupReciever() {
     bindMode = true;
     radioPipeID = CABELL_BIND_RADIO_ADDR;
     digitalWrite(pin_LED, HIGH);      // Turn on LED to indicate bind mode
-    radioNormalRxPipeID = 0x01<<43;   // This is a number bigger than the max possible pipe ID, which only uses 40 bits.  This makes sure the bind routine writes to EEPROM
+    radioNormalRxPipeID = 0x01<<43;   // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
   }
   else
   {
@@ -117,7 +117,7 @@ void setupReciever() {
 
   getChannelSequence (radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
 
-  //Need to set all CSN pins high before BEGIN so that only one device listens on SPI during the first initialization
+  // Need to set all CSN pins high before BEGIN so that only one device listens on SPI during the first initialization
   pinMode(pin_radio1_CSN, OUTPUT);    
   pinMode(pin_radio2_CSN, OUTPUT);   
   digitalWrite(pin_radio1_CSN, HIGH);
@@ -138,7 +138,7 @@ void setupReciever() {
     secondaryReciever = &radio2;
   } else {
     secondaryReciever = &radio1;
-    digitalWrite(pin_radio2_CSN, HIGH);   // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
+    digitalWrite(pin_radio2_CSN, HIGH); // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
   }  
   if (radio1.isChipConnected()) {
     primaryReciever = &radio1;
@@ -158,13 +158,13 @@ void setupReciever() {
   secondaryReciever->flush_rx();
   packetReady = false;
 
-  outputFailSafeValues(false);   // initialize default values for output channels
+  outputFailSafeValues(false); // initialize default values for output channels
 
   setNextRadioChannel(true);
  
  //setup pin change interrupt
-  cli();    // switch interrupts off while messing with their settings  
-  PCICR =0x02;          // Enable PCINT1 interrupt
+  cli();                       // switch interrupts off while messing with their settings  
+  PCICR =0x02;                 // Enable PCINT1 interrupt
   PCMSK1 = RADIO_IRQ_PIN_MASK;
   sei();
 }
@@ -180,11 +180,11 @@ void setupReciever() {
 void outputChannels() {
     if (!bindMode) {
       if (failSafeNoPulses && failSafeMode) {
-        nextOutputMode = 255;   // set to unused output mode
+        nextOutputMode = 255; // set to unused output mode
       }
       
       if (!throttleArmed) {
-        channelValues[THROTTLE] = THROTTLE_DISARM_VALUE;     // Safety precaution.  Min throttle if not armed
+        channelValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Safety precaution. Min throttle if not armed
       }
       
       bool firstPacketOnMode = false;
@@ -239,23 +239,23 @@ void setNextRadioChannel(bool missedPacket) {
   }
   
   //secondaryReciever->stopListening();
-  secondaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForTX);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  secondaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
   secondaryReciever->flush_rx();
   secondaryReciever->setChannel(currentChannel);
   //secondaryReciever->startListening();
-  secondaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_Masked);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
-  secondaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );                 // This normally happens in StartListening
+  secondaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_Masked);     // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  secondaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) ); // This normally happens in StartListening
 
   primaryReciever->setChannel(currentChannel);
   //primaryReciever->startListening();
-  primaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_Masked);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
-  primaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );                 // This normally happens in StartListening
+  primaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_Masked);     // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  primaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) ); // This normally happens in StartListening
   if (performSwap) {
     swapRecievers();
    }
 
   packetReady = false;
-  primaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_On);  // Turn on RX interrupt
+  primaryReciever->write_register(NRF_CONFIG,radioConfigRegisterForRX_IRQ_On); // Turn on RX interrupt
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ bool getPacket() {
         sequentialHitCount = 0;
         sequentialMissCount++;
         rssi.miss();
-        setNextRadioChannel(true);       //true indicates that packet was missed         
+        setNextRadioChannel(true); // true indicates that packet was missed         
         if ((long)(nextAutomaticChannelSwitch - lastRadioPacketeRecievedTime) > ((long)RESYNC_TIME_OUT)) {  // if a long time passed, increase timeout duration to re-sync with the TX
           telemetryEnabled = false;
           hoppingLockedIn = false;
@@ -299,26 +299,26 @@ bool getPacket() {
         } else {
           nextAutomaticChannelSwitch += packetInterval;
         }
-        checkFailsafeDisarmTimeout(lastPacketTime,inititalGoodPacketRecieved);   // at each timeout, check for failsafe and disarm.  When disarmed TX must send min throttle to re-arm.
+        checkFailsafeDisarmTimeout(lastPacketTime,inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm. When disarmed TX must send min throttle to re-arm.
       }
     }
   } else {
     if (secondaryRecieverUsed) {
       // If the secondary receiver is used, then the packet was actually received some time ago, so don't uses micros(). 
       // Do this to prevent the timing from drifting if there are multiple packets in a row only received by the secondary receiver.
-      lastRadioPacketeRecievedTime = nextAutomaticChannelSwitch - INITIAL_PACKET_TIMEOUT_ADD; //Can't log the actual received time when primary missed packet, so assume it came in when expected
+      lastRadioPacketeRecievedTime = nextAutomaticChannelSwitch - INITIAL_PACKET_TIMEOUT_ADD; // Can't log the actual received time when primary missed packet, so assume it came in when expected
       secondaryRecieverUsed = false;
     } else {
-      lastRadioPacketeRecievedTime = micros();   //Use this time to calculate the next expected packet so when we miss packets we can change channels
+      lastRadioPacketeRecievedTime = micros(); // Use this time to calculate the next expected packet so when we miss packets we can change channels
     }
     if (!powerOnLock) {
-      // save this now while the value is latched.  To save loop time only do this before initial lock as the initial lock process is the only thing that needs this
+    // save this now while the value is latched. To save loop time only do this before initial lock as the initial lock process is the only thing that needs this
 	  strongSignal = primaryReciever->testRPD();  
 	}
     goodPacket_rx = readAndProcessPacket();
-    nextAutomaticChannelSwitch = lastRadioPacketeRecievedTime + packetInterval + INITIAL_PACKET_TIMEOUT_ADD;  // must ne set after readAndProcessPacket because packetInterval may get adjusted
+    nextAutomaticChannelSwitch = lastRadioPacketeRecievedTime + packetInterval + INITIAL_PACKET_TIMEOUT_ADD; // must ne set after readAndProcessPacket because packetInterval may get adjusted
 	if (!powerOnLock && !strongSignal) {
-	   // During the initial power on lock process only consider the packet good if the signal was strong (better than -64 DBm) 
+	     // During the initial power on lock process only consider the packet good if the signal was strong (better than -64 DBm) 
        goodPacket_rx = false;
     }
     if (goodPacket_rx) {
@@ -351,8 +351,8 @@ bool getPacket() {
   
   if (!hoppingLockedIn) {
 	if (!powerOnLock) {    
-      goodPacket_rx = false;           // Always consider a bad packet until initial lock is obtained so no control signals are output.
-	  if (sequentialHitCount > (CABELL_RADIO_CHANNELS * 5) ) {     // Ensure strong signal on all channels
+      goodPacket_rx = false; // Always consider a bad packet until initial lock is obtained so no control signals are output.
+	  if (sequentialHitCount > (CABELL_RADIO_CHANNELS * 5) ) {   // Ensure strong signal on all channels
 		  powerOnLock = true;
 		  hoppingLockedIn = true;
 	  }
@@ -379,7 +379,7 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
     outputFailSafeValues(true);
   }
   
-  if (((long)(holdMicros - lastPacketTime) >  ((long)RX_DISARM_TIMEOUT)) || (!inititalGoodPacketRecieved && ((long)(holdMicros - lastPacketTime)  > ((long)RX_DISARM_TIMEOUT)) ) ) { 
+  if (((long)(holdMicros - lastPacketTime) >  ((long)RX_DISARM_TIMEOUT)) || (!inititalGoodPacketRecieved && ((long)(holdMicros - lastPacketTime)  > ((long)RX_DISARM_TIMEOUT)))) { 
     if (throttleArmed) {
       throttleArmed = false;
     }
@@ -400,8 +400,8 @@ void attachServoPins() {
 //--------------------------------------------------------------------------------------------------------------------------
 void outputServo() {
   
-  servo1.write(channelValues[THROTTLE]);  //plyn
-  servo2.write(channelValues[RUDDER]);    //smerovka
+  servo1.write(channelValues[THROTTLE]); //plyn
+  servo2.write(channelValues[RUDDER]);   //smerovka
   servo3.write(channelValues[AUX1]);
   servo4.write(channelValues[AUX2]);
   servo5.write(channelValues[AUX3]);
@@ -440,8 +440,8 @@ void outputPWM() {
   
 //---------------------------------------------------------------------------------------------
      
-int steering = channelValues[AILERONS];  //kridelka
-int throttle = channelValues[ELEVATOR];  //vyskovka
+int steering = channelValues[AILERONS]; //kridelka
+int throttle = channelValues[ELEVATOR]; //vyskovka
 
 int motA_value = 0, motB_value = 0;
 
@@ -511,10 +511,10 @@ void unbindReciever() {
   }
   outputFailSafeValues(true);
   bool ledState = false;
-  while (true) {                                           // Flash LED forever indicating unbound
+  while (true) {                     // Flash LED forever indicating unbound
     digitalWrite(pin_LED, ledState);
     ledState =  !ledState;
-    delay(250);                                            // Fast LED flash
+    delay(250);                      // Fast LED flash
   }  
 }
 
@@ -540,10 +540,10 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     setFailSafeDefaultValues();
     outputFailSafeValues(true);
     bool ledState = false;
-    while (true) {                                           // Flash LED forever indicating bound
+    while (true) {                     // Flash LED forever indicating bound
       digitalWrite(pin_LED, ledState);
       ledState =  !ledState;
-      delay(2000);                                            // Slow flash
+      delay(2000);                     // Slow flash
     }
   }  
 }
@@ -554,7 +554,7 @@ void setFailSafeDefaultValues() {
   for (int x = 0; x < CABELL_NUM_CHANNELS; x++) {
     defaultFailSafeValues[x] = CHANNEL_MID_VALUE;
   }
-  defaultFailSafeValues[THROTTLE] = THROTTLE_DISARM_VALUE;           // Throttle should always be the min value when failsafe}
+  defaultFailSafeValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Throttle should always be the min value when failsafe}
   setFailSafeValues(defaultFailSafeValues);  
 }
 
@@ -566,7 +566,7 @@ void loadFailSafeDefaultValues() {
       failSafeChannelValues[x] = CHANNEL_MID_VALUE;
     }
   }
-  failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE;     // Throttle should always be the min value when failsafe
+  failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Throttle should always be the min value when failsafe
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -574,7 +574,7 @@ void setFailSafeValues(uint16_t newFailsafeValues[]) {
     for (int x = 0; x < CABELL_NUM_CHANNELS; x++) {
       failSafeChannelValues[x] = newFailsafeValues[x];
     }
-    failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE;           // Throttle should always be the min value when failsafe}
+    failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE;              // Throttle should always be the min value when failsafe}
     EEPROM.put(failSafeChannelValuesEEPROMAddress,failSafeChannelValues);  
 }
 
@@ -605,8 +605,8 @@ bool readAndProcessPacket() {    //only call when a packet is available on the r
   if (tx_channel != 0 ) {
     currentChannel = tx_channel;
   }
-  setNextRadioChannel(false);                   // Also sends telemetry if in telemetry mode.  Doing this as soon as possible to keep timing as tight as possible
-                                                // False indicates that packet was not missed
+  setNextRadioChannel(false); // Also sends telemetry if in telemetry mode.  Doing this as soon as possible to keep timing as tight as possible
+                              // False indicates that packet was not missed
 
   // Remove 8th bit from RxMode because this is a toggle bit that is not included in the checksum
   // This toggle with each xmit so consecutive payloads are not identical.  This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
@@ -617,15 +617,15 @@ bool readAndProcessPacket() {    //only call when a packet is available on the r
   telemetryEnabled = (RxPacket.RxMode==CABELL_RxTxPacket_t::RxMode_t::normalWithTelemetry)?true:false;
                                                 
   bool packet_rx = false;
-  uint16_t tempHoldValues [CABELL_NUM_CHANNELS]; 
-  uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION),0,CABELL_NUM_CHANNELS-CABELL_MIN_CHANNELS);  // Must be at least 4 channels, so cap at 12
-  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction%2))/ 2)) * 3);      // reduce 3 bytes per 2 channels, but not last channel if it is odd
+  uint16_t tempHoldValues[CABELL_NUM_CHANNELS]; 
+  uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS-CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
+  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction%2))/ 2)) * 3); // reduce 3 bytes per 2 channels, but not last channel if it is odd
   uint8_t maxPayloadValueIndex = sizeof(RxPacket.payloadValue) - (sizeof(RxPacket) - packetSize);
   uint8_t channelsRecieved = CABELL_NUM_CHANNELS - channelReduction; 
   
   if (telemetryEnabled) {  // putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
     setTelemetryPowerMode(RxPacket.option);
-    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((int16_t)channelsRecieved - (int16_t)6),(int16_t)0 ,(int16_t)10 ) * (int16_t)100);  // increase packet period by 100 us for each channel over 6
+    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((int16_t)channelsRecieved - (int16_t)6),(int16_t)0 ,(int16_t)10 ) * (int16_t)100); // increase packet period by 100 us for each channel over 6
   } else {
     packetInterval = DEFAULT_PACKET_INTERVAL;
   }
@@ -636,13 +636,13 @@ bool readAndProcessPacket() {    //only call when a packet is available on the r
     packet_rx = decodeChannelValues(RxPacket, channelsRecieved, tempHoldValues);
 
   if (packet_rx) 
-    packet_rx = processRxMode (RxPacket.RxMode, RxPacket.modelNum, tempHoldValues);    // If bind or unbind happens, this will never return.
+    packet_rx = processRxMode (RxPacket.RxMode, RxPacket.modelNum, tempHoldValues); // If bind or unbind happens, this will never return.
 
   // if packet is good, copy the channel values
   if (packet_rx) {
     nextOutputMode = (RxPacket.option & CABELL_OPTION_MASK_RECIEVER_OUTPUT_MODE) >> CABELL_OPTION_SHIFT_RECIEVER_OUTPUT_MODE;
     for ( int b = 0 ; b < CABELL_NUM_CHANNELS ; b ++ ) { 
-      channelValues[b] =  (b < channelsRecieved) ? tempHoldValues[b] : CHANNEL_MID_VALUE;   // use the mid value for channels not received.
+      channelValues[b] =  (b < channelsRecieved) ? tempHoldValues[b] : CHANNEL_MID_VALUE; // use the mid value for channels not received.
     }
   } 
   return packet_rx;
@@ -739,11 +739,11 @@ unsigned long sendTelemetryPacket() {
   uint8_t sendPacket[4] = {CABELL_RxTxPacket_t::RxMode_t::telemetryResponse};
  
   packetCounter++;
-  sendPacket[0] &= 0x7F;                 // clear 8th bit
-  sendPacket[0] |= packetCounter<<7;     // This causes the 8th bit of the first byte to toggle with each xmit so consecutive payloads are not identical.  This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
+  sendPacket[0] &= 0x7F;             // clear 8th bit
+  sendPacket[0] |= packetCounter<<7; // This causes the 8th bit of the first byte to toggle with each xmit so consecutive payloads are not identical. This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
   sendPacket[1] = rssi.getRSSI();   
-  sendPacket[2] = analogValue[0]/4;      // Send a 8 bit value (0 to 255) of the analog input.  Can be used for LiPo voltage or other analog input for telemetry
-  sendPacket[3] = analogValue[1]/4;      // Send a 8 bit value (0 to 255) of the analog input.  Can be used for LiPo voltage or other analog input for telemetry
+  sendPacket[2] = analogValue[0]/4;  // Send a 8 bit value (0 to 255) of the analog input. Can be used for LiPo voltage or other analog input for telemetry
+  sendPacket[3] = analogValue[1]/4;  // Send a 8 bit value (0 to 255) of the analog input. Can be used for LiPo voltage or other analog input for telemetry
 
   uint8_t packetSize =  sizeof(sendPacket);
   primaryReciever->startFastWrite( &sendPacket[0], packetSize, 0); 
@@ -760,25 +760,25 @@ unsigned long sendTelemetryPacket() {
 
 //--------------------------------------------------------------------------------------------------------------------------
 // based on ADC Interrupt example from https://www.gammon.com.au/adc
-void ADC_Processing() {             //Reads ADC value then configures next conversion. Alternates between pins A6 and A7
+void ADC_Processing() {               // Reads ADC value then configures next conversion. Alternates between pins A6 and A7
   static byte adcPin = pin_rxBatt_A1;
 
   if (bit_is_clear(ADCSRA, ADSC)) {
     analogValue[(adcPin == pin_rxBatt_A1) ? 0 : 1] = ADC;  
   
-    adcPin = (adcPin == pin_rxBatt_A2) ? pin_rxBatt_A1 : pin_rxBatt_A2;   // Choose next pin to read
+    adcPin = (adcPin == pin_rxBatt_A2) ? pin_rxBatt_A1 : pin_rxBatt_A2; // Choose next pin to read
   
-    ADCSRA =  bit (ADEN);                      // turn ADC on
-    ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2);  // Pre-scaler of 128
-    ADMUX  =  bit (REFS0) | (adcPin & 0x07);    // AVcc and select input port
+    ADCSRA =  bit (ADEN);                               // turn ADC on
+    ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2); // Pre-scaler of 128
+    ADMUX  =  bit (REFS0) | (adcPin & 0x07);            // AVcc and select input port
   
-    ADCSRA |= bit (ADSC);   //Start next conversion 
+    ADCSRA |= bit (ADSC); // Start next conversion 
   }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
 bool failSafeButtonHeld() {
-  // use the bind button because bind mode is only checked at startup.  Once RX is started and not in bind mode it is the set failsafe button
+  // use the bind button because bind mode is only checked at startup. Once RX is started and not in bind mode it is the set failsafe button
   
   static unsigned long heldTriggerTime = 0;
   
@@ -817,25 +817,25 @@ void setTelemetryPowerMode(uint8_t option) {
 
 //--------------------------------------------------------------------------------------------------------------------------
 void initializeRadio(My_RF24* radioPointer) {
-  radioPointer->maskIRQ(true,true,true);         // Mask all interrupts.  RX interrupt (the only one we use) gets turned on after channel change
+  radioPointer->maskIRQ(true, true, true);     // Mask all interrupts. RX interrupt (the only one we use) gets turned on after channel change
   radioPointer->enableDynamicPayloads();
   radioPointer->setDataRate(RF24_250KBPS );
-  radioPointer->setChannel(0);                    // start out on a channel we don't use so we don't start receiving packets yet.  It will get changed when the looping starts
+  radioPointer->setChannel(0);                 // start out on a channel we don't use so we don't start receiving packets yet. It will get changed when the looping starts
   radioPointer->setAutoAck(0);
-  radioPointer->openWritingPipe(~radioPipeID);   // Invert bits for writing pipe so that telemetry packets transmit with a different pipe ID.
-  radioPointer->openReadingPipe(1,radioPipeID);
+  radioPointer->openWritingPipe(~radioPipeID); // Invert bits for writing pipe so that telemetry packets transmit with a different pipe ID.
+  radioPointer->openReadingPipe(1, radioPipeID);
   radioPointer->startListening();
-  radioPointer->csDelay = 0;         //Can be reduced to 0 because we use interrupts and timing instead of polling through SPI
+  radioPointer->csDelay = 0;         // Can be reduced to 0 because we use interrupts and timing instead of polling through SPI
   radioPointer->txDelay = 0;         // Timing works out so a delay is not needed
 
-  //Stop listening to set up module for writing then take a copy of the config register so we can change to write mode more quickly when sending telemetry packets
+  // Stop listening to set up module for writing then take a copy of the config register so we can change to write mode more quickly when sending telemetry packets
   radioPointer->stopListening();
-  radioConfigRegisterForTX = radioPointer->read_register(NRF_CONFIG);  // This saves the config register state with all interrupts masked and in TX mode.  Used to switch quickly to TX mode for telemetry
+  radioConfigRegisterForTX = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in TX mode.  Used to switch quickly to TX mode for telemetry
   radioPointer->startListening();
-  radioConfigRegisterForRX_IRQ_Masked = radioPointer->read_register(NRF_CONFIG);  // This saves the config register state with all interrupts masked and in RX mode.  Used to switch secondary radio quickly to RX after channel change
-  radioPointer->maskIRQ(true,true,false);       
-  radioConfigRegisterForRX_IRQ_On = radioPointer->read_register(NRF_CONFIG);     // This saves the config register state with Read Interrupt ON and in RX mode.  Used to switch primary radio quickly to RX after channel change
-  radioPointer->maskIRQ(true,true,true);       
+  radioConfigRegisterForRX_IRQ_Masked = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in RX mode. Used to switch secondary radio quickly to RX after channel change
+  radioPointer->maskIRQ(true, true, false);       
+  radioConfigRegisterForRX_IRQ_On = radioPointer->read_register(NRF_CONFIG);     // This saves the config register state with Read Interrupt ON and in RX mode. Used to switch primary radio quickly to RX after channel change
+  radioPointer->maskIRQ(true, true, true);       
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -845,3 +845,4 @@ void swapRecievers() {
   primaryReciever = secondaryReciever;
   secondaryReciever = hold;
 }
+ 

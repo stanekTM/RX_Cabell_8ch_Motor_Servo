@@ -2,6 +2,7 @@
 // Copied from https://github.com/nRF24/RF24 library and changed to streamline
 // operations specific to this application
 //
+
 /*
  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
 
@@ -1634,5 +1635,5 @@ void SPIClass::setDataMode(uint8_t mode){}
 void SPIClass::setBitOrder(uint8_t bitOrder){}
 void SPIClass::setClockDivider(uint8_t rate){}
 
-
 #endif
+ 

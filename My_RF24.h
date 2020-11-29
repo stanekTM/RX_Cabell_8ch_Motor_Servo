@@ -2,6 +2,7 @@
 // Copied from https://github.com/nRF24/RF24 library and changed to streamline
 // operations specific to this application
 //
+
 /*
  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
 
@@ -2001,3 +2002,4 @@ private:
  */
 
 #endif // __RF24_H__
+ 
