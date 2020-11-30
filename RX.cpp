@@ -79,14 +79,6 @@ uint16_t initialTelemetrySkipPackets = 0;
 
 uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM;  // Initializes the channel sequence.
 
-//Create servo object
-ServoTimer2 servo1;
-ServoTimer2 servo2;
-ServoTimer2 servo3;
-ServoTimer2 servo4;
-ServoTimer2 servo5;
-ServoTimer2 servo6;
-
 RSSI rssi;
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -386,7 +378,9 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
   }
 }
 
-//--------------------------------------------------------------------------------------------------------------------------
+//Create servo object ------------------------------------------------------------------------------------------------------
+ServoTimer2 servo1, servo2, servo3, servo4, servo5, servo6;
+
 void attachServoPins() {
   
   servo1.attach(pin_servo1);
@@ -397,7 +391,6 @@ void attachServoPins() {
   servo6.attach(pin_servo6);
 }
 
-//--------------------------------------------------------------------------------------------------------------------------
 void outputServo() {
   
   servo1.write(channelValues[THROTTLE]); //plyn
@@ -443,20 +436,20 @@ void outputPWM() {
 int steering = channelValues[AILERONS]; //kridelka
 int throttle = channelValues[ELEVATOR]; //vyskovka
 
-int motA_value = 0, motB_value = 0;
+int value_motorA = 0, value_motorB = 0;
 
 //MotorA --------------------------------------------------------------------------------------  
 
   if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
-    motA_value = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(pin_pwm1_motorA, motA_value); 
+    value_motorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    analogWrite(pin_pwm1_motorA, value_motorA); 
     digitalWrite(pin_pwm2_motorA, LOW);
   }
   else if (steering > CHANNEL_MID_VALUE + dead_zone)
   { 
-    motA_value = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
-    analogWrite(pin_pwm2_motorA, motA_value); 
+    value_motorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
+    analogWrite(pin_pwm2_motorA, value_motorA); 
     digitalWrite(pin_pwm1_motorA, LOW);
   }
   else
@@ -469,14 +462,14 @@ int motA_value = 0, motB_value = 0;
 
   if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
-    motB_value = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
-    analogWrite(pin_pwm3_motorB, motB_value); 
+    value_motorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    analogWrite(pin_pwm3_motorB, value_motorB); 
     digitalWrite(pin_pwm4_motorB, LOW);
   }
   else if (throttle > CHANNEL_MID_VALUE + dead_zone)
   {
-    motB_value = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
-    analogWrite(pin_pwm4_motorB, motB_value); 
+    value_motorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
+    analogWrite(pin_pwm4_motorB, value_motorB); 
     digitalWrite(pin_pwm3_motorB, LOW);
   }
   else
