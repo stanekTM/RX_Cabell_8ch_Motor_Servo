@@ -4,7 +4,7 @@ SBUS and PPM output is removed.
 It is possible to use Arduino Nano or Pro Mini.
 The motor driver IC is based on MX1508, MX1208, MX1515, MX1616, TC1508S and others similar, using 4x pwm input control signals.
 The option to adjust the brake is included in the code.
-The firmware will be used in the planned micro receivers of rc cars, tanks, boats, robots, aircraft.
+The firmware will be used in the planned receivers of rc cars, tanks, boats, robots, aircraft.
 
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 ### Arduino pins:
