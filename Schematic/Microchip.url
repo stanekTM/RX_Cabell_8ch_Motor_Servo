@@ -2,4 +2,5 @@
 Prop3=19,11
 [InternetShortcut]
 IDList=
-URL=https://www.microchip.com/wwwproducts/en/ATmega328
+URL=https://www.microchip.com/wwwproducts/en/ATmega328P
+HotKey=0
