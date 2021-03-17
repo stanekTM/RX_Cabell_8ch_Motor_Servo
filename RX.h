@@ -43,7 +43,7 @@
 #define brake_motorB 0   //throttle[ELEVATOR]
 
 //setting the dead zone of poor quality joysticks TX for the motor controller
-#define dead_zone  10
+#define dead_zone  15
 
 #define AILERONS   0   //kridelka
 #define ELEVATOR   1   //vyskovka
