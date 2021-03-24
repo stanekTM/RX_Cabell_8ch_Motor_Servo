@@ -1,4 +1,6 @@
-﻿# About the version
+﻿# Note:
+Thank you to the author of the RC receiver project Dennis "soligen2010".
+
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the RC transmitter [OpenAVRc](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
 SBUS and PPM output is removed.
 It is possible to use Arduino Nano or Pro Mini.
@@ -33,8 +35,6 @@ nRF24L01:
 * D12 - MISO
 * D13 - SCK
 #
-Thank you to the author of the RC receiver project Dennis "soligen2010" [RC_RX_CABELL_V3_FHSS](https://github.com/soligen2010/RC_RX_CABELL_V3_FHSS).
-
 For other information, see below ... 
 
 # RC_RX_CABELL_V3_FHSS
