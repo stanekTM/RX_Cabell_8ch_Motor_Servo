@@ -1,4 +1,4 @@
-﻿# Note:
+﻿## Note:
 Thank you to the author of the RC receiver project Dennis "soligen2010".
 
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the RC transmitter [OpenAVRc](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
@@ -34,9 +34,11 @@ nRF24L01:
 * D11 - MOSI
 * D12 - MISO
 * D13 - SCK
-#
-For other information, see below ... 
 
+For other information, see below ...
+
+Jiri StanekTM
+#
 # RC_RX_CABELL_V3_FHSS
 ## Background
 RC_RX_CABELL_V3_FHSS is an open source receiver for remote controlled vehicles.  Developed by Dennis Cabell (KE8FZX)
