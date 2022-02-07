@@ -1,4 +1,3 @@
-
 //
 // -----------------------
 // PWM FREQUENCY PRESCALER
@@ -26,7 +25,7 @@
  *
  * Arduino Leonardo AtMega 32u4 specific
  *
- * Sets the Prescaler (Divisor) for a given PWM pin. The resulting frequency 
+ * Sets the Prescaler (Divisor) for a given PWM pin. The resulting frequency
  * is equal to the base frequency divided by the given divisor:
  *   - Base frequencies:
  *      o The base frequency for pins 3 and 11    is 64,500 Hz.
@@ -45,14 +44,14 @@
  * Note: Pins 3 and 11 operate on Timer 0 changes this pins will
  * affect the user of the main time millis() functions
  * 
- * Thanks to MacTester of the TonyMacX86 forums for his work in defining 
+ * Thanks to MacTester of the TonyMacX86 forums for his work in defining
  * the timings and testing this library
  */ 
 void setPWMPrescaler(uint8_t pin, uint16_t prescale)
-{ 
+{
   byte mode;
   
-  if(pin==3 || pin==5 || pin==9 || pin==10 || pin==11) { 
+  if(pin==3 || pin==5 || pin==9 || pin==10 || pin==11) {
     switch(prescale) {
       case    1: mode = 0b001; break;
       case    8: mode = 0b010; break;
@@ -136,7 +135,7 @@ void setPWMPrescaler(uint8_t pin, uint16_t prescale) {
     switch(prescale) {
       case    1: mode = 0b001; break;
       case    8: mode = 0b010; break;
-      case   64: mode = 0b011; break;
+      case   64: mode = 0b011; break; 
       case  256: mode = 0b100; break;
       case 1024: mode = 0b101; break;
       default: return;
@@ -146,15 +145,15 @@ void setPWMPrescaler(uint8_t pin, uint16_t prescale) {
     switch(prescale) {
       case    1: mode = 0b001; break;
       case    8: mode = 0b010; break;
-      case   32: mode = 0b011; break;
-      case   64: mode = 0b100; break;
+      case   32: mode = 0b011; break; 
+      case   64: mode = 0b100; break; 
       case  128: mode = 0b101; break;
       case  256: mode = 0b110; break;
       case 1024: mode = 0b111; break;
       default: return;
     }
   }
-  
+
   if(pin==5 || pin==6) {
     TCCR0B = TCCR0B & 0b11111000 | mode;
   } else if (pin==9 || pin==10) {

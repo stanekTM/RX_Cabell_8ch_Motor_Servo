@@ -38,6 +38,10 @@
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
 #define pwm_motorB 256
 
+//setting the reaction of the motor to be rotated after the lever has been moved (0-255)
+#define accelerate_motorA 0
+#define accelerate_motorB 0
+
 //Brake setting, adjustment (0-255), no brake 0, max brake 255
 #define brake_motorA 255 //steering[AILERONS]
 #define brake_motorB 0   //throttle[ELEVATOR]

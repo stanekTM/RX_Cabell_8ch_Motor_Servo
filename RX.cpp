@@ -442,13 +442,13 @@ int value_motorA = 0, value_motorB = 0;
 
   if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
-    value_motorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    value_motorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, accelerate_motorA, 255);
     analogWrite(pin_pwm1_motorA, value_motorA); 
     digitalWrite(pin_pwm2_motorA, LOW);
   }
   else if (steering > CHANNEL_MID_VALUE + dead_zone)
   { 
-    value_motorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255);
+    value_motorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, accelerate_motorA, 255);
     analogWrite(pin_pwm2_motorA, value_motorA); 
     digitalWrite(pin_pwm1_motorA, LOW);
   }
@@ -462,13 +462,13 @@ int value_motorA = 0, value_motorB = 0;
 
   if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
-    value_motorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, 0, 255);
+    value_motorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, accelerate_motorB, 255);
     analogWrite(pin_pwm3_motorB, value_motorB); 
     digitalWrite(pin_pwm4_motorB, LOW);
   }
   else if (throttle > CHANNEL_MID_VALUE + dead_zone)
   {
-    value_motorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, 0, 255); 
+    value_motorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, accelerate_motorB, 255); 
     analogWrite(pin_pwm4_motorB, value_motorB); 
     digitalWrite(pin_pwm3_motorB, LOW);
   }
