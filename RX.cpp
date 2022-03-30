@@ -755,12 +755,12 @@ unsigned long sendTelemetryPacket() {
 //--------------------------------------------------------------------------------------------------------------------------
 // based on ADC Interrupt example from https://www.gammon.com.au/adc
 void ADC_Processing() {               // Reads ADC value then configures next conversion. Alternates between pins A6 and A7
-  static byte adcPin = pin_rxBatt_A1;
+  static byte adcPin = pin_RX_batt_A1;
 
   if (bit_is_clear(ADCSRA, ADSC)) {
-    analogValue[(adcPin == pin_rxBatt_A1) ? 0 : 1] = ADC;  
+    analogValue[(adcPin == pin_RX_batt_A1) ? 0 : 1] = ADC;  
   
-    adcPin = (adcPin == pin_rxBatt_A2) ? pin_rxBatt_A1 : pin_rxBatt_A2; // Choose next pin to read
+    adcPin = (adcPin == pin_RX_batt_A1) ? pin_RX_batt_A1 : pin_RX_batt_A1; // Choose next pin to read
   
     ADCSRA =  bit (ADEN);                               // turn ADC on
     ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2); // Pre-scaler of 128
