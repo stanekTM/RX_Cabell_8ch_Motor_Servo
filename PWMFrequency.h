@@ -1,4 +1,3 @@
-
 //
 // -----------------------
 // PWM FREQUENCY PRESCALER

@@ -73,7 +73,7 @@ volatile uint8_t nextOutputMode = 255;    // initialize to an unused mode
 volatile bool packetReady = false;
 
 bool telemetryEnabled = false;
-int16_t analogValue[2] = {0,0};
+int16_t analogValue[2] = {0, 0};
 
 uint16_t initialTelemetrySkipPackets = 0;
 
@@ -82,18 +82,19 @@ uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM;  // Initializes the chann
 RSSI rssi;
 
 //--------------------------------------------------------------------------------------------------------------------------
-void setupReciever() { 
-  
+void setupReciever()
+{
   uint8_t softRebindFlag;
 
   EEPROM.get(softRebindFlagEEPROMAddress,softRebindFlag);
   EEPROM.get(radioPipeEEPROMAddress,radioNormalRxPipeID);
   EEPROM.get(currentModelEEPROMAddress,currentModel);
-
-  if (softRebindFlag == BOUND_WITH_FAILSAFE_NO_PULSES) {
+  
+  if (softRebindFlag == BOUND_WITH_FAILSAFE_NO_PULSES)
+  {
     softRebindFlag = DO_NOT_SOFT_REBIND;
     failSafeNoPulses = true;
-  }  
+  }
  
   if ((digitalRead(pin_button_bind) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND)) {
     bindMode = true;

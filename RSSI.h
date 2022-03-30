@@ -38,7 +38,7 @@
 class RSSI {
 
   public:
-      RSSI ( );
+      RSSI ();
                                      
       void hit();
       void miss();
