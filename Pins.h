@@ -54,8 +54,8 @@
 #define pin_button_bind        A3
 #define pin_LED                2
 
-#define pin_rxBatt_A1          6  // A6
-#define pin_rxBatt_A2          7  // A7
+#define pin_RX_batt_A1         6  // A6
+#define pin_RX_batt_A2         7  // A7
 
 // configure A2 for radio IRQ 
 #define RADIO_IRQ_PIN          A2 
@@ -67,7 +67,7 @@
 #define RADIO_IRQ_SET_INPUT    RADIO_IRQ_ddr &= ~RADIO_IRQ_PIN_MASK
 #define RADIO_IRQ_SET_OUTPUT   RADIO_IRQ_ddr |=  RADIO_IRQ_PIN_MASK
 #define RADIO_IRQ_SET_PULLUP   RADIO_IRQ_port |= RADIO_IRQ_PIN_MASK
-#define IS_RADIO_IRQ_on       ((RADIO_IRQ_ipr & RADIO_IRQ_PIN_MASK) == 0x00)
+#define IS_RADIO_IRQ_on        ((RADIO_IRQ_ipr & RADIO_IRQ_PIN_MASK) == 0x00)
 
 #endif
  
