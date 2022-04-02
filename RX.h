@@ -30,11 +30,11 @@
 #include "My_RF24.h"
 
 
-//settings PWM MotorA (pin D5 or D6)
+//settings PWM motorA (pin D5 or D6)
 //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
 #define pwm_motorA 256
 
-//settings PWM MotorB (pin D9 or D10)
+//settings PWM motorB (pin D9 or D10)
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
 #define pwm_motorB 256
 

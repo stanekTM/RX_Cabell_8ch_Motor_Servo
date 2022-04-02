@@ -424,11 +424,11 @@ void outputPWM() {
  * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
 */
  
-//MotorA PWM frequency pin D5 or pin D6
+//motorA PWM frequency pin D5 or pin D6
 //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
   setPWMPrescaler(pin_pwm1_motorA, pwm_motorA);
   
-//MotorB PWM frequency pin D9 or pin D10
+//motorB PWM frequency pin D9 or pin D10
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
   setPWMPrescaler(pin_pwm3_motorB, pwm_motorB);
   
@@ -439,7 +439,7 @@ int throttle = channelValues[ELEVATOR]; //vyskovka
 
 int value_motorA = 0, value_motorB = 0;
 
-//MotorA --------------------------------------------------------------------------------------  
+//motorA --------------------------------------------------------------------------------------  
 
   if (steering < CHANNEL_MID_VALUE - dead_zone)
   {
@@ -459,7 +459,7 @@ int value_motorA = 0, value_motorB = 0;
     analogWrite(pin_pwm2_motorA, brake_motorA);
   }
   
-//MotorB --------------------------------------------------------------------------------------
+//motorB --------------------------------------------------------------------------------------
 
   if (throttle < CHANNEL_MID_VALUE - dead_zone)
   {
