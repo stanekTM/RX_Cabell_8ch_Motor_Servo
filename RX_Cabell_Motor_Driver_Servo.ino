@@ -39,9 +39,8 @@
 #include "Pins.h"
 
 //--------------------------------------------------------------------------------------------------------------------------
-void setup(void) {
-  Serial.begin(74880);
-  
+void setup(void)
+{
   pinMode(pin_pwm1_motorA, OUTPUT);
   pinMode(pin_pwm2_motorA, OUTPUT);
   pinMode(pin_pwm3_motorB, OUTPUT);
@@ -52,25 +51,27 @@ void setup(void) {
   pinMode(pin_LED, OUTPUT);   //status LED
   digitalWrite(pin_LED, LOW);
 
-  ADC_Processing();   // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
-  while (!bit_is_clear(ADCSRA, ADSC));  // wait for conversion
+  ADC_Processing(); // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
+  while (!bit_is_clear(ADCSRA, ADSC)); // wait for conversion
   ADC_Processing();
-  while (!bit_is_clear(ADCSRA, ADSC));  // wait for conversion
+  while (!bit_is_clear(ADCSRA, ADSC)); // wait for conversion
   ADC_Processing();
  
   setupReciever();
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-void loop() { 
-  while (true) {               // loop forever without going back to Arduino core code
-    
-    if (getPacket()) {
-      
+void loop()
+{
+  while (true)
+  {
+    // loop forever without going back to Arduino core code
+    if (getPacket())
+    {
       outputChannels();
-      }
-      
-      ADC_Processing();          // Process ADC to asynchronously read A6 and A7 for telemetry analog values. Non-blocking read
     }
+    
+    ADC_Processing(); // Process ADC to asynchronously read A6 and A7 for telemetry analog values. Non-blocking read
+  }
 }
  

@@ -21,9 +21,9 @@
   /*** USER DEFINES:  ***/  
   //#define FAILURE_HANDLING
   //#define SERIAL_DEBUG
-  #define MINIMAL
+  //#define MINIMAL
   //#define SPI_UART  // Requires library from https://github.com/TMRh20/Sketches/tree/master/SPI_UART
-  //#define SOFTSPI   // Requires library from https://github.com/greiman/DigitalIO
+  #define SOFTSPI   // Requires library from https://github.com/greiman/DigitalIO
   
   /**********************/
   #define rf24_max(a,b) (a>b?a:b)
@@ -76,9 +76,9 @@
 	  #elif defined SOFTSPI
 	  // change these pins to your liking
       //
-      const uint8_t SOFT_SPI_MISO_PIN = 16; 
-      const uint8_t SOFT_SPI_MOSI_PIN = 15; 
-      const uint8_t SOFT_SPI_SCK_PIN = 14;  
+      const uint8_t SOFT_SPI_MISO_PIN = 18; //A4
+      const uint8_t SOFT_SPI_MOSI_PIN = 17; //A3
+      const uint8_t SOFT_SPI_SCK_PIN  = 13;
       const uint8_t SPI_MODE = 0;
       #define _SPI spi
       

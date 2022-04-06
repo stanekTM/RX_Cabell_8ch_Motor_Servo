@@ -29,35 +29,36 @@
 
 #include "Arduino.h"
 
-#define RSSI_CALC_INTERVAL  152    // The number of expected packets between calculating the base RSSI.  Approximately 1/2 second
-#define TELEMETRY_RSSI_MIN_VALUE        0                     // The lowest possible RSSI value = zero packet rate
-#define TELEMETRY_RSSI_MAX_VALUE        100                   // The highest possible RSSI value = 100% packet rate
-#define RSSI_MISS_ADJUSTMENT            5                     // Each consecutive miss deducts this from the packet rate
-#define RSSI_MISS_ADJUSTMENT_RECOVERY   1                     // The rate at which a hit removes the miss adjustment
+#define RSSI_CALC_INTERVAL            152 // The number of expected packets between calculating the base RSSI.  Approximately 1/2 second
+#define TELEMETRY_RSSI_MIN_VALUE      0   // The lowest possible RSSI value = zero packet rate
+#define TELEMETRY_RSSI_MAX_VALUE      100 // The highest possible RSSI value = 100% packet rate
+#define RSSI_MISS_ADJUSTMENT          5   // Each consecutive miss deducts this from the packet rate
+#define RSSI_MISS_ADJUSTMENT_RECOVERY 1   // The rate at which a hit removes the miss adjustment
 
-class RSSI {
-
+class RSSI
+{
   public:
-      RSSI ();
-                                     
-      void hit();
-      void miss();
-      void secondaryHit();      
-      void badPacket(); 
-      uint8_t getRSSI();     
-     
+  
+  RSSI();
+  void hit();
+  void miss();
+  void secondaryHit();    
+  void badPacket();
+  uint8_t getRSSI();
+          
   private:
-      void packetProcess();
-      void resetCounters();
-                 
-      int hitCount = 0;
-      int missCount = 0;
-      int secondaryHitCount = 0;
-      int badPacketCount = 0;
-      int packetCount = 0;
+  
+  void packetProcess();
+  void resetCounters();
+  
+  int hitCount = 0;
+  int missCount = 0;
+  int secondaryHitCount = 0;
+  int badPacketCount = 0;
+  int packetCount = 0;
 
-      int packetRate = 0.0;
-      int8_t sequentialMissTrack = 0;
+  int packetRate = 0.0;
+  int8_t sequentialMissTrack = 0;
 };
 
 #endif

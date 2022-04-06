@@ -29,36 +29,42 @@
 
 #include "RX.h"
 
-#define pin_radio1_CSN         15     // A1 CSN
-#define pin_radio2_CSN         14     // A0 Second radio for diversity.  Some older hardware used this pin as CE
+//free pins
+//pin                          0
+//pin                          1
+
+//pins for nRF24L01
+#define pin_radio1_CSN         15     // A1 - CSN
+#define pin_radio2_CSN         14     // A0 - CE  Second radio for diversity. Some older hardware used this pin as CE
 
 #define pin_radio1_CE          pin_radio1_CSN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
 #define pin_radio2_CE          pin_radio2_CSN
 
-#define SPI_MOSI               11
-#define SPI_MISO               12
-#define SPI_SCLK               13
+//software SPI http://tmrh20.github.io/RF24/Arduino.html
+//----- SCK                    13
+//----- MOSI                   17 - A3
+//----- MISO                   18 - A4
 
-#define pin_servo1             3     
-#define pin_servo2             4 
-#define pin_servo3             7
-#define pin_servo4             8
-#define pin_servo5             A4
-#define pin_servo6             A5
+#define pin_servo1             2     
+#define pin_servo2             3 
+#define pin_servo3             4
+#define pin_servo4             7
+#define pin_servo5             8
+#define pin_servo6             11
      
 #define pin_pwm1_motorA        5
 #define pin_pwm2_motorA        6
 #define pin_pwm3_motorB        9
 #define pin_pwm4_motorB        10
 
-#define pin_button_bind        A3
-#define pin_LED                2
+#define pin_button_bind        12
+#define pin_LED                A5 // 19
 
-#define pin_RX_batt_A1         6  // A6
-#define pin_RX_batt_A2         7  // A7
+#define pin_RX_batt_A1         6  // A6 - 20
+#define pin_RX_batt_A2         7  // A7 - 21
 
 // configure A2 for radio IRQ 
-#define RADIO_IRQ_PIN          A2 
+#define RADIO_IRQ_PIN          A2 // 16
 #define RADIO_IRQ_PIN_bit      2  // A2 = PC2
 #define RADIO_IRQ_port         PORTC
 #define RADIO_IRQ_ipr          PINC
