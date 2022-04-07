@@ -11,29 +11,30 @@ Note: I use (Arduino) ATmega328P 5V/16Mhz and supply VCC only with 3.3V voltage.
 
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 ### Arduino pins:
-* D3 - servo 1    
-* D4 - servo 2 
-* D7 - servo 3
-* D8 - servo 4
-* A4 - servo 5
-* A5 - servo 6
+* D2  - servo 1    
+* D3  - servo 2 
+* D4  - servo 3
+* D7  - servo 4
+* D8  - servo 5
+* D11 - servo 6
 #
 * D5  - pwm1/Motor A
 * D6  - pwm2/Motor A
 * D9  - pwm3/Motor B
 * D10 - pwm4/Motor B
 #
-* D2 - LED
-* A3 - bind button
-* A6 - telemetry analog input 1
-* A7 - telemetry analog input 2
+* A5  - LED
+* D12 - bind button
+# 
+* A6 - telemetry analog input A1
+* A7 - telemetry analog input A2
 #
 nRF24L01:
 * A0  - CE
 * A1  - CSN
 * A2  - IRQ
-* D11 - MOSI
-* D12 - MISO
+* A3  - MOSI
+* A4  - MISO
 * D13 - SCK
 
 For other information, see below ...
