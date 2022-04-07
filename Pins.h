@@ -34,11 +34,8 @@
 //pin                          1
 
 //pins for nRF24L01
-#define pin_radio1_CSN         15     // A1 - CSN
-#define pin_radio2_CSN         14     // A0 - CE  Second radio for diversity. Some older hardware used this pin as CE
-
-#define pin_radio1_CE          pin_radio1_CSN  // Set CE pin to CSN puts radio in a mode where CE is not used (always pulled high)
-#define pin_radio2_CE          pin_radio2_CSN
+#define pin_CE                 14     // A0
+#define pin_CSN                15     // A1
 
 //software SPI http://tmrh20.github.io/RF24/Arduino.html
 //----- SCK                    13

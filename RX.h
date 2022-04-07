@@ -152,7 +152,6 @@ void ADC_Processing();
 bool failSafeButtonHeld();
 void setTelemetryPowerMode(uint8_t option);
 void initializeRadio(My_RF24* radio);
-void swapRecievers();
 
 #endif
  

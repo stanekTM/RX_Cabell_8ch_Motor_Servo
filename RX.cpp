@@ -36,11 +36,9 @@
 #include <DigitalIO.h>    //https://github.com/greiman/DigitalIO
 
 
-My_RF24 radio1(pin_radio1_CE, pin_radio1_CSN);
-My_RF24 radio2(pin_radio2_CE, pin_radio2_CSN);
+My_RF24 radio(pin_CE, pin_CSN);
 
-My_RF24* primaryReciever = NULL;
-My_RF24* secondaryReciever = NULL;
+My_RF24* Reciever = NULL;
 
 uint8_t radioConfigRegisterForTX = 0;
 uint8_t radioConfigRegisterForRX_IRQ_Masked = 0;
@@ -112,51 +110,23 @@ void setupReciever()
   getChannelSequence (radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
 
   // Need to set all CSN pins high before BEGIN so that only one device listens on SPI during the first initialization
-  pinMode(pin_radio1_CSN, OUTPUT);    
-  pinMode(pin_radio2_CSN, OUTPUT);   
-  digitalWrite(pin_radio1_CSN, HIGH);
-  digitalWrite(pin_radio2_CSN, HIGH);
+  pinMode(pin_CE, OUTPUT);
+  pinMode(pin_CSN, OUTPUT);
+  digitalWrite(pin_CE, HIGH);
+  digitalWrite(pin_CSN, HIGH);
   
-  pinMode(pin_radio1_CE, OUTPUT);    
-  pinMode(pin_radio2_CE, OUTPUT);   
-  digitalWrite(pin_radio1_CE, HIGH);
-  digitalWrite(pin_radio2_CE, HIGH);
+  radio.begin();
+  Reciever = &radio;
+  digitalWrite(pin_CE, HIGH); // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
   
-  radio1.begin();
-  radio2.begin();
-
-  // Set primary and secondary receivers.
-  // If only one is present, then both primary and secondary receiver pointers end up pointing to the same radio.
-  // This way the receiver swap logic doesn't care if one or two receives are actually connected
-  if (radio2.isChipConnected())
-  {
-    secondaryReciever = &radio2;
-  }
-  else
-  {
-    secondaryReciever = &radio1;
-    digitalWrite(pin_radio2_CSN, HIGH); // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
-  }  
-  
-  if (radio1.isChipConnected())
-  {
-    primaryReciever = &radio1;
-  }
-  else
-  {
-    primaryReciever = &radio2;
-  }
-
   RADIO_IRQ_SET_INPUT;
   RADIO_IRQ_SET_PULLUP;
 
-  initializeRadio(primaryReciever);
-  initializeRadio(secondaryReciever);
+  initializeRadio(Reciever);
 
   setTelemetryPowerMode(CABELL_OPTION_MASK_MAX_POWER_OVERRIDE);
   
-  primaryReciever->flush_rx();
-  secondaryReciever->flush_rx();
+  Reciever->flush_rx();
   packetReady = false;
 
   outputFailSafeValues(false); // initialize default values for output channels
@@ -222,9 +192,9 @@ void outputChannels()
 //--------------------------------------------------------------------------------------------------------------------------
 void setNextRadioChannel(bool missedPacket)
 {
-  //primaryReciever->stopListening();
-  primaryReciever->write_register(NRF_CONFIG, radioConfigRegisterForTX);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
-  primaryReciever->flush_rx();
+  //Reciever->stopListening();
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
+  Reciever->flush_rx();
   
   unsigned long expectedTransmitCompleteTime = 0;
   
@@ -241,12 +211,6 @@ void setNextRadioChannel(bool missedPacket)
     }
   }
   
-  //only swap receivers if the secondary receiver got the last packet 
-  //so we don't swap to a receiver that is not currently receiving
-  //unless packet was missed by both radios, in which case swap every time.
-
-  bool performSwap = secondaryReciever->available() || missedPacket;
-  
   currentChannel = getNextChannel (radioChannel, CABELL_RADIO_CHANNELS, currentChannel);
   
   if (expectedTransmitCompleteTime != 0)
@@ -260,26 +224,14 @@ void setNextRadioChannel(bool missedPacket)
    }
   }
   
-  //secondaryReciever->stopListening();
-  secondaryReciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
-  secondaryReciever->flush_rx();
-  secondaryReciever->setChannel(currentChannel);
-  //secondaryReciever->startListening();
-  secondaryReciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_Masked);     // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
-  secondaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)); // This normally happens in StartListening
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  Reciever->flush_rx();
+  Reciever->setChannel(currentChannel);
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_Masked);   // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  Reciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)); // This normally happens in StartListening
 
-  primaryReciever->setChannel(currentChannel);
-  //primaryReciever->startListening();
-  primaryReciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_Masked);     // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
-  primaryReciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)); // This normally happens in StartListening
-  
-  if (performSwap)
-  {
-    swapRecievers();
-  }
-  
   packetReady = false;
-  primaryReciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_On); // Turn on RX interrupt
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_On); // Turn on RX interrupt
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -292,7 +244,6 @@ bool getPacket()
   static bool hoppingLockedIn = false;
   static uint16_t sequentialHitCount = 0;
   static uint16_t sequentialMissCount = 0;
-  static bool secondaryRecieverUsed = false;
   static bool powerOnLock = false;
   bool goodPacket_rx = false;
   bool strongSignal = false;
@@ -303,13 +254,10 @@ bool getPacket()
     // if timed out the packet was missed, go to the next channel
     if ((long)(micros() - nextAutomaticChannelSwitch) >= 0)
     {
-      // missed packet but secondary radio has it so swap radios and signal packet ready
       //packet will be picked up on next loop through
-      if (secondaryReciever->available())
+      if (Reciever->available())
       {
         packetReady = true;
-        secondaryRecieverUsed = true;
-        swapRecievers();
         rssi.secondaryHit();
       }
       else
@@ -342,22 +290,12 @@ bool getPacket()
   }
   else
   {
-    if (secondaryRecieverUsed)
-    {
-      // If the secondary receiver is used, then the packet was actually received some time ago, so don't uses micros(). 
-      // Do this to prevent the timing from drifting if there are multiple packets in a row only received by the secondary receiver.
-      lastRadioPacketeRecievedTime = nextAutomaticChannelSwitch - INITIAL_PACKET_TIMEOUT_ADD; // Can't log the actual received time when primary missed packet, so assume it came in when expected
-      secondaryRecieverUsed = false;
-    }
-    else
-    {
-      lastRadioPacketeRecievedTime = micros(); // Use this time to calculate the next expected packet so when we miss packets we can change channels
-    }
+    lastRadioPacketeRecievedTime = micros(); // Use this time to calculate the next expected packet so when we miss packets we can change channels
     
     if (!powerOnLock)
     {
       // save this now while the value is latched. To save loop time only do this before initial lock as the initial lock process is the only thing that needs this
-	    strongSignal = primaryReciever->testRPD();  
+	    strongSignal = Reciever->testRPD();  
 	  }
 	  
 	  goodPacket_rx = readAndProcessPacket();
@@ -701,7 +639,7 @@ bool readAndProcessPacket()
 {
   CABELL_RxTxPacket_t RxPacket;
   
-  primaryReciever->read( &RxPacket,  sizeof(RxPacket));
+  Reciever->read( &RxPacket, sizeof(RxPacket));
   int tx_channel = RxPacket.reserved & CABELL_RESERVED_MASK_CHANNEL;
   
   if (tx_channel != 0)
@@ -887,7 +825,7 @@ unsigned long sendTelemetryPacket()
   sendPacket[3] = analogValue[1]/4;  // Send a 8 bit value (0 to 255) of the analog input. Can be used for LiPo voltage or other analog input for telemetry
 
   uint8_t packetSize =  sizeof(sendPacket);
-  primaryReciever->startFastWrite( &sendPacket[0], packetSize, 0); 
+  Reciever->startFastWrite( &sendPacket[0], packetSize, 0); 
 
       // calculate transmit time based on packet size and data rate of 1MB per sec
       // This is done because polling the status register during xmit to see when xmit is done causes issues sometimes.
@@ -966,8 +904,7 @@ void setTelemetryPowerMode(uint8_t option)
   
   if (newPower != prevPower)
   {
-    primaryReciever->setPALevel(newPower);
-    secondaryReciever->setPALevel(newPower);
+    Reciever->setPALevel(newPower);
     prevPower = newPower;
   }
 }
@@ -988,20 +925,11 @@ void initializeRadio(My_RF24* radioPointer)
 
   // Stop listening to set up module for writing then take a copy of the config register so we can change to write mode more quickly when sending telemetry packets
   radioPointer->stopListening();
-  radioConfigRegisterForTX = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in TX mode.  Used to switch quickly to TX mode for telemetry
+  radioConfigRegisterForTX = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in TX mode. Used to switch quickly to TX mode for telemetry
   radioPointer->startListening();
-  radioConfigRegisterForRX_IRQ_Masked = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in RX mode. Used to switch secondary radio quickly to RX after channel change
+  radioConfigRegisterForRX_IRQ_Masked = radioPointer->read_register(NRF_CONFIG); // This saves the config register state with all interrupts masked and in RX mode. Used to switch radio quickly to RX after channel change
   radioPointer->maskIRQ(true, true, false);       
-  radioConfigRegisterForRX_IRQ_On = radioPointer->read_register(NRF_CONFIG);     // This saves the config register state with Read Interrupt ON and in RX mode. Used to switch primary radio quickly to RX after channel change
-  radioPointer->maskIRQ(true, true, true);       
-}
-
-//--------------------------------------------------------------------------------------------------------------------------
-void swapRecievers()
-{
-  My_RF24* hold = NULL;
-  hold = primaryReciever;
-  primaryReciever = secondaryReciever;
-  secondaryReciever = hold;
+  radioConfigRegisterForRX_IRQ_On = radioPointer->read_register(NRF_CONFIG);     // This saves the config register state with Read Interrupt ON and in RX mode. Used to switch radio quickly to RX after channel change
+  radioPointer->maskIRQ(true, true, true);      
 }
  
