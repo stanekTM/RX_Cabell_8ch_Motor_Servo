@@ -160,11 +160,6 @@ void outputChannels()
       nextOutputMode = 255; // set to unused output mode
     }
     
-    if (!throttleArmed)
-    {
-      channelValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Safety precaution. Min throttle if not armed
-    }
-    
     bool firstPacketOnMode = false;
 
     // If new mode, turn off all modes
@@ -175,14 +170,9 @@ void outputChannels()
     
     if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM)
     {
-      outputServo(); // Do this first so we have something to send when PWM enabled               
+      outputServo(); // Do this first so we have something to send when servo enabled               
       outputPWM();   // Do this first so we have something to send when PWM enabled
-      
-      // First time through attach pins to start output
-      if (firstPacketOnMode)
-      {
-        attachServoPins();
-      }
+      attachServoPins();
     }
     
     currentOutputMode = nextOutputMode;
@@ -579,7 +569,6 @@ void setFailSafeDefaultValues()
     defaultFailSafeValues[x] = CHANNEL_MID_VALUE;
   }
   
-  defaultFailSafeValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Throttle should always be the min value when failsafe}
   setFailSafeValues(defaultFailSafeValues);  
 }
 
@@ -596,8 +585,6 @@ void loadFailSafeDefaultValues()
       failSafeChannelValues[x] = CHANNEL_MID_VALUE;
     }
   }
-  
-  failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Throttle should always be the min value when failsafe
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -608,8 +595,7 @@ void setFailSafeValues(uint16_t newFailsafeValues[])
     failSafeChannelValues[x] = newFailsafeValues[x];
   }
   
-  failSafeChannelValues[THROTTLE] = THROTTLE_DISARM_VALUE; // Throttle should always be the min value when failsafe
-  EEPROM.put(failSafeChannelValuesEEPROMAddress,failSafeChannelValues);  
+  EEPROM.put(failSafeChannelValuesEEPROMAddress, failSafeChannelValues);  
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -751,11 +737,6 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     {
       digitalWrite(pin_LED, LOW);
       failSafeValuesHaveBeenSet = false; // Reset when not in setFailSafe mode so next time failsafe is to be set it will take
-      
-      if (!throttleArmed && (tempHoldValues[THROTTLE] <= THROTTLE_DISARM_VALUE + 10) && (tempHoldValues[THROTTLE] >= THROTTLE_DISARM_VALUE - 10))
-      {
-        throttleArmed = true;
-      }
     }
     else
     {
