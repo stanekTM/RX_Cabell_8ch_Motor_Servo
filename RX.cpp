@@ -75,7 +75,7 @@ int16_t analogValue[2] = {0, 0};
 
 uint16_t initialTelemetrySkipPackets = 0;
 
-uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM;  // Initializes the channel sequence.
+uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM; // Initializes the channel sequence
 
 RSSI rssi;
 
@@ -84,9 +84,9 @@ void setupReciever()
 {
   uint8_t softRebindFlag;
 
-  EEPROM.get(softRebindFlagEEPROMAddress,softRebindFlag);
-  EEPROM.get(radioPipeEEPROMAddress,radioNormalRxPipeID);
-  EEPROM.get(currentModelEEPROMAddress,currentModel);
+  EEPROM.get(softRebindFlagEEPROMAddress, softRebindFlag);
+  EEPROM.get(radioPipeEEPROMAddress, radioNormalRxPipeID);
+  EEPROM.get(currentModelEEPROMAddress, currentModel);
   
   if (softRebindFlag == BOUND_WITH_FAILSAFE_NO_PULSES)
   {
@@ -98,8 +98,8 @@ void setupReciever()
   {
     bindMode = true;
     radioPipeID = CABELL_BIND_RADIO_ADDR;
-    digitalWrite(pin_LED, HIGH);      // Turn on LED to indicate bind mode
-    radioNormalRxPipeID = 0x01<<43;   // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
+    digitalWrite(pin_LED, HIGH);    // Turn on LED to indicate bind mode
+    radioNormalRxPipeID = 0x01<<43; // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
   }
   else
   {
@@ -133,9 +133,9 @@ void setupReciever()
 
   setNextRadioChannel(true);
  
- //setup pin change interrupt
-  cli();                       // switch interrupts off while messing with their settings  
-  PCICR =0x02;                 // Enable PCINT1 interrupt
+  //setup pin change interrupt
+  cli();       // switch interrupts off while messing with their settings  
+  PCICR =0x02; // Enable PCINT1 interrupt
   PCMSK1 = RADIO_IRQ_PIN_MASK;
   sei();
 }
@@ -183,7 +183,7 @@ void outputChannels()
 void setNextRadioChannel(bool missedPacket)
 {
   //Reciever->stopListening();
-  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX);  // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
   Reciever->flush_rx();
   
   unsigned long expectedTransmitCompleteTime = 0;
@@ -214,10 +214,10 @@ void setNextRadioChannel(bool missedPacket)
    }
   }
   
-  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
   Reciever->flush_rx();
   Reciever->setChannel(currentChannel);
-  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_Masked);   // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask.
+  Reciever->write_register(NRF_CONFIG, radioConfigRegisterForRX_IRQ_Masked);   // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
   Reciever->write_register(NRF_STATUS, _BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT)); // This normally happens in StartListening
 
   packetReady = false;
@@ -274,7 +274,7 @@ bool getPacket()
           nextAutomaticChannelSwitch += packetInterval;
         }
         
-        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm. When disarmed TX must send min throttle to re-arm.
+        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm. When disarmed TX must send min throttle to re-arm
       }
     }
   }
@@ -332,7 +332,7 @@ bool getPacket()
   {
     if (!powerOnLock)
     {
-      goodPacket_rx = false; // Always consider a bad packet until initial lock is obtained so no control signals are output.
+      goodPacket_rx = false; // Always consider a bad packet until initial lock is obtained so no control signals are output
       
       // Ensure strong signal on all channels
       if (sequentialHitCount > (CABELL_RADIO_CHANNELS * 5))

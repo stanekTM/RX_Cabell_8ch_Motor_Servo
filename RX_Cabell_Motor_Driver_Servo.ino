@@ -46,15 +46,18 @@ void setup(void)
   pinMode(pin_pwm3_motorB, OUTPUT);
   pinMode(pin_pwm4_motorB, OUTPUT);
   
-  pinMode(pin_button_bind, INPUT_PULLUP); // used for bind plug or button
+  pinMode(pin_button_bind, INPUT_PULLUP);
 
-  pinMode(pin_LED, OUTPUT);   //status LED
+  pinMode(pin_LED, OUTPUT);
   digitalWrite(pin_LED, LOW);
-
-  ADC_Processing(); // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
-  while (!bit_is_clear(ADCSRA, ADSC)); // wait for conversion
+  
+  // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
   ADC_Processing();
-  while (!bit_is_clear(ADCSRA, ADSC)); // wait for conversion
+  // wait for conversion
+  while (!bit_is_clear(ADCSRA, ADSC));
+  ADC_Processing();
+  // wait for conversion
+  while (!bit_is_clear(ADCSRA, ADSC));
   ADC_Processing();
  
   setupReciever();
@@ -70,8 +73,8 @@ void loop()
     {
       outputChannels();
     }
-    
-    ADC_Processing(); // Process ADC to asynchronously read A6 and A7 for telemetry analog values. Non-blocking read
+    // Process ADC to asynchronously read A6 and A7 for telemetry analog values. Non-blocking read
+    ADC_Processing();
   }
 }
  

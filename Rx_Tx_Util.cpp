@@ -79,7 +79,7 @@ void getChannelSequence (uint8_t outArray[], uint8_t numChannels, uint64_t permu
    * variables to overflow, yielding unknown results (possibly infinite loop?).  Therefor
    * this routine constrains the value.
    */
-   uint64_t i;   //iterator counts numChannels
+   uint64_t i;   // iterator counts numChannels
    uint64_t indexOfNextSequenceValue;
    uint64_t numChannelsFactorial=1;
    uint8_t  sequenceValue;
@@ -88,8 +88,8 @@ void getChannelSequence (uint8_t outArray[], uint8_t numChannels, uint64_t permu
    
    for (i = 1; i <= numChannels;i++)
    {
-    numChannelsFactorial *= i; //  Calculate n!
-    outArray[i-1] = i-1;       //  Initialize array with the sequence
+    numChannelsFactorial *= i; // Calculate n!
+    outArray[i-1] = i-1;       // Initialize array with the sequence
    }
    
    permutation = (permutation % numChannelsFactorial) + 1; // permutation must be between 1 and n! or this algorithm will infinite loop
