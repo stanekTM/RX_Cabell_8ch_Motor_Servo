@@ -29,7 +29,7 @@
 */
 
 /* Memory Map */
-#define NRF_CONFIG      0x00
+#define NRF_CONFIG  0x00
 #define EN_AA       0x01
 #define EN_RXADDR   0x02
 #define SETUP_AW    0x03
@@ -53,7 +53,7 @@
 #define RX_PW_P4    0x15
 #define RX_PW_P5    0x16
 #define FIFO_STATUS 0x17
-#define DYNPD	    0x1C
+#define DYNPD	      0x1C
 #define FEATURE	    0x1D
 
 /* Bit Mnemonics */
@@ -122,8 +122,8 @@
 #define LNA_HCURR   0
 
 /* P model memory Map */
-#define RPD         0x09
-#define W_TX_PAYLOAD_NO_ACK  0xB0
+#define RPD                 0x09
+#define W_TX_PAYLOAD_NO_ACK 0xB0
 
 /* P model bit Mnemonics */
 #define RF_DR_LOW   5
