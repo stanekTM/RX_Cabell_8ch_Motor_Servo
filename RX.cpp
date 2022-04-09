@@ -27,13 +27,13 @@
 #include "My_RF24.h"
 #include "RX.h"
 #include "Pins.h"
-#include <EEPROM.h>       //Arduino standard library
+#include <EEPROM.h>       // Arduino standard library
 #include "Rx_Tx_Util.h"
 #include "RSSI.h"
 #include "My_nRF24L01.h"
-#include "PWMFrequency.h" //used locally https://github.com/TheDIYGuy999/PWMFrequency
-#include "ServoTimer2.h"  //https://github.com/nabontra/ServoTimer2
-#include <DigitalIO.h>    //https://github.com/greiman/DigitalIO
+#include "PWMFrequency.h" // used locally https://github.com/TheDIYGuy999/PWMFrequency
+#include "ServoTimer2.h"  // https://github.com/nabontra/ServoTimer2
+#include <DigitalIO.h>    // https://github.com/greiman/DigitalIO
 
 
 My_RF24 radio(pin_CE, pin_CSN);
@@ -54,7 +54,7 @@ const int radioPipeEEPROMAddress = currentModelEEPROMAddress + sizeof(currentMod
 const int softRebindFlagEEPROMAddress = radioPipeEEPROMAddress + sizeof(radioNormalRxPipeID);
 const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t); // uint8_t is the sifr of the rebind flag
 
-uint16_t failSafeChannelValues [CABELL_NUM_CHANNELS];
+uint16_t failSafeChannelValues[CABELL_NUM_CHANNELS];
 
 bool bindMode = false;     // when true send bind command to cause receiver to bind enter bind mode
 bool failSafeMode = false;
@@ -106,7 +106,7 @@ void setupReciever()
     radioPipeID = radioNormalRxPipeID;    
   }
 
-  getChannelSequence (radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
+  getChannelSequence(radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
   
   radio.begin();
   Reciever = &radio;
@@ -193,7 +193,7 @@ void setNextRadioChannel(bool missedPacket)
     }
   }
   
-  currentChannel = getNextChannel (radioChannel, CABELL_RADIO_CHANNELS, currentChannel);
+  currentChannel = getNextChannel(radioChannel, CABELL_RADIO_CHANNELS, currentChannel);
   
   if (expectedTransmitCompleteTime != 0)
   {
@@ -813,13 +813,12 @@ void ADC_Processing()
   {
     analogValue[(adcPin == pin_RX_batt_A1) ? 0 : 1] = ADC;
     
-    adcPin = (adcPin == pin_RX_batt_A1) ? pin_RX_batt_A1 : pin_RX_batt_A1; // Choose next pin to read
+    adcPin = (adcPin == pin_RX_batt_A2) ? pin_RX_batt_A1 : pin_RX_batt_A2; // Choose next pin to read
   
     ADCSRA =  bit (ADEN);                               // turn ADC on
     ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2); // Pre-scaler of 128
     ADMUX  =  bit (REFS0) | (adcPin & 0x07);            // AVcc and select input port
-  
-    ADCSRA |= bit (ADSC); // Start next conversion 
+    ADCSRA |= bit (ADSC);                               // Start next conversion 
   }
 }
 
