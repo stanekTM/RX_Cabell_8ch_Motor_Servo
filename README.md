@@ -23,19 +23,19 @@ Note: I use (Arduino) ATmega328P 5V/16Mhz and supply VCC only with 3.3V voltage.
 * D9  - pwm3/Motor B
 * D10 - pwm4/Motor B
 #
-* A5  - LED
 * D12 - bind button
+* D13 - LED
 # 
 * A6 - telemetry analog input A1
 * A7 - telemetry analog input A2
 #
 nRF24L01:
-* A0  - CE
-* A1  - CSN
-* A2  - IRQ
-* A3  - MOSI
-* A4  - MISO
-* D13 - SCK
+* A0 - CE
+* A1 - CSN
+* A2 - SCK
+* A3 - MOSI
+* A4 - MISO
+* A5 - IRQ
 
 For other information, see below ...
 
