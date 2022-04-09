@@ -76,9 +76,9 @@
 	  #elif defined SOFTSPI
 	  // change these pins to your liking
       //
-      const uint8_t SOFT_SPI_MISO_PIN = 18; //A4
-      const uint8_t SOFT_SPI_MOSI_PIN = 17; //A3
-      const uint8_t SOFT_SPI_SCK_PIN  = 13;
+      const uint8_t SOFT_SPI_MISO_PIN = 18; // A4
+      const uint8_t SOFT_SPI_MOSI_PIN = 17; // A3
+      const uint8_t SOFT_SPI_SCK_PIN  = 16; // A2
       const uint8_t SPI_MODE = 0;
       #define _SPI spi
       

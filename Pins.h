@@ -38,11 +38,11 @@
 #define pin_CSN                15     // A1
 
 //software SPI http://tmrh20.github.io/RF24/Arduino.html
-//----- SCK                    13
+//----- SCK                    16 - A2
 //----- MOSI                   17 - A3
 //----- MISO                   18 - A4
 
-#define pin_servo1             2     
+#define pin_servo1             2
 #define pin_servo2             3 
 #define pin_servo3             4
 #define pin_servo4             7
@@ -55,14 +55,14 @@
 #define pin_pwm4_motorB        10
 
 #define pin_button_bind        12
-#define pin_LED                A5 // 19
+#define pin_LED                13
 
 #define pin_RX_batt_A1         6  // A6 - 20
 #define pin_RX_batt_A2         7  // A7 - 21
 
-// configure A2 for radio IRQ 
-#define RADIO_IRQ_PIN          A2 // 16
-#define RADIO_IRQ_PIN_bit      2  // A2 = PC2
+// configure A5 for radio IRQ 
+#define RADIO_IRQ_PIN          A5 // 19
+#define RADIO_IRQ_PIN_bit      5  // PC5
 #define RADIO_IRQ_port         PORTC
 #define RADIO_IRQ_ipr          PINC
 #define RADIO_IRQ_ddr          DDRC
