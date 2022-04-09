@@ -80,7 +80,6 @@
 #define CABELL_RECIEVER_OUTPUT_PWM                0
 
 #define RX_CONNECTION_TIMEOUT  1000000 // If no packet received in this time frame apply failsafe settings. In microseconds
-#define RX_DISARM_TIMEOUT      3000000 // If no packet received in this time frame disarm the throttle. In microseconds
 
 // FHSS parameters
 #define DEFAULT_PACKET_INTERVAL     ((uint32_t)3000) 

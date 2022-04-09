@@ -56,7 +56,6 @@ const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + siz
 
 uint16_t failSafeChannelValues [CABELL_NUM_CHANNELS];
 
-bool throttleArmed = true;
 bool bindMode = false;     // when true send bind command to cause receiver to bind enter bind mode
 bool failSafeMode = false;
 bool failSafeNoPulses = false;
@@ -108,16 +107,9 @@ void setupReciever()
   }
 
   getChannelSequence (radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
-
-  // Need to set all CSN pins high before BEGIN so that only one device listens on SPI during the first initialization
-  pinMode(pin_CE, OUTPUT);
-  pinMode(pin_CSN, OUTPUT);
-  digitalWrite(pin_CE, HIGH);
-  digitalWrite(pin_CSN, HIGH);
   
   radio.begin();
   Reciever = &radio;
-  digitalWrite(pin_CE, HIGH); // If the backup radio is not present, set this pin high because some older 1 radio configurations used this as CE on the primary radio
   
   RADIO_IRQ_SET_INPUT;
   RADIO_IRQ_SET_PULLUP;
@@ -167,11 +159,12 @@ void outputChannels()
     {
       firstPacketOnMode = true;
     }
-    
+
+    // Do this first so we have something to send when PWM enabled
     if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM)
     {
-      outputServo(); // Do this first so we have something to send when servo enabled               
-      outputPWM();   // Do this first so we have something to send when PWM enabled
+      outputServo();               
+      outputPWM();
       attachServoPins();
     }
     
@@ -182,7 +175,6 @@ void outputChannels()
 //--------------------------------------------------------------------------------------------------------------------------
 void setNextRadioChannel(bool missedPacket)
 {
-  //Reciever->stopListening();
   Reciever->write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
   Reciever->flush_rx();
   
@@ -274,7 +266,7 @@ bool getPacket()
           nextAutomaticChannelSwitch += packetInterval;
         }
         
-        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm. When disarmed TX must send min throttle to re-arm
+        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm
       }
     }
   }
@@ -353,7 +345,7 @@ bool getPacket()
       lastRadioPacketeRecievedTime = millis() - (long)RESYNC_TIME_OUT;
       nextAutomaticChannelSwitch = millis() + RESYNC_WAIT_MICROS;
       telemetryEnabled = false;
-      setNextRadioChannel(true);   //Getting the next channel ensures radios are flushed and properly waiting for a packet
+      setNextRadioChannel(true); // Getting the next channel ensures radios are flushed and properly waiting for a packet
     }
   }
   return goodPacket_rx;
@@ -367,14 +359,6 @@ void checkFailsafeDisarmTimeout(unsigned long lastPacketTime,bool inititalGoodPa
   if ((long)(holdMicros - lastPacketTime)  > ((long)RX_CONNECTION_TIMEOUT))
   {
     outputFailSafeValues(true);
-  }
-  
-  if (((long)(holdMicros - lastPacketTime) >  ((long)RX_DISARM_TIMEOUT)) || (!inititalGoodPacketRecieved && ((long)(holdMicros - lastPacketTime)  > ((long)RX_DISARM_TIMEOUT))))
-  {
-    if (throttleArmed)
-    {
-      throttleArmed = false;
-    }
   }
 }
 
