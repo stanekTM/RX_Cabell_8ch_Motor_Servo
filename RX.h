@@ -1,13 +1,13 @@
 /*
  Copyright 2017 by Dennis Cabell
  KE8FZX
- 
+
  To use this software, you must adhere to the license terms described below, and assume all responsibility for the use
  of the software.  The user is responsible for all consequences or damage that may result from using this software.
- The user is responsible for ensuring that the hardware used to run this software complies with local regulations and that 
- any radio signal generated from use of this software is legal for that user to generate.  The author(s) of this software 
- assume no liability whatsoever.  The author(s) of this software is not responsible for legal or civil consequences of 
- using this software, including, but not limited to, any damages cause by lost control of a vehicle using this software.  
+ The user is responsible for ensuring that the hardware used to run this software complies with local regulations and that
+ any radio signal generated from use of this software is legal for that user to generate.  The author(s) of this software
+ assume no liability whatsoever.  The author(s) of this software is not responsible for legal or civil consequences of
+ using this software, including, but not limited to, any damages cause by lost control of a vehicle using this software.
  If this software is copied or modified, this disclaimer must accompany all copies.
  
  This project is free software: you can redistribute it and/or modify
@@ -31,11 +31,11 @@
 
 
 //settings PWM motorA (pin D5 or D6)
-//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
+//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
 #define pwm_motorA 256
 
 //settings PWM motorB (pin D9 or D10)
-//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
+//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
 #define pwm_motorB 256
 
 //setting the reaction of the motor to be rotated after the lever has been moved (0-255)
@@ -85,7 +85,7 @@
 #define DEFAULT_PACKET_INTERVAL     ((uint32_t)3000) 
 #define MAX_PACKET_INTERVAL         ((uint32_t)4000) // Max packet interval - used with telemetry and 16 channels
 #define INITIAL_PACKET_TIMEOUT_ADD  200ul
-#define RESYNC_TIME_OUT             ((uint32_t)2000000) //  Go to re-sync if no packet received in 3 seconds
+#define RESYNC_TIME_OUT             ((uint32_t)2000000) // Go to re-sync if no packet received in 3 seconds
 #define RESYNC_WAIT_MICROS          (((((uint32_t)CABELL_RADIO_CHANNELS)*5ul)+8ul) * MAX_PACKET_INTERVAL) // when syncing listen on each channel for slightly longer than the time it takes to cycle through all channels
 
 #define INITIAL_TELEMETRY_PACKETS_TO_SKIP  1000 // dont send initial telemetry packets to avoid anoying warnings at startup
@@ -100,7 +100,7 @@ typedef struct
     normal              = 0,
     bind                = 1,
     setFailSafe         = 2,
-    normalWithTelemetry = 3,   
+    normalWithTelemetry = 3,
     telemetryResponse   = 4,
     bindFalesafeNoPulse = 5,
     unBind              = 127
@@ -120,7 +120,7 @@ typedef struct
   uint8_t  modelNum;
   uint8_t  checkSum_LSB;  // Checksum least significant byte
   uint8_t  checkSum_MSB;  // Checksum most significant byte
-  uint8_t  payloadValue[CABELL_PAYLOAD_BYTES] = {0}; //12 bits per channel value, unsigned
+  uint8_t  payloadValue[CABELL_PAYLOAD_BYTES] = {0}; // 12 bits per channel value, unsigned
 }
 CABELL_RxTxPacket_t;   
 
@@ -143,7 +143,7 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
 void setFailSafeDefaultValues();
 void loadFailSafeDefaultValues();
 void setFailSafeValues(uint16_t newFailsafeValues[]);
-unsigned long  sendTelemetryPacket(); //returns micros of when the transmit is expected to be complete
+unsigned long sendTelemetryPacket(); // returns micros of when the transmit is expected to be complete
 uint8_t calculateRSSI(bool goodPacket);
 void ADC_Processing();
 bool failSafeButtonHeld();
