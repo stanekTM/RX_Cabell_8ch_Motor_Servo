@@ -137,15 +137,15 @@ void outputPWM()
   int value_motorA = 0, value_motorB = 0;
 
   //motorA --------------------------------------------------------------------------------------
-  if (channelValues[CHANNEL_MOTOR_A] < CHANNEL_MID_VALUE - DEAD_ZONE)
+  if (channelValues[CHANNEL_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], CHANNEL_MID_VALUE - DEAD_ZONE, CHANNEL_MIN_VALUE, ACCELERATE_MOTOR_A, 255);
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
     analogWrite(PIN_PWM_1_MOTOR_A, value_motorA); 
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
-  else if (channelValues[CHANNEL_MOTOR_A] > CHANNEL_MID_VALUE + DEAD_ZONE)
+  else if (channelValues[CHANNEL_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], CHANNEL_MID_VALUE + DEAD_ZONE, CHANNEL_MAX_VALUE, ACCELERATE_MOTOR_A, 255);
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
     analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
@@ -156,15 +156,15 @@ void outputPWM()
   }
 
   //motorB --------------------------------------------------------------------------------------
-  if (channelValues[CHANNEL_MOTOR_B] < CHANNEL_MID_VALUE - DEAD_ZONE)
+  if (channelValues[CHANNEL_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], CHANNEL_MID_VALUE - DEAD_ZONE, CHANNEL_MIN_VALUE, ACCELERATE_MOTOR_B, 255);
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, 255);
     analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
-  else if (channelValues[CHANNEL_MOTOR_B] > CHANNEL_MID_VALUE + DEAD_ZONE)
+  else if (channelValues[CHANNEL_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], CHANNEL_MID_VALUE + DEAD_ZONE, CHANNEL_MAX_VALUE, ACCELERATE_MOTOR_B, 255);
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, 255);
     analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
@@ -553,7 +553,7 @@ void setFailSafeDefaultValues()
   
   for (int x = 0; x < CABELL_NUM_CHANNELS; x++)
   {
-    defaultFailSafeValues[x] = CHANNEL_MID_VALUE;
+    defaultFailSafeValues[x] = MID_CONTROL_VAL;
   }
   
   setFailSafeValues(defaultFailSafeValues);
@@ -567,9 +567,9 @@ void loadFailSafeDefaultValues()
   for (int x = 0; x < CABELL_NUM_CHANNELS; x++)
   {
     // Make sure failsafe values are valid
-    if (failSafeChannelValues[x] < CHANNEL_MIN_VALUE || failSafeChannelValues[x] > CHANNEL_MAX_VALUE)
+    if (failSafeChannelValues[x] < MIN_CONTROL_VAL || failSafeChannelValues[x] > MAX_CONTROL_VAL)
     {
-      failSafeChannelValues[x] = CHANNEL_MID_VALUE;
+      failSafeChannelValues[x] = MID_CONTROL_VAL;
     }
   }
 }
@@ -662,7 +662,7 @@ bool readAndProcessPacket()
     
     for ( int b = 0 ; b < CABELL_NUM_CHANNELS ; b ++ )
     {
-      channelValues[b] =  (b < channelsRecieved) ? tempHoldValues[b] : CHANNEL_MID_VALUE; // use the mid value for channels not received
+      channelValues[b] =  (b < channelsRecieved) ? tempHoldValues[b] : MID_CONTROL_VAL; // use the mid value for channels not received
     }
   }
   return packet_rx;
@@ -771,7 +771,7 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
       tempHoldValues[b] &= 0x0FFF;
     }
     
-    if ((tempHoldValues[b] > CHANNEL_MAX_VALUE) || (tempHoldValues[b] < CHANNEL_MIN_VALUE))
+    if ((tempHoldValues[b] > MAX_CONTROL_VAL) || (tempHoldValues[b] < MIN_CONTROL_VAL))
     {
       packet_rx = false;   // throw out entire packet if any value out of range
     }
