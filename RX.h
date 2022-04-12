@@ -44,7 +44,7 @@
 
 //brake setting, adjustment (0-255), no brake 0, max brake 255
 #define brake_motorA 255 //steering[AILERONS]
-#define brake_motorB 0   //throttle[ELEVATOR]
+#define brake_motorB 255 //throttle[ELEVATOR]
 
 //setting the dead zone of poor quality joysticks TX for the motor controller
 #define dead_zone  15
