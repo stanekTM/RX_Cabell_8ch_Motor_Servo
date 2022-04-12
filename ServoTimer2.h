@@ -20,7 +20,7 @@
 // Updated for Arduino 1.x by Nick Bontrager 2013
 
 /* 
-  This library uses Timer2 to drive up to 8 servos using interrupts so no refresh activity is required from within the sketch. 
+  This library uses Timer2 to drive up to 8 servos using interrupts so no refresh activity is required from within the sketch.
   The usage and method naming is similar to the Arduino software servo library http://www.arduino.cc/playground/ComponentLib/Servo
   except that pulse widths can be in microseconds or degrees.
   write() treats parameters of 180 or less as degrees, otherwise values are milliseconds.
@@ -41,7 +41,7 @@
 
    attach(pin, min, max  ) - Attaches to a pin setting min and max values in microseconds
 
-    default min is 544, max is 2400  
+    default min is 544, max is 2400
 
  
 
@@ -49,19 +49,19 @@
 
 
 
-   read()      - Gets the last written servo pulse width in microseconds. 
+   read()      - Gets the last written servo pulse width in microseconds.
 
 
 
-   attached()  - Returns true if there is a servo attached. 
+   attached()  - Returns true if there is a servo attached.
 
 
 
-   detach()    - Stops an attached servos from pulsing its i/o pin. 
-  
+   detach()    - Stops an attached servos from pulsing its i/o pin.
 
 
-The library takes about 824 bytes of program memory and 32+(1*servos) bytes of SRAM. 
+
+The library takes about 824 bytes of program memory and 32+(1*servos) bytes of SRAM.
 
 The pulse width timing is accurate to within 1%
 
@@ -76,20 +76,21 @@ The pulse width timing is accurate to within 1%
 //typedef uint8_t boolean;
 //typedef uint8_t byte;
 
-#define MIN_PULSE_WIDTH       750  // the shortest pulse sent to a servo  
 
-#define MAX_PULSE_WIDTH      2250  // the longest pulse sent to a servo 
+#define MIN_PULSE_WIDTH      750   // the shortest pulse sent to a servo
+
+#define MAX_PULSE_WIDTH      2250  // the longest pulse sent to a servo
 
 #define DEFAULT_PULSE_WIDTH  1500  // default pulse width when servo is attached
 
-#define FRAME_SYNC_PERIOD   20000 // total frame duration in microseconds 
+#define FRAME_SYNC_PERIOD    20000 // total frame duration in microseconds 
 
-#define NBR_CHANNELS 8            // the maximum number of channels, don't change this 
+#define NBR_CHANNELS         8     // the maximum number of channels, don't change this
 
 typedef struct
 {
   uint8_t nbr        :5; // a pin number from 0 to 31
-  uint8_t isActive   :1; // false if this channel not enabled, pin only pulsed if true 
+  uint8_t isActive   :1; // false if this channel not enabled, pin only pulsed if true
 }
 ServoPin_t;
 

@@ -36,7 +36,7 @@
 #include <DigitalIO.h>    // https://github.com/greiman/DigitalIO
 
 
-My_RF24 radio(pin_CE, pin_CSN);
+My_RF24 radio(PIN_CE, PIN_CSN);
 
 My_RF24* Reciever = NULL;
 
@@ -78,27 +78,28 @@ uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM; // Initializes the channe
 
 RSSI rssi;
 
+
 //Create servo object ------------------------------------------------------------------------------------------------------
 ServoTimer2 servo1, servo2, servo3, servo4, servo5, servo6;
 
 void attachServoPins()
 {
-  servo1.attach(pin_servo1);
-  servo2.attach(pin_servo2);
-  servo3.attach(pin_servo3);
-  servo4.attach(pin_servo4);
-  servo5.attach(pin_servo5);
-  servo6.attach(pin_servo6);
+  servo1.attach(PIN_SERVO_1);
+  servo2.attach(PIN_SERVO_2);
+  servo3.attach(PIN_SERVO_3);
+  servo4.attach(PIN_SERVO_4);
+  servo5.attach(PIN_SERVO_5);
+  servo6.attach(PIN_SERVO_6);
 }
 
 void outputServo()
 {
-  servo1.write(channelValues[THROTTLE]); //plyn
-  servo2.write(channelValues[RUDDER]);   //smerovka
-  servo3.write(channelValues[AUX1]);
-  servo4.write(channelValues[AUX2]);
-  servo5.write(channelValues[AUX3]);
-  servo6.write(channelValues[AUX4]);
+  servo1.write(channelValues[CHANNEL_SERVO_1]);
+  servo2.write(channelValues[CHANNEL_SERVO_2]);
+  servo3.write(channelValues[CHANNEL_SERVO_3]);
+  servo4.write(channelValues[CHANNEL_SERVO_4]);
+  servo5.write(channelValues[CHANNEL_SERVO_5]);
+  servo6.write(channelValues[CHANNEL_SERVO_6]);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -112,86 +113,80 @@ void outputPWM()
  * The divisors available on pins 3, 11       are: 1, 8, 32, 64, 128, 256, and 1024.
  *    
  * Pins 5, 6  are paired on timer0, functions delay(), millis() and micros()
- * D5   pwm 976Hz(default), timer0, 8-bit 
+ * D5   pwm 976Hz(default), timer0, 8-bit
  * D6   pwm 976Hz(default), timer0, 8-bit
  * 
  * Pins 9, 10 are paired on timer1, Servo library
  * D9   pwm 488Hz(default), timer1, 16-bit
- * D10  pwm 488Hz(default), timer1, 16-bit    
+ * D10  pwm 488Hz(default), timer1, 16-bit
  * 
  * Pins 3, 11 are paired on timer2, ServoTimer2 library
  * D3   pwm 488Hz(default), timer2, 8-bit
  * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
 */
  
-//motorA PWM frequency pin D5 or pin D6
-//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz 
-  setPWMPrescaler(pin_pwm1_motorA, pwm_motorA);
+  //motorA PWM frequency pin D5 or pin D6
+  //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
+  setPWMPrescaler(PIN_PWM_1_MOTOR_A, PWM_MOTOR_A);
   
-//motorB PWM frequency pin D9 or pin D10
-//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz 
-  setPWMPrescaler(pin_pwm3_motorB, pwm_motorB);
+  //motorB PWM frequency pin D9 or pin D10
+  //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
+  setPWMPrescaler(PIN_PWM_3_MOTOR_B, PWM_MOTOR_B);
   
-//---------------------------------------------------------------------------------------------
-     
-int steering = channelValues[AILERONS]; //kridelka
-int throttle = channelValues[ELEVATOR]; //vyskovka
+  //---------------------------------------------------------------------------------------------
+  int value_motorA = 0, value_motorB = 0;
 
-int value_motorA = 0, value_motorB = 0;
-
-//motorA --------------------------------------------------------------------------------------  
-
-  if (steering < CHANNEL_MID_VALUE - dead_zone)
+  //motorA --------------------------------------------------------------------------------------
+  if (channelValues[CHANNEL_MOTOR_A] < CHANNEL_MID_VALUE - DEAD_ZONE)
   {
-    value_motorA = map(steering, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, accelerate_motorA, 255);
-    analogWrite(pin_pwm1_motorA, value_motorA); 
-    digitalWrite(pin_pwm2_motorA, LOW);
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], CHANNEL_MID_VALUE - DEAD_ZONE, CHANNEL_MIN_VALUE, ACCELERATE_MOTOR_A, 255);
+    analogWrite(PIN_PWM_1_MOTOR_A, value_motorA); 
+    digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
-  else if (steering > CHANNEL_MID_VALUE + dead_zone)
-  { 
-    value_motorA = map(steering, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, accelerate_motorA, 255);
-    analogWrite(pin_pwm2_motorA, value_motorA); 
-    digitalWrite(pin_pwm1_motorA, LOW);
+  else if (channelValues[CHANNEL_MOTOR_A] > CHANNEL_MID_VALUE + DEAD_ZONE)
+  {
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], CHANNEL_MID_VALUE + DEAD_ZONE, CHANNEL_MAX_VALUE, ACCELERATE_MOTOR_A, 255);
+    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
+    digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   else
   {
-    analogWrite(pin_pwm1_motorA, brake_motorA);
-    analogWrite(pin_pwm2_motorA, brake_motorA);
+    analogWrite(PIN_PWM_1_MOTOR_A, BRAKE_MOTOR_A);
+    analogWrite(PIN_PWM_2_MOTOR_A, BRAKE_MOTOR_A);
   }
-  
-//motorB --------------------------------------------------------------------------------------
 
-  if (throttle < CHANNEL_MID_VALUE - dead_zone)
+  //motorB --------------------------------------------------------------------------------------
+  if (channelValues[CHANNEL_MOTOR_B] < CHANNEL_MID_VALUE - DEAD_ZONE)
   {
-    value_motorB = map(throttle, CHANNEL_MID_VALUE - dead_zone, CHANNEL_MIN_VALUE, accelerate_motorB, 255);
-    analogWrite(pin_pwm3_motorB, value_motorB); 
-    digitalWrite(pin_pwm4_motorB, LOW);
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], CHANNEL_MID_VALUE - DEAD_ZONE, CHANNEL_MIN_VALUE, ACCELERATE_MOTOR_B, 255);
+    analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
+    digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
-  else if (throttle > CHANNEL_MID_VALUE + dead_zone)
+  else if (channelValues[CHANNEL_MOTOR_B] > CHANNEL_MID_VALUE + DEAD_ZONE)
   {
-    value_motorB = map(throttle, CHANNEL_MID_VALUE + dead_zone, CHANNEL_MAX_VALUE, accelerate_motorB, 255); 
-    analogWrite(pin_pwm4_motorB, value_motorB); 
-    digitalWrite(pin_pwm3_motorB, LOW);
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], CHANNEL_MID_VALUE + DEAD_ZONE, CHANNEL_MAX_VALUE, ACCELERATE_MOTOR_B, 255);
+    analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
+    digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
   else
   {
-    analogWrite(pin_pwm3_motorB, brake_motorB);
-    analogWrite(pin_pwm4_motorB, brake_motorB);
+    analogWrite(PIN_PWM_3_MOTOR_B, BRAKE_MOTOR_B);
+    analogWrite(PIN_PWM_4_MOTOR_B, BRAKE_MOTOR_B);
   }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-// based on ADC Interrupt example from https://www.gammon.com.au/adc
 // Reads ADC value then configures next conversion. Alternates between pins A6 and A7
+// based on ADC Interrupt example from https://www.gammon.com.au/adc
 void ADC_Processing()
 {
-  static byte adcPin = pin_RX_batt_A1;
+  static byte adcPin = PIN_RX_BATT_A1;
   
   if (bit_is_clear(ADCSRA, ADSC))
   {
-    analogValue[(adcPin == pin_RX_batt_A1) ? 0 : 1] = ADC;
+    analogValue[(adcPin == PIN_RX_BATT_A1) ? 0 : 1] = ADC;
     
-    adcPin = (adcPin == pin_RX_batt_A2) ? pin_RX_batt_A1 : pin_RX_batt_A2; // Choose next pin to read
+    adcPin = (adcPin == PIN_RX_BATT_A2) ? PIN_RX_BATT_A1 : PIN_RX_BATT_A2; // Choose next pin to read
   
     ADCSRA =  bit (ADEN);                               // turn ADC on
     ADCSRA |= bit (ADPS0) |  bit (ADPS1) | bit (ADPS2); // Pre-scaler of 128
@@ -215,11 +210,11 @@ void setupReciever()
     failSafeNoPulses = true;
   }
  
-  if ((digitalRead(pin_button_bind) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND))
+  if ((digitalRead(PIN_BUTTON_BIND) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND))
   {
     bindMode = true;
     radioPipeID = CABELL_BIND_RADIO_ADDR;
-    digitalWrite(pin_LED, HIGH);    // Turn on LED to indicate bind mode
+    digitalWrite(PIN_LED, HIGH);    // Turn on LED to indicate bind mode
     radioNormalRxPipeID = 0x01<<43; // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
   }
   else
@@ -268,19 +263,6 @@ void outputChannels()
 {
   if (!bindMode)
   {
-    if (failSafeNoPulses && failSafeMode)
-    {
-      nextOutputMode = 255; // set to unused output mode
-    }
-    
-    bool firstPacketOnMode = false;
-
-    // If new mode, turn off all modes
-    if (currentOutputMode != nextOutputMode)
-    {
-      firstPacketOnMode = true;
-    }
-
     // Do this first so we have something to send when PWM enabled
     if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM)
     {
@@ -399,9 +381,10 @@ bool getPacket()
     if (!powerOnLock)
     {
       strongSignal = Reciever->testRPD();
-	  }
-	  
-	  goodPacket_rx = readAndProcessPacket();
+    }
+    
+    goodPacket_rx = readAndProcessPacket();
+    
     nextAutomaticChannelSwitch = lastRadioPacketeRecievedTime + packetInterval + INITIAL_PACKET_TIMEOUT_ADD; // must ne set after readAndProcessPacket because packetInterval may get adjusted
 
     // During the initial power on lock process only consider the packet good if the signal was strong (better than -64 DBm)
@@ -517,7 +500,7 @@ void unbindReciever()
   // Flash LED forever indicating unbound
   while (true)
   {
-    digitalWrite(pin_LED, ledState);
+    digitalWrite(PIN_LED, ledState);
     ledState =  !ledState;
     delay(250); // Fast LED flash
   }  
@@ -538,7 +521,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     EEPROM.put(currentModelEEPROMAddress, modelNum);
     radioNormalRxPipeID = newRadioPipeID;
     EEPROM.put(radioPipeEEPROMAddress, radioNormalRxPipeID);
-    digitalWrite(pin_LED, LOW); // Turn off LED to indicate successful bind
+    digitalWrite(PIN_LED, LOW); // Turn off LED to indicate successful bind
     
     if (RxMode == CABELL_RxTxPacket_t::RxMode_t::bindFalesafeNoPulse)
     {
@@ -556,7 +539,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     // Flash LED forever indicating bound
     while (true)
     {
-      digitalWrite(pin_LED, ledState);
+      digitalWrite(PIN_LED, ledState);
       ledState =  !ledState;
       delay(2000); // Slow flash
     }
@@ -637,20 +620,20 @@ bool readAndProcessPacket()
     currentChannel = tx_channel;
   }
   
-  setNextRadioChannel(false); // Also sends telemetry if in telemetry mode.  Doing this as soon as possible to keep timing as tight as possible
+  setNextRadioChannel(false); // Also sends telemetry if in telemetry mode. Doing this as soon as possible to keep timing as tight as possible
                               // False indicates that packet was not missed
 
   // Remove 8th bit from RxMode because this is a toggle bit that is not included in the checksum
-  // This toggle with each xmit so consecutive payloads are not identical.  This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
+  // This toggle with each xmit so consecutive payloads are not identical. This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
   uint8_t* p = reinterpret_cast<uint8_t*>(&RxPacket.RxMode);
-  *p &= 0x7F;  //ensure 8th bit is not set.  This bit is not included in checksum
+  *p &= 0x7F;  // ensure 8th bit is not set. This bit is not included in checksum
 
   // putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
   telemetryEnabled = (RxPacket.RxMode==CABELL_RxTxPacket_t::RxMode_t::normalWithTelemetry) ? true : false;
   
   bool packet_rx = false;
   uint16_t tempHoldValues[CABELL_NUM_CHANNELS];
-  uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS-CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
+  uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS - CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
   uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction%2))/ 2)) * 3); // reduce 3 bytes per 2 channels, but not last channel if it is odd
   uint8_t maxPayloadValueIndex = sizeof(RxPacket.payloadValue) - (sizeof(RxPacket) - packetSize);
   uint8_t channelsRecieved = CABELL_NUM_CHANNELS - channelReduction;
@@ -719,7 +702,7 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     
     if (modelNum == currentModel)
     {
-      digitalWrite(pin_LED, HIGH);
+      digitalWrite(PIN_LED, HIGH);
       
       // only set the values first time through
       if (!failSafeValuesHaveBeenSet)
@@ -739,7 +722,7 @@ bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     
     if (modelNum == currentModel)
     {
-      digitalWrite(pin_LED, LOW);
+      digitalWrite(PIN_LED, LOW);
       failSafeValuesHaveBeenSet = false; // Reset when not in setFailSafe mode so next time failsafe is to be set it will take
     }
     else
@@ -828,7 +811,7 @@ bool failSafeButtonHeld()
   static unsigned long heldTriggerTime = 0;
   
   // invert because pin is pulled up so low means pressed
-  if(!bindMode && !digitalRead(pin_button_bind))
+  if(!bindMode && !digitalRead(PIN_BUTTON_BIND))
   {
     if (heldTriggerTime == 0)
     {

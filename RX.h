@@ -32,31 +32,31 @@
 
 //settings PWM motorA (pin D5 or D6)
 //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
-#define pwm_motorA 256
+#define PWM_MOTOR_A  256
 
 //settings PWM motorB (pin D9 or D10)
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
-#define pwm_motorB 256
+#define PWM_MOTOR_B  256
 
 //setting the reaction of the motor to be rotated after the lever has been moved (0-255)
-#define accelerate_motorA 0
-#define accelerate_motorB 0
+#define ACCELERATE_MOTOR_A  0
+#define ACCELERATE_MOTOR_B  0
 
 //brake setting, adjustment (0-255), no brake 0, max brake 255
-#define brake_motorA 255 //steering[AILERONS]
-#define brake_motorB 255 //throttle[ELEVATOR]
+#define BRAKE_MOTOR_A  255
+#define BRAKE_MOTOR_B  255
 
 //setting the dead zone of poor quality joysticks TX for the motor controller
-#define dead_zone  15
+#define DEAD_ZONE  15
 
-#define AILERONS  0 //kridelka
-#define ELEVATOR  1 //vyskovka
-#define THROTTLE  2 //plyn
-#define RUDDER    3 //smerovka
-#define AUX1      4
-#define AUX2      5
-#define AUX3      6
-#define AUX4      7
+#define CHANNEL_MOTOR_A  0
+#define CHANNEL_MOTOR_B  1
+#define CHANNEL_SERVO_1  2
+#define CHANNEL_SERVO_2  3
+#define CHANNEL_SERVO_3  4
+#define CHANNEL_SERVO_4  5
+#define CHANNEL_SERVO_5  6
+#define CHANNEL_SERVO_6  7
 
 #define CHANNEL_MIN_VALUE  1000
 #define CHANNEL_MAX_VALUE  2000

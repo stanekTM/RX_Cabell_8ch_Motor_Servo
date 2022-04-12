@@ -38,18 +38,19 @@
 #include "RX.h"
 #include "Pins.h"
 
+
 //--------------------------------------------------------------------------------------------------------------------------
 void setup(void)
 {
-  pinMode(pin_pwm1_motorA, OUTPUT);
-  pinMode(pin_pwm2_motorA, OUTPUT);
-  pinMode(pin_pwm3_motorB, OUTPUT);
-  pinMode(pin_pwm4_motorB, OUTPUT);
+  pinMode(PIN_PWM_1_MOTOR_A, OUTPUT);
+  pinMode(PIN_PWM_2_MOTOR_A, OUTPUT);
+  pinMode(PIN_PWM_3_MOTOR_B, OUTPUT);
+  pinMode(PIN_PWM_4_MOTOR_B, OUTPUT);
   
-  pinMode(pin_button_bind, INPUT_PULLUP);
+  pinMode(PIN_BUTTON_BIND, INPUT_PULLUP);
 
-  pinMode(pin_LED, OUTPUT);
-  digitalWrite(pin_LED, LOW);
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
   
   // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
   ADC_Processing();
