@@ -42,6 +42,8 @@
 //--------------------------------------------------------------------------------------------------------------------------
 void setup(void)
 {
+  //Serial.begin(9600); //print value ​​on a serial monitor
+  
   pinMode(PIN_PWM_1_MOTOR_A, OUTPUT);
   pinMode(PIN_PWM_2_MOTOR_A, OUTPUT);
   pinMode(PIN_PWM_3_MOTOR_B, OUTPUT);

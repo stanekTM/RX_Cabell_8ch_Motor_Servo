@@ -105,26 +105,26 @@ void outputServo()
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM()
 {
-/*
- * The base frequency for pins 3, 9, 10, 11 is 31250Hz.
- * The base frequency for pins 5, 6         is 62500Hz.
- * 
- * The divisors available on pins 5, 6, 9, 10 are: 1, 8, 64, 256, and 1024.
- * The divisors available on pins 3, 11       are: 1, 8, 32, 64, 128, 256, and 1024.
- *    
- * Pins 5, 6  are paired on timer0, functions delay(), millis() and micros()
- * D5   pwm 976Hz(default), timer0, 8-bit
- * D6   pwm 976Hz(default), timer0, 8-bit
- * 
- * Pins 9, 10 are paired on timer1, Servo library
- * D9   pwm 488Hz(default), timer1, 16-bit
- * D10  pwm 488Hz(default), timer1, 16-bit
- * 
- * Pins 3, 11 are paired on timer2, ServoTimer2 library
- * D3   pwm 488Hz(default), timer2, 8-bit
- * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
-*/
- 
+ /*
+  * The base frequency for pins 3, 9, 10, 11 is 31250Hz.
+  * The base frequency for pins 5, 6         is 62500Hz.
+  * 
+  * The divisors available on pins 5, 6, 9, 10 are: 1, 8, 64, 256, and 1024.
+  * The divisors available on pins 3, 11       are: 1, 8, 32, 64, 128, 256, and 1024.
+  * 
+  * Pins 5, 6  are paired on timer0, functions delay(), millis(), micros() and delayMicroseconds()
+  * D5   pwm 976Hz(default), timer0, 8-bit
+  * D6   pwm 976Hz(default), timer0, 8-bit
+  * 
+  * Pins 9, 10 are paired on timer1, Servo library
+  * D9   pwm 488Hz(default), timer1, 16-bit
+  * D10  pwm 488Hz(default), timer1, 16-bit
+  * 
+  * Pins 3, 11 are paired on timer2, ServoTimer2 library
+  * D3   pwm 488Hz(default), timer2, 8-bit
+  * D11  pwm 488Hz(default), timer2, 8-bit, SPI MOSI hardware
+  */
+  
   //motorA PWM frequency pin D5 or pin D6
   //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
   setPWMPrescaler(PIN_PWM_1_MOTOR_A, PWM_MOTOR_A);
@@ -133,20 +133,19 @@ void outputPWM()
   //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
   setPWMPrescaler(PIN_PWM_3_MOTOR_B, PWM_MOTOR_B);
   
-  //---------------------------------------------------------------------------------------------
   int value_motorA = 0, value_motorB = 0;
-
+  
   //motorA --------------------------------------------------------------------------------------
   if (channelValues[CHANNEL_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
     value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
-    analogWrite(PIN_PWM_1_MOTOR_A, value_motorA); 
+    analogWrite(PIN_PWM_1_MOTOR_A, value_motorA);
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
   else if (channelValues[CHANNEL_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
     value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
-    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
+    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA);
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   else
@@ -154,7 +153,9 @@ void outputPWM()
     analogWrite(PIN_PWM_1_MOTOR_A, BRAKE_MOTOR_A);
     analogWrite(PIN_PWM_2_MOTOR_A, BRAKE_MOTOR_A);
   }
-
+  
+  //Serial.println(channelValues[CHANNEL_MOTOR_A]); //print value ​​on a serial monitor
+  
   //motorB --------------------------------------------------------------------------------------
   if (channelValues[CHANNEL_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
