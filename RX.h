@@ -30,11 +30,11 @@
 #include "My_RF24.h"
 
 
-//settings PWM motorA (pin D5 or D6)
+//settings PWM motorA (pin D5 or D6 are paired on timer0, functions delay(), millis(), micros() and delayMicroseconds())
 //1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
 #define PWM_MOTOR_A  256
 
-//settings PWM motorB (pin D9 or D10)
+//settings PWM motorB (pin D9 or D10 are paired on timer1, Servo library)
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
 #define PWM_MOTOR_B  256
 
@@ -64,7 +64,7 @@
 
 #define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
 
-#define CABELL_NUM_CHANNELS   16 // min 12 max 16. The maximum number of RC channels that can be sent in one packet
+#define CABELL_NUM_CHANNELS   16 // The maximum number of RC channels that can be sent in one packet
 #define CABELL_MIN_CHANNELS   4  // The minimum number of channels that must be included in a packet, the number of channels cannot be reduced any further than this
 #define CABELL_PAYLOAD_BYTES  24 // 12 bits per value * 16 channels
 
@@ -118,6 +118,7 @@ typedef struct
   uint8_t  checkSum_LSB;  // Checksum least significant byte
   uint8_t  checkSum_MSB;  // Checksum most significant byte
   uint8_t  payloadValue[CABELL_PAYLOAD_BYTES] = {0}; // 12 bits per channel value, unsigned
+  
 }
 CABELL_RxTxPacket_t;   
 
