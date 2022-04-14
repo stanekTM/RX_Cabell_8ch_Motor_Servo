@@ -62,8 +62,9 @@ void setup(void)
   // wait for conversion
   while (!bit_is_clear(ADCSRA, ADSC));
   ADC_Processing();
- 
+  
   setupReciever();
+  attachServoPins();
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
