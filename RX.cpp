@@ -56,16 +56,13 @@ const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + siz
 
 uint16_t failSafeChannelValues[CABELL_NUM_CHANNELS];
 
-bool bindMode = false;     // when true send bind command to cause receiver to bind enter bind mode
+bool bindMode = false; // when true send bind command to cause receiver to bind enter bind mode
 bool failSafeMode = false;
 bool failSafeNoPulses = false;
 bool packetMissed = false;
 uint32_t packetInterval = DEFAULT_PACKET_INTERVAL;
 
 uint8_t radioChannel[CABELL_RADIO_CHANNELS];
-
-volatile uint8_t currentOutputMode = 255; // initialize to an unused mode
-volatile uint8_t nextOutputMode = 255;    // initialize to an unused mode
 
 volatile bool packetReady = false;
 
@@ -177,6 +174,13 @@ void outputPWM()
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
+void outputChannels()
+{
+  outputServo();
+  outputPWM();
+}
+
+//--------------------------------------------------------------------------------------------------------------------------
 // Reads ADC value then configures next conversion. Alternates between pins A6 and A7
 // based on ADC Interrupt example from https://www.gammon.com.au/adc
 void ADC_Processing()
@@ -258,24 +262,7 @@ void setupReciever()
       packetReady = true; // pulled low when packet is received
     }
   }
-
-//--------------------------------------------------------------------------------------------------------------------------
-void outputChannels()
-{
-  if (!bindMode)
-  {
-    // Do this first so we have something to send when PWM enabled
-    if (nextOutputMode == CABELL_RECIEVER_OUTPUT_PWM)
-    {
-      outputServo();
-      outputPWM();
-      attachServoPins();
-    }
-    
-    currentOutputMode = nextOutputMode;
-  }
-}
-
+  
 //--------------------------------------------------------------------------------------------------------------------------
 void setNextRadioChannel(bool missedPacket)
 {
@@ -435,8 +422,8 @@ bool getPacket()
       if (sequentialHitCount > (CABELL_RADIO_CHANNELS * 5))
       {
         powerOnLock = true;
-		    hoppingLockedIn = true;
-	    }
+        hoppingLockedIn = true;
+      }
     }
     else if (sequentialHitCount > 5)
     {
@@ -472,7 +459,7 @@ void outputFailSafeValues(bool callOutputChannels)
 {
   loadFailSafeDefaultValues();
   
-  for (uint8_t x =0; x < CABELL_NUM_CHANNELS; x++)
+  for (uint8_t x = 0; x < CABELL_NUM_CHANNELS; x++)
   {
     channelValues[x] = failSafeChannelValues[x];
   }
@@ -481,7 +468,7 @@ void outputFailSafeValues(bool callOutputChannels)
   {  
     failSafeMode = true;
   }
-  if (callOutputChannels) outputChannels();
+  if (callOutputChannels)outputChannels();
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -613,7 +600,7 @@ bool readAndProcessPacket()
 {
   CABELL_RxTxPacket_t RxPacket;
   
-  Reciever->read( &RxPacket, sizeof(RxPacket));
+  Reciever->read(&RxPacket, sizeof(RxPacket));
   int tx_channel = RxPacket.reserved & CABELL_RESERVED_MASK_CHANNEL;
   
   if (tx_channel != 0)
@@ -659,8 +646,6 @@ bool readAndProcessPacket()
   // if packet is good, copy the channel values
   if (packet_rx)
   {
-    nextOutputMode = (RxPacket.option & CABELL_OPTION_MASK_RECIEVER_OUTPUT_MODE) >> CABELL_OPTION_SHIFT_RECIEVER_OUTPUT_MODE;
-    
     for ( int b = 0 ; b < CABELL_NUM_CHANNELS ; b ++ )
     {
       channelValues[b] =  (b < channelsRecieved) ? tempHoldValues[b] : MID_CONTROL_VAL; // use the mid value for channels not received

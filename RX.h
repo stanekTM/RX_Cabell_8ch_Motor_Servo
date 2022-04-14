@@ -75,9 +75,6 @@
 
 #define CABELL_OPTION_MASK_MAX_POWER_OVERRIDE     0x40
 #define CABELL_OPTION_MASK_CHANNEL_REDUCTION      0x0F
-#define CABELL_OPTION_MASK_RECIEVER_OUTPUT_MODE   0x30
-#define CABELL_OPTION_SHIFT_RECIEVER_OUTPUT_MODE  4
-#define CABELL_RECIEVER_OUTPUT_PWM                0
 
 #define RX_CONNECTION_TIMEOUT  1000000 // If no packet received in this time frame apply failsafe settings. In microseconds
 
