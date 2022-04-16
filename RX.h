@@ -123,27 +123,26 @@ typedef struct
 CABELL_RxTxPacket_t;   
 
 
-void setupReciever();
 void attachServoPins();
 void outputServo();
 void outputPWM();
-bool getPacket();
-void outputFailSafeValues(bool callOutputChannels);
 void outputChannels();
+void ADC_Processing();
+void setupReciever();
 void setNextRadioChannel(bool missedPacket);
+bool getPacket();
 void checkFailsafeDisarmTimeout(unsigned long lastPacketTime, bool inititalGoodPacketRecieved);
+void outputFailSafeValues(bool callOutputChannels);
 void unbindReciever();
 void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket_t :: RxMode_t RxMode);
-bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex);
-bool readAndProcessPacket();
-bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[]);
-bool processRxMode (uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[]);
 void setFailSafeDefaultValues();
 void loadFailSafeDefaultValues();
 void setFailSafeValues(uint16_t newFailsafeValues[]);
+bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex);
+bool readAndProcessPacket();
+bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[]);
+bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[]);
 unsigned long sendTelemetryPacket(); // returns micros of when the transmit is expected to be complete
-uint8_t calculateRSSI(bool goodPacket);
-void ADC_Processing();
 bool failSafeButtonHeld();
 void setTelemetryPowerMode(uint8_t option);
 void initializeRadio(My_RF24* radio);
