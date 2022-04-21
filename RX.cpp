@@ -617,7 +617,7 @@ bool readAndProcessPacket()
   *p &= 0x7F;  // ensure 8th bit is not set. This bit is not included in checksum
 
   // putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
-  telemetryEnabled = (RxPacket.RxMode==CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry) ? true : false;
+  telemetryEnabled = (RxPacket.RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry) ? true : false;
   
   bool packet_rx = false;
   uint16_t tempHoldValues[CABELL_NUM_CHANNELS];
