@@ -39,8 +39,6 @@ For other information, see below ...
 
 Jiri StanekTM
 #
-Since there are on-going changes to the main Multi-protocol branch, if you have issues or are using experimental features please test with the soligen2010 fork, which is the latest version tested with the receiver [https://github.com/soligen2010/DIY-Multiprotocol-TX-Module](https://github.com/soligen2010/DIY-Multiprotocol-TX-Module).
-
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
 
@@ -83,7 +81,7 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Initial Setup 
-__Channel Reduction__ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error). For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
+__Channel Reduction__ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. Fewer bytes sent equates to less opportunity for error. For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
 * 0  - Send 16 channels
 * 1  - Send 15 channels
 * 2  - Send 14 channels
