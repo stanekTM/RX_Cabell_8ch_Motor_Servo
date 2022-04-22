@@ -1,5 +1,5 @@
 ## RX_Cabell_8ch_Motor_Servo
-It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [__Multiprotocol__](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 This RX includes 2x motor controller with brake and has 6x servo output.
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, using 4x PWN input control signals.
 The option to adjust the brake is included in the code.
@@ -39,7 +39,7 @@ For other information, see below ...
 
 Jiri StanekTM
 #
-Since there are on-going changes to the main Multi-protocol branch, if you have issues or are using experimental features please test with the soligen2010 fork, which is the latest version tested with the receiver [https://github.com/soligen2010/DIY-Multiprotocol-TX-Module]( https://github.com/soligen2010/DIY-Multiprotocol-TX-Module).
+Since there are on-going changes to the main Multi-protocol branch, if you have issues or are using experimental features please test with the soligen2010 fork, which is the latest version tested with the receiver [https://github.com/soligen2010/DIY-Multiprotocol-TX-Module](https://github.com/soligen2010/DIY-Multiprotocol-TX-Module).
 
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
@@ -67,7 +67,7 @@ Turn on the transmitter and have it send a Bind packet. The receiver LED changes
 * When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 
 ## Customizing Fail-safe Values
-__Do not set fail-safe values while in flight.__  Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
+__Do not set fail-safe values while in flight__.  Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values. This can be done one of two ways:
 * A set-Fail-Safe packet can be sent from the transmitter. The values from the first packet in a series for set-Fail-Safe packets are saved as the new fail-safe values. The LED is turned on when a set-Fail-Safe packet is received, and stays on as long as set-Fail-Safe packets continue to be received. The LED is turned off when set-Fail-Safe values stop being received.
@@ -127,7 +127,7 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 When the receiver is restarted, it will start in Bind mode.
 
 ## Setting Failsafe Values
-__Do not set fail-safe values while in flight.__ Please see the Customizing Fail-safe Values section for more information.
+__Do not set fail-safe values while in flight__. Please see the Customizing Fail-safe Values section for more information.
 * Navigate to the Model Setup page.
 * Go to the External RF section.
 * Place all switches in the desired fail-safe state.
