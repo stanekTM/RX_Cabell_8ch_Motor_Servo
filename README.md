@@ -75,7 +75,7 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Binding Receiver
-* Turn on the receiver in Bind Mode (see receiver setup above).
+* Turn on the receiver in Bind Mode (see. receiver setup above).
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
 * When the pairing is successful, the LED of the receiver will flash slowly.
@@ -84,7 +84,7 @@ Powering the transmitter off before the model will cause the receiver to dis-arm
 ## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
 * Navigate to the model "SETUP" page.
-* Change the sub-protocol to "Unbind" (The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind").
+* Change the sub-protocol to "Unbind". The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind".
 * The receiver LED will blink when the un-bind is successful.
 
 When the receiver is restarted, it will start in Bind mode.
@@ -94,14 +94,14 @@ __Do not set fail-safe values while in flight!__ Please see the Customizing Fail
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
-* While holding the sticks, change the sub-protocol to "F-Safe" (DO not go past "F-Safe". If you even briefly go to "Unbind" the receiver will un-bind).
+* While holding the sticks, change the sub-protocol to "F-Safe". DO not go past "F-Safe". If you even briefly go to "Unbind" the receiver will un-bind.
 * When the LED is turned on, the Fail-safe settings are recorded.
 * Change the sub-protocol back to the original setting and the LED will turn off.
 
 Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a Fail-safe after one second.
 
 ## Telemetry
-When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
+When the sub-protocol is set to "V3 Telm", the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
 
 ## RSSI
 Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
