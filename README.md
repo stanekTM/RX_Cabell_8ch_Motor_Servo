@@ -1,4 +1,4 @@
-﻿## Note:
+## Note:
 Thank you to the author of the RC receiver project Dennis "soligen2010".
 
 It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the RC transmitter [OpenAVRc](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module). 
@@ -70,7 +70,7 @@ The receiver fail-safes after 1 second when no packets are received. If a connec
 
 When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 
-### Customizing Fail-safe Values
+## Customizing Fail-safe Values
 __Do not set fail-safe values while in flight.__  Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values. This can be done one of two ways:
@@ -86,7 +86,7 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
-### Initial Setup 
+## Initial Setup 
 * Move down to the Option value. This value must be calculated to configure the protocol. This is done by entering a number that is the sum of the options you wish to use. Select the values from below and add them together to get the option value.
 
 * _Channel Reduction_ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error). For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
@@ -116,14 +116,14 @@ Powering the transmitter off before the model will cause the receiver to dis-arm
 #### Notes on Power Setting
 Using an NRF24L01+ with PA/LNA outputs 25 milliwatts for HIGH power and 100 milliwatts for MAX power. Despite this there are reports that using MAX power on inexpensive Chinese modules provides worse range than using the HIGH power setting due to the noise added by the extra amplification and the lower quality Chinese components. By adding shielding and using a good antenna, I get better range using MAX power even with Chinese components. Your results may vary so range test your equipment and use the setting that provides the best results.
 
-### Binding Receiver
+## Binding Receiver
 * Turn on the receiver in Bind Mode. (See receiver setup above.)
 * In the transmitter Navigate to the Model Setup page.
 * In the External RF section, highlight BIND and press enter.
 * The receiver LED will blink when the bind is successful.
 * Restart the receiver.
 
-### Unbinding Receiver
+## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
 * Navigate to the Model Setup page.
 * Go to the External RF section.
@@ -132,7 +132,7 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 
 When the receiver is restarted, it will start in Bind mode.
 
-### Setting Failsafe Values
+## Setting Failsafe Values
 __Do not set fail-safe values while in flight.__ Please see the Customizing Fail-safe Values section for more information.
 * Navigate to the Model Setup page.
 * Go to the External RF section.
@@ -147,14 +147,14 @@ Always test the Fail-safe settings before flying. Turning off the transmitter sh
 ## Telemetry
 When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7. A receiver module with diversity is recommended when using telemetry to increase the reliability of the telemetry packets being received by the transmitter.
 
-### RSSI
+## RSSI
 Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
 
 In practice, the packet rate seems to stay high for a long range, then drop off quickly as the receiver moves out of range. Typically, the telemetry lost warning happens before the RSSI low warning.
 
 The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
-### Analog Values
+## Analog Values
 Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause  damage__, so care must be taken to ensure the voltage is in a safe range.
 
 Values from pins A6 and A7 come into a Taranis transmitter as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
