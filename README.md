@@ -5,7 +5,7 @@ The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302
 The option to adjust the brake is included in the code.
 The firmware will be used in the planned receivers of rc cars, tanks, boats, robots, aircraft.
 
-#### Note: I use (Arduino) ATmega328P 5V/16Mhz and supply VCC only with 3.3V voltage.
+__Note🥇 I use (Arduino) ATmega328P 5V/16Mhz and supply VCC only with 3.3V voltage.
 
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 ### Arduino pins:
