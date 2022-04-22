@@ -162,47 +162,32 @@ Diversity is achieved by using 2 NRF24L01 modules, which improves link reliabili
 
 Both modules listen for an incoming packet.  If the primary receiver does not get a packet when expected, the secondary receiver is checked for the missed packet.  After each packet, the primary/secondary receivers are swapped, except in the case where only the primary receiver had the packet, in which case this receiver will retain the primary role.  Telemetry packets are transmitted using the same receiver that was used to read the packet.  If both receivers got the incoming packet, then the packet in the secondary receiver is discarded.  The net effect is that the receivers alternate with each packet, except when only one receiver is receiving, in which case that receiver continues to be used for both the primary receiver and telemetry transmit.
 
-## Taranis Setup using Multi-Protocol Module and Open-TX 2.2
-
-With a Multi Protocol module installed in the Taranis, this is how to configure a model to use this protocol.  These instructions for for a Serial connection using OpenTX 2.2.  These instructions assume some familiarity with using OpenTX on the Taranis.
-
 ### Initial Setup 
-   
-* Press Menu to go to Model Selection and Select the model you with to set up.
-* Press Page to get the the Model Setup page.
-* Scroll down to the Internal RF section and change Mode to OFF.
-* Scroll down to the External RF section and change Mode to MULT.
-* In the protocol field to the right of MULT, select Custom.
-* In the protocol field to the right of Custom, enter 34.  This is the protocol number. 
-  * __This number is temporary.  It likely will need to change when the TX half of this protocol is merged into the main Multi-Protocol project.__
-* The next number to the right is the sub-protocol.  For initial setup select 0 or 1.  Valid values are:
-  * 0 - Normal usage without telemetry
-  * 1 - Normal usage with telemetry (please see the section on telemetry)
-  * 6 - Set fail-safe values (see below and the Fail-safe section)
-  * 7 - Unbind receiver (see below)
-* Receiver No. should be filled in with the model number.
-* Move down to the Option value.  This value must be calculated to configure the protocol.  This is done by entering a number that is the sum of the options you wish to use.  Select the values from below and add them together to get the option value.
-  * _Channel Reduction_ reduces the number of channels transmitted.  This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error.)  For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent.  Choose one of the following to add into the Option value:
-    * 0  - Send 16 channels
-    * 1  - Send 15 channels
-    * 2  - Send 14 channels
-    * 3  - Send 13 channels
-    * 4  - Send 12 channels
-    * 5  - Send 11 channels
-    * 6  - Send 10 channels
-    * 7  - Send 9 channels
-    * 8  - Send 8 channels
-    * 9  - Send 7 channels
-    * 10 - Send 6 channels
-    * 11 - Send 5 channels
-    * 12 - Send 4 channels
-  * _Output Mode_ indicates how the receiver should output the channels.  Choose one of the following to add into the Option value:
-    * 0  - Output servo PWM signals on pins D2 through D9 for channels 1 to 8
-	* 16 - Output channels 1 to 8 using PPM on pin D2
-	* 32 - Output channels 1 to 16 using SBUS __(Experimental)__
-  * _Transmitter Power_ Overrides the Multi-Protocol's normal high power setting.  See comments on power setting below.  Choose one of the following to add into the Option value:
-    * 0 - Use the NRF24L01+ HIGH power setting.  This is the normal Multi-Protocol module behavior.
-    * 64 - Use the NRF24L01+ MAX power setting instead of the HIGH power setting.  This over-rides the normal Multi-Protocol module behavior.
+* Move down to the Option value. This value must be calculated to configure the protocol. This is done by entering a number that is the sum of the options you wish to use. Select the values from below and add them together to get the option value.
+
+* _Channel Reduction_ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error). For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
+* 0  - Send 16 channels
+* 1  - Send 15 channels
+* 2  - Send 14 channels
+* 3  - Send 13 channels
+* 4  - Send 12 channels
+* 5  - Send 11 channels
+* 6  - Send 10 channels
+* 7  - Send 9 channels
+* 8  - Send 8 channels
+* 9  - Send 7 channels
+* 10 - Send 6 channels
+* 11 - Send 5 channels
+* 12 - Send 4 channels
+
+* _Output Mode_ indicates how the receiver should output the channels. Choose one of the following to add into the Option value:
+* 0  - Output servo PWM signals on pins D2 through D9 for channels 1 to 8
+* 16 - Output channels 1 to 8 using PPM on pin D2
+* 32 - Output channels 1 to 16 using SBUS __(Experimental)__
+
+* _Transmitter Power_ Overrides the Multi-Protocol's normal high power setting. See comments on power setting below. Choose one of the following to add into the Option value:
+* 0 - Use the NRF24L01+ HIGH power setting. This is the normal Multi-Protocol module behavior.
+* 64 - Use the NRF24L01+ MAX power setting instead of the HIGH power setting. This over-rides the normal Multi-Protocol module behavior.
 
 #### Notes on Power Setting
 Using an NRF24L01+ with PA/LNA outputs 25 milliwatts for HIGH power and 100 milliwatts for MAX power. Despite this there are reports that using MAX power on inexpensive Chinese modules provides worse range than using the HIGH power setting due to the noise added by the extra amplification and the lower quality Chinese components. By adding shielding and using a good antenna, I get better range using MAX power even with Chinese components. Your results may vary so range test your equipment and use the setting that provides the best results.
