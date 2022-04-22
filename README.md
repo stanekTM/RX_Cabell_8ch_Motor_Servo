@@ -59,7 +59,7 @@ Turn on the transmitter and have it send a Bind packet. The receiver LED changes
 * When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 
 ## Customizing Fail-safe Values
-__Do not set fail-safe values while in flight__.  Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
+__Do not set fail-safe values while in flight!__ Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values. This can be done one of two ways:
 * A set-Fail-Safe packet can be sent from the transmitter. The values from the first packet in a series for set-Fail-Safe packets are saved as the new fail-safe values. The LED is turned on when a set-Fail-Safe packet is received, and stays on as long as set-Fail-Safe packets continue to be received. The LED is turned off when set-Fail-Safe values stop being received.
@@ -90,7 +90,7 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 When the receiver is restarted, it will start in Bind mode.
 
 ## Setting Failsafe Values
-__Do not set fail-safe values while in flight!__. Please see the Customizing Fail-safe Values section for more information.
+__Do not set fail-safe values while in flight!__ Please see the Customizing Fail-safe Values section for more information.
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
