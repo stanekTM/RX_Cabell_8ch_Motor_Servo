@@ -80,34 +80,6 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
-## Initial Setup 
-__Channel Reduction__ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. Fewer bytes sent equates to less opportunity for error. For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
-* 0  - Send 16 channels
-* 1  - Send 15 channels
-* 2  - Send 14 channels
-* 3  - Send 13 channels
-* 4  - Send 12 channels
-* 5  - Send 11 channels
-* 6  - Send 10 channels
-* 7  - Send 9 channels
-* 8  - Send 8 channels
-* 9  - Send 7 channels
-* 10 - Send 6 channels
-* 11 - Send 5 channels
-* 12 - Send 4 channels
-
-__Output Mode__ indicates how the receiver should output the channels. Choose one of the following to add into the Option value:
-* 0  - Output servo PWM signals on pins D2 through D9 for channels 1 to 8
-* 16 - Output channels 1 to 8 using PPM on pin D2
-* 32 - Output channels 1 to 16 using SBUS __(Experimental)__
-
-__Transmitter Power__ Overrides the Multi-Protocol's normal high power setting. See comments on power setting below. Choose one of the following to add into the Option value:
-* 0 - Use the NRF24L01+ HIGH power setting. This is the normal Multi-Protocol module behavior.
-* 64 - Use the NRF24L01+ MAX power setting instead of the HIGH power setting. This over-rides the normal Multi-Protocol module behavior.
-
-#### Notes on Power Setting
-Using an NRF24L01+ with PA/LNA outputs 25 milliwatts for HIGH power and 100 milliwatts for MAX power. Despite this there are reports that using MAX power on inexpensive Chinese modules provides worse range than using the HIGH power setting due to the noise added by the extra amplification and the lower quality Chinese components. By adding shielding and using a good antenna, I get better range using MAX power even with Chinese components. Your results may vary so range test your equipment and use the setting that provides the best results.
-
 ## Binding Receiver
 * Turn on the receiver in Bind Mode. (See receiver setup above.)
 * In the transmitter Navigate to the Model Setup page.
@@ -137,7 +109,7 @@ __Do not set fail-safe values while in flight__. Please see the Customizing Fail
 Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a Fail-safe after one second.
 
 ## Telemetry
-When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7. A receiver module with diversity is recommended when using telemetry to increase the reliability of the telemetry packets being received by the transmitter.
+When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
 
 ## RSSI
 Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
@@ -149,7 +121,7 @@ The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel 
 ## Analog Values
 Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause  damage__, so care must be taken to ensure the voltage is in a safe range.
 
-Values from pins A6 and A7 come into a Taranis transmitter as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
+The values from pins A6 and A7 come to the transmitter with OpenTX or OpenAVRc as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
 
 The values sent are 0 - 255 corresponding to 0V - 5V. This will need to be re-scaled to the actual voltage (or current, etc.) in the transmitter on the telemetry  configuration screen.
 
