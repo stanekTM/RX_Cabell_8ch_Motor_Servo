@@ -1,5 +1,5 @@
 ## RX_Cabell_8ch_Motor_Servo
-It is a modified firmware of the receiver with the "Cabell" protocol, which is supported by the RC transmitter [OpenAVRc](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [Multiprotocol](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 This RX includes 2x motor controller with brake and has 6x servo output.
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, using 4x PWN input control signals.
 The option to adjust the brake is included in the code.
@@ -83,9 +83,7 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Initial Setup 
-* Move down to the Option value. This value must be calculated to configure the protocol. This is done by entering a number that is the sum of the options you wish to use. Select the values from below and add them together to get the option value.
-
-* _Channel Reduction_ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error). For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
+__Channel Reduction__ reduces the number of channels transmitted. This also reduces the size of the packet, which improves reliability. (Fewer bytes sent equates to less opportunity for error). For best reliability reduce the number of channels to the minimum number needed for the model. Note that at least 4 channels must always be sent. Choose one of the following to add into the Option value:
 * 0  - Send 16 channels
 * 1  - Send 15 channels
 * 2  - Send 14 channels
@@ -100,12 +98,12 @@ Powering the transmitter off before the model will cause the receiver to dis-arm
 * 11 - Send 5 channels
 * 12 - Send 4 channels
 
-* _Output Mode_ indicates how the receiver should output the channels. Choose one of the following to add into the Option value:
+__Output Mode__ indicates how the receiver should output the channels. Choose one of the following to add into the Option value:
 * 0  - Output servo PWM signals on pins D2 through D9 for channels 1 to 8
 * 16 - Output channels 1 to 8 using PPM on pin D2
 * 32 - Output channels 1 to 16 using SBUS __(Experimental)__
 
-* _Transmitter Power_ Overrides the Multi-Protocol's normal high power setting. See comments on power setting below. Choose one of the following to add into the Option value:
+__Transmitter Power__ Overrides the Multi-Protocol's normal high power setting. See comments on power setting below. Choose one of the following to add into the Option value:
 * 0 - Use the NRF24L01+ HIGH power setting. This is the normal Multi-Protocol module behavior.
 * 64 - Use the NRF24L01+ MAX power setting instead of the HIGH power setting. This over-rides the normal Multi-Protocol module behavior.
 
