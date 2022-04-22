@@ -5,8 +5,6 @@ The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302
 The option to adjust the brake is included in the code.
 The firmware will be used in the planned receivers of rc cars, tanks, boats, robots, aircraft.
 
-__Note:__ I use (Arduino) ATmega328P 5V/16Mhz and supply VCC only with 3.3V voltage.
-
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 ### Arduino pins:
 * D2  - servo 1    
@@ -44,7 +42,7 @@ The protocol used is named CABELL_V3 (the third version, but the first version p
 
 Each transmitter is assigned a random ID (this is handled by the Multi-protocol TX Module) based on this ID one of 362880 possible channel sequences is used for the frequency hopping. The hopping pattern algorithm ensures that each hop moves at least 9 channels from the previous channel. One packet is sent every 3 - 4 milliseconds (depending on options chosen), changing channels with each packet. All 45 channels are used equally.
 
-The CABELL_V3 protocol can be configured to send between 4 and 16 RC channels, however this receiver software is currently only capable of outputting up to 8 channels via PWN. This is because only 8 channels were conveniently laid out on the Arduino Pro Mini.
+This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini.
 
 I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
@@ -81,30 +79,28 @@ Powering on the model before the transmitter will cause the receiver to dis-arm 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Binding Receiver
-* Turn on the receiver in Bind Mode. (See receiver setup above.)
-* In the transmitter Navigate to the Model Setup page.
-* In the External RF section, highlight BIND and press enter.
-* The receiver LED will blink when the bind is successful.
+* Turn on the receiver in Bind Mode (see receiver setup above).
+* Navigate to the model "SETUP" page.
+* Highlight bind "Bnd" and press enter.
+* When the pairing is successful, the LED of the receiver will flash slowly.
 * Restart the receiver.
 
 ## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
-* Navigate to the Model Setup page.
-* Go to the External RF section.
-* Change the sub-protocol (second number after "Custom") to 7.
-* The receiver LED will fast blink when the un-bind is successful.
+* Navigate to the model "SETUP" page.
+* Change the sub-protocol to "Unbind" (The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind").
+* The receiver LED will blink when the un-bind is successful.
 
 When the receiver is restarted, it will start in Bind mode.
 
 ## Setting Failsafe Values
-__Do not set fail-safe values while in flight__. Please see the Customizing Fail-safe Values section for more information.
-* Navigate to the Model Setup page.
-* Go to the External RF section.
+__Do not set fail-safe values while in flight!__. Please see the Customizing Fail-safe Values section for more information.
+* Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
-* While holding the sticks, change the sub-protocol (second number after "Custom") to 6. DO not go past 6. If you even briefly go to 7 the receiver will un-bind.
+* While holding the sticks, change the sub-protocol to "F-Safe" (DO not go past "F-Safe". If you even briefly go to "Unbind" the receiver will un-bind).
 * When the LED is turned on, the Fail-safe settings are recorded.
-* Change the sub-protocol back to its original setting. The LED will turn off.
+* Change the sub-protocol back to the original setting and the LED will turn off.
 
 Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a Fail-safe after one second.
 
@@ -127,34 +123,41 @@ The values sent are 0 - 255 corresponding to 0V - 5V. This will need to be re-sc
 
 ## Packet Format
 ```
-typedef struct {
-   enum RxMode_t : uint8_t {
-         normal                 = 0, 
-         bind                   = 1,
-         setFailSafe            = 2,
-         normalWithTelemetry    = 3,
-         telemetryResponse      = 4,
-         bindFalesafeNoPulse    = 5,   (experimental)
-         unBind                 = 127
-   } RxMode;
-   uint8_t  reserved = 0; /* Contains the channel number that the packet was sent on in bits 0-5
-                          */
-   uint8_t  option;
-                          /*   mask 0x0F    : Channel reduction.  The number of channels to not send (subtracted from the 16 max channels) at least 4 channels are always sent.
-                           *   mask 0x30>>4 : Receiver output mode
-                           *                  0 (00) = Single PPM on individual pins for each channel
-                           *                  1 (01) = SUM PPM on channel 1 pin
-                           *                  2 (10) = SBUS output
-                           *                  3 (11) = Unused
-                           *   mask 0x40>>6   Contains max power override flag for Multiprotocol TX module. Also sent to RX
-                           *                  The RX uses MAX power when 1, HIGH power when 0
-                           *   mask 0x80>>7   Unused
-                           */
-   uint8_t  modelNum;
-   uint8_t  checkSum_LSB;   // Checksum least significant byte
-   uint8_t  checkSum_MSB;   // Checksum most significant byte
-   uint8_t  payloadValue [24] = {0}; //12 bits per channel value, unsigned
-} CABELL_RxTxPacket_t;
+typedef struct
+{
+  enum RxMode_t : uint8_t
+  {
+    normal              = 0, 
+    bind                = 1,
+    setFailSafe         = 2,
+    normalWithTelemetry = 3,
+    telemetryResponse   = 4,
+    bindFalesafeNoPulse = 5, (experimental)
+    unBind              = 127
+  }
+  RxMode;
+  
+  uint8_t reserved = 0; // Contains the channel number that the packet was sent on in bits 0-5
+  
+                  /*
+  uint8_t  option; * mask 0x0F    : Channel reduction. The number of channels to not send (subtracted from the 16 max channels) at least 4 channels are always sent.
+                   * mask 0x30>>4 : Receiver output mode:
+                   *                0 (00) = Single PPM on individual pins for each channel
+                   *                1 (01) = SUM PPM on channel 1 pin
+                   *                2 (10) = SBUS output
+                   *                3 (11) = Unused
+                   *
+                   * mask 0x40>>6   Contains max power override flag for Multiprotocol TX module. Also sent to RX.
+                   *                The RX uses MAX power when 1, HIGH power when 0.
+                   * mask 0x80>>7   Unused
+                   */
+                   
+  uint8_t  modelNum;
+  uint8_t  checkSum_LSB; // Checksum least significant byte
+  uint8_t  checkSum_MSB; // Checksum most significant byte
+  uint8_t  payloadValue [24] = {0}; // 12 bits per channel value, unsigned
+}
+CABELL_RxTxPacket_t;
 ```
 Each 12 bits in payloadValue is the value of one channel. Valid values are in the range 1000 to 2000. The values are stored big endian. Using channel reduction reduces the number of bytes sent, thereby trimming off the end of the payloadValue array.
 
