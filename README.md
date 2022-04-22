@@ -280,29 +280,6 @@ The Arduino development environment is required to compile the code and write th
 * [https://www.youtube.com/watch?v=78HCgaYsA70](https://www.youtube.com/watch?v=78HCgaYsA70)
 * [http://lab.dejaworks.com/programming-arduino-mini-pro-with-ftdi-usb-to-ttl-serial-converter/](http://lab.dejaworks.com/programming-arduino-mini-pro-with-ftdi-usb-to-ttl-serial-converter/)
 
-## Receiver Test Harness
-
-The receiver code can be compiled as a test harness.  What this means is that instead of outputting the normal output signals, statistics are displayed on a 16x2 LCD screen about the packet success rate. To enable Test Harness mode, uncomment the following line in TestHarness.h.  No output will go to servos, flight controller, etc. when in test harness mode.
-
-```//#define TEST_HARNESS```
-
-The LCD displays 5 numbers.
-* Line 1:  Packet success rate (percent); Number of missed packets in a row; The number of time the secondary receiver  recovers a packet the primary receiver  missed
-* Line 2:  The number of good packets received; The number of missed or bad packets
-
-The LCD pin connections are:
-
-  LCD D4_PIN = Arduino D9
-  LCD D5_PIN = Arduino D8
-  LCD D6_PIN = Arduino D7
-  LCD D7_PIN = Arduino D6
-  LCD RS_PIN = Arduino D5
-  LCD EN_PIN = Arduino D4
-  
-More information on connecting the LCD is at [https://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay](https://www.arduino.cc/en/Tutorial/LiquidCrystalDisplay).  However, I suggest using a 330 or 470 ohm resistor instead of the 220 ohms listed in the article to avoid pulling over 20 mA from the Arduino pin connected to the LED back-light.
-
-You can also connect an I2C LCD display.  This may require additional code editing and the installation of a different LCD library (from [https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/)).  Please see the comments in TestHarness.h for more details.
-
 ## Packet Format
 ```
 typedef struct {
