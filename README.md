@@ -304,36 +304,35 @@ More information on connecting the LCD is at [https://www.arduino.cc/en/Tutorial
 You can also connect an I2C LCD display.  This may require additional code editing and the installation of a different LCD library (from [https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/](https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads/)).  Please see the comments in TestHarness.h for more details.
 
 ## Packet Format
-
 ```
 typedef struct {
-   enum RxMode_t : uint8_t {   
+   enum RxMode_t : uint8_t {
          normal                 = 0, 
          bind                   = 1,
          setFailSafe            = 2,
-         normalWithTelemetry    = 3,  
+         normalWithTelemetry    = 3,
          telemetryResponse      = 4,
          bindFalesafeNoPulse    = 5,   (experimental)
          unBind                 = 127
    } RxMode;
-   uint8_t  reserved = 0; /* Contains the channel number that the packet was sent on in bits 0-5 
+   uint8_t  reserved = 0; /* Contains the channel number that the packet was sent on in bits 0-5
                           */
    uint8_t  option;
                           /*   mask 0x0F    : Channel reduction.  The number of channels to not send (subtracted from the 16 max channels) at least 4 channels are always sent.
                            *   mask 0x30>>4 : Receiver output mode
-                           *                  0 (00) = Single PPM on individual pins for each channel 
+                           *                  0 (00) = Single PPM on individual pins for each channel
                            *                  1 (01) = SUM PPM on channel 1 pin
                            *                  2 (10) = SBUS output
                            *                  3 (11) = Unused
                            *   mask 0x40>>6   Contains max power override flag for Multiprotocol TX module. Also sent to RX
                            *                  The RX uses MAX power when 1, HIGH power when 0
-                           *   mask 0x80>>7   Unused 
-                           */  
+                           *   mask 0x80>>7   Unused
+                           */
    uint8_t  modelNum;
    uint8_t  checkSum_LSB;   // Checksum least significant byte
    uint8_t  checkSum_MSB;   // Checksum most significant byte
    uint8_t  payloadValue [24] = {0}; //12 bits per channel value, unsigned
-} CABELL_RxTxPacket_t;   
+} CABELL_RxTxPacket_t;
 ```
 Each 12 bits in payloadValue is the value of one channel. Valid values are in the range 1000 to 2000. The values are stored big endian. Using channel reduction reduces the number of bytes sent, thereby trimming off the end of the payloadValue array.
 
@@ -345,4 +344,4 @@ This project is free software: you can redistribute it and/or modify it under th
 
 RC_RX_CABELL_V3_FHSS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with RC_RX_CABELL_V3_FHSS.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with RC_RX_CABELL_V3_FHSS.  If not, see <http://www.gnu.org/licenses/>
