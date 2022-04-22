@@ -335,36 +335,14 @@ typedef struct {
    uint8_t  payloadValue [24] = {0}; //12 bits per channel value, unsigned
 } CABELL_RxTxPacket_t;   
 ```
-Each 12 bits in payloadValue is the value of one channel.  The channel order is EART (i.e. Pitch, Roll, Yaw, Throttle, AUX1, AUX2, AUX3, AUX4).  Valid values are in the range 1000 to 2000.  The values are stored big endian.
-
-Using channel reduction reduces the number of bytes sent, thereby trimming off the end of the payloadValue array.
-
-## Credits
-davidbuzz on github.  Although none of his code is in this project, my very first foray into DIY rx/tx was based on his esp8266_wifi_tx project.
-
-iforce2d on YouTube.  Although none of his code is in this project, the work he did with the NRF24L01 was a big inspiration.
-
-All the contributors to the pascallanger/DIY-Multiprotocol-TX-Module project on GitHub.  This is a great contribution to the RC community and houses the TX side of this protocol.  
-
-All the contributors to the nRF24/RF24 project on GitHub.  This library was essential to learning to use the NRF24L01.
-
-All the contributors to Arduino Core and standard libraries.  Especially the Servo library, which I modified to adapt to the needs of this project.
-
-The author of the PPM algorithm at https://code.google.com/archive/p/generate-ppm-signal/ I believe this to be david.hasko94@gmail.com
-
-The channel sequence is generated using a permutation algorithm described at http://stackoverflow.com/questions/7918806/finding-n-th-permutation-without-computing-others 
-
-Nick Gammon for his tutorials on interrupts and async reading of ADC pins at https://www.gammon.com.au/adc
-
-My wife, for tolerating the obsession I have had with this project.
+Each 12 bits in payloadValue is the value of one channel. Valid values are in the range 1000 to 2000. The values are stored big endian. Using channel reduction reduces the number of bytes sent, thereby trimming off the end of the payloadValue array.
 
 ## License Info
 Copyright 2017 - 2019 by Dennis Cabell (KE8FZX)
- 
-To use this software, you must adhere to the license terms described below, and assume all responsibility for the use of the software.  The user is responsible for all consequences or damage that may result from using this software. The user is responsible for ensuring that the hardware used to run this software complies with local regulations and that any radio signal generated from use of this software is legal for that user to generate.  The author(s) of this software assume no liability whatsoever.  The author(s) of this software is not responsible for legal or civil consequences of using this software, including, but not limited to, any damages cause by lost control of a vehicle using this software.   If this software is copied or modified, this disclaimer must accompany all copies.
- 
+To use this software, you must adhere to the license terms described below, and assume all responsibility for the use of the software. The user is responsible for all consequences or damage that may result from using this software. The user is responsible for ensuring that the hardware used to run this software complies with local regulations and that any radio signal generated from use of this software is legal for that user to generate. The author(s) of this software assume no liability whatsoever. The author(s) of this software is not responsible for legal or civil consequences of using this software, including, but not limited to, any damages cause by lost control of a vehicle using this software. If this software is copied or modified, this disclaimer must accompany all copies.
+
 This project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-RC_RX_CABELL_V3_FHSS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+RC_RX_CABELL_V3_FHSS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with RC_RX_CABELL_V3_FHSS.  If not, see <http://www.gnu.org/licenses/>.
