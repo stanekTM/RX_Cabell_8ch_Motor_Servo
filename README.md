@@ -62,11 +62,9 @@ The receiver must be bound to the transmitter. There are several ways for the re
 Turn on the transmitter and have it send a Bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of Bind mode, then test the connection.
 
 ## Fail-safe
-*The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
-
+* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
 * At fail-safe the channels are set to the failsafe value.
-
-When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
+* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 
 ## Customizing Fail-safe Values
 __Do not set fail-safe values while in flight.__  Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
