@@ -203,8 +203,9 @@ With a Multi Protocol module installed in the Taranis, this is how to configure 
   * _Transmitter Power_ Overrides the Multi-Protocol's normal high power setting.  See comments on power setting below.  Choose one of the following to add into the Option value:
     * 0 - Use the NRF24L01+ HIGH power setting.  This is the normal Multi-Protocol module behavior.
     * 64 - Use the NRF24L01+ MAX power setting instead of the HIGH power setting.  This over-rides the normal Multi-Protocol module behavior.
-  #### Notes on Power Setting
-  Using an NRF24L01+ with PA/LNA outputs 25 milliwatts for HIGH power and 100 milliwatts for MAX power.  Despite this there are reports that using MAX power on inexpensive Chinese modules provides worse range than using the HIGH power setting due to the noise added by the extra amplification and the lower quality Chinese components.  By adding shielding and using a good antenna, I get better range using MAX power even with Chinese components.  Your results may vary so range test your equipment and use the setting that provides the best results.
+
+#### Notes on Power Setting
+Using an NRF24L01+ with PA/LNA outputs 25 milliwatts for HIGH power and 100 milliwatts for MAX power. Despite this there are reports that using MAX power on inexpensive Chinese modules provides worse range than using the HIGH power setting due to the noise added by the extra amplification and the lower quality Chinese components. By adding shielding and using a good antenna, I get better range using MAX power even with Chinese components. Your results may vary so range test your equipment and use the setting that provides the best results.
 
 ### Binding Receiver
 * Turn on the receiver in Bind Mode. (See receiver setup above.)
@@ -212,73 +213,44 @@ With a Multi Protocol module installed in the Taranis, this is how to configure 
 * In the External RF section, highlight BIND and press enter.
 * The receiver LED will blink when the bind is successful.
 * Restart the receiver.
- 
-### Unbinding Receiver
 
-In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter.  With a model selected that is bound to the receiver:
+### Unbinding Receiver
+In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
 * Navigate to the Model Setup page.
 * Go to the External RF section.
 * Change the sub-protocol (second number after "Custom") to 7.
 * The receiver LED will fast blink when the un-bind is successful.
+
 When the receiver is restarted, it will start in Bind mode.
 
 ### Setting Failsafe Values
-
 __Do not set fail-safe values while in flight.__ Please see the Customizing Fail-safe Values section for more information.
-
 * Navigate to the Model Setup page.
 * Go to the External RF section.
 * Place all switches in the desired fail-safe state.
-* Move the sticks to the desired fail-safe state.  Hold them in this position until the fail-safe settings are recorded by the receiver.
-* While holding the sticks, change the sub-protocol (second number after "Custom") to 6.  DO not go past 6.  If you even briefly go to 7 the receiver will un-bind.
-* When the LED is turned on, the Fail-safe settings are recorded
+* Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
+* While holding the sticks, change the sub-protocol (second number after "Custom") to 6. DO not go past 6. If you even briefly go to 7 the receiver will un-bind.
+* When the LED is turned on, the Fail-safe settings are recorded.
 * Change the sub-protocol back to its original setting. The LED will turn off.
 
-Always test the Fail-safe settings before flying.  Turning off the transmitter should initiate a Fail-safe after one second.
-
-### Setting Failsafe No Pulses (Experimental)
-
-Failsafe No Pulses can only be set at bind time.  All servos will receive no pulses during a fail-safe, so custom fail safe values do not apply.  If the receiver is on SBUS output mode, the SBUS output is stopped during failsafe.
-
-* Unbind the receiver.
-* Navigate to the Model Setup page.
-* Go to the External RF section.
-* Change the sub-protocol to 5.  
-* Perform the Bind procedure.
-* Change the sub-protocol to the desired setting for flying.
-
-If your output goes to a flight controller via SBUS, and the flight controller honors the SBUS failsafe flag (which is typical), then you probably do not want to use No Pulses because the SBUS protocol handles the failsafe appropriately.
-
-Always test the Fail-safe settings before flying.  Turning off the transmitter should initiate a Fail-safe after one second.
+Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a Fail-safe after one second.
 
 ## Telemetry
-
-When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter.  Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7.  A receiver module with diversity is recommended when using telemetry to increase the reliability of the telemetry packets being received by the transmitter.
+When the sub-protocol is set to Normal with Telemetry, the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7. A receiver module with diversity is recommended when using telemetry to increase the reliability of the telemetry packets being received by the transmitter.
 
 ### RSSI
+Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
 
-Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate.  The base of the RSSI calculation is the packet success rate from 0 to 100.  This value is re-calculated approximately every 1/2 second (every 152 expected packets).  This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
+In practice, the packet rate seems to stay high for a long range, then drop off quickly as the receiver moves out of range. Typically, the telemetry lost warning happens before the RSSI low warning.
 
-In practice, the packet rate seems to stay high for a long range, then drop off quickly as the receiver moves out of range.  Typically, the telemetry lost warning happens before the RSSI low warning.
-
-The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it. 
+The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
 ### Analog Values
+Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause  damage__, so care must be taken to ensure the voltage is in a safe range.
 
-Analog values are read on Arduino pins A6 and A7.  Running on a, Arduino with VCC of 5V, only values up to 5V can be read.  __A value on A6 or A7 that exceeds the Arduino VCC will cause  damage__, so care must be taken to ensure the voltage is in a safe range.
+Values from pins A6 and A7 come into a Taranis transmitter as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
 
-Values from pins A6 and A7 come into a Taranis transmitter as telemetry values A1 and A2.  You can use either of these to read battery voltage or the output of current sensor.  The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider.  The same method can be used to read battery voltage on this receiver.  [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
-
-The values sent are 0 - 255 corresponding to 0V - 5V.  This will need to be re-scaled to the actual voltage (or current, etc.) in the transmitter on the telemetry  configuration screen.
-
-## Flashing Firmware
-
-The Arduino development environment is required to compile the code and write the firmware to the Arduino Pro Mini. If you are not familiar with this, here are some resources to help you.
-
-* [https://www.arduino.cc/en/Guide/HomePage](https://www.arduino.cc/en/Guide/HomePage)
-* [https://www.arduino.cc/en/Guide/ArduinoProMini](https://www.arduino.cc/en/Guide/ArduinoProMini)
-* [https://www.youtube.com/watch?v=78HCgaYsA70](https://www.youtube.com/watch?v=78HCgaYsA70)
-* [http://lab.dejaworks.com/programming-arduino-mini-pro-with-ftdi-usb-to-ttl-serial-converter/](http://lab.dejaworks.com/programming-arduino-mini-pro-with-ftdi-usb-to-ttl-serial-converter/)
+The values sent are 0 - 255 corresponding to 0V - 5V. This will need to be re-scaled to the actual voltage (or current, etc.) in the transmitter on the telemetry  configuration screen.
 
 ## Packet Format
 ```
