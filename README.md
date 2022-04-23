@@ -45,13 +45,13 @@ Each transmitter is assigned a random ID (this is handled by the Multiprotocol) 
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol transmitter software only does 16.
 
 ## Binding receiver
-### There are several ways for the receiver to enter bind mode
+**There are several ways the receiver enters the binding mode**
 * A new Arduino will start in bind mode automatically. Only an Arduino that was flashed for the first time (not previously bound) does this. Re-flashing the software will retain the old binding unless the EEPROM has been erased.
 * Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
 * Connect the bind jumper, or press the bind button while the receiver powers on.
 * The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino.
 
-### Procedure
+**Procedure**
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
@@ -59,7 +59,7 @@ The protocol also assigns each model a different number so one model setting doe
 * Switch off the transmitter from bind mode and restart the receiver without bind mode.
 
 ## Unbinding Receiver
-In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter:
+**In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter**
 * Navigate to the model "SETUP" page.
 * Change the sub-protocol to "Unbind". The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind".
 * The receiver LED will blink when the un-bind is successful.
@@ -74,13 +74,13 @@ When the receiver is restarted, it will start in bind mode.
 
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model.
 
-### You can set fail-safe values in one of two ways
+**You can set fail-safe values in one of two ways**
 * A set fail-safe packet can be sent from the transmitter. The values from the first packet in a series for set fail-safe packets are saved as the new fail-safe values. The LED is turned on when a set fail-safe packet is received, and stays on as long as set fail-safe packets continue to be received. The LED is turned off when set fail-safe values stop being received.
 * After the receiver has initialized, the bind button (or bind jumper) can be held for one to 2 seconds until the LED is turned on. The values from the first packet received after the LED is turned on will be saved as the new fail-safe values. The LED will turn off when the button is released (or jumper removed).
  
 When fail-safe set mode is entered, the LED is turned on and stays on until the fail-safe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
 
-### Procedure
+**Procedure**
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
@@ -93,14 +93,14 @@ Before flying a model, always test the fail-safe values after they have been set
 ## Telemetry
 When the sub-protocol is set to "V3 Telm", the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
 
-### RSSI
+**RSSI**
 Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
 
 In practice, the packet rate seems to stay high for a long range, then drop off quickly as the receiver moves out of range. Typically, the telemetry lost warning happens before the RSSI low warning.
 
 The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
-### A1, A2 analog values
+**A1, A2 analog values**
 Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. **A value on A6 or A7 that exceeds the Arduino VCC will cause damage**, so care must be taken to ensure the voltage is in a safe range.
 
 The values from pins A6 and A7 come to the transmitter with OpenTX or OpenAVRc as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
