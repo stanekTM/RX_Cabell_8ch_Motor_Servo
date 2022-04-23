@@ -9,31 +9,31 @@ The option to adjust the brake is included in the code.
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 
 ## Arduino pins
-* D2  - servo 1
-* D3  - servo 2
-* D4  - servo 3
-* D7  - servo 4
-* D8  - servo 5
-* D11 - servo 6
-*
-* D5  - pwm1/Motor A
-* D6  - pwm2/Motor A
-* D9  - pwm3/Motor B
-* D10 - pwm4/Motor B
-*
-* D12 - bind button
-* D13 - LED
-*
-* A6 - telemetry analog input A1
-* A7 - telemetry analog input A2
-*
+D2  - servo 1
+D3  - servo 2
+D4  - servo 3
+D7  - servo 4
+D8  - servo 5
+D11 - servo 6
+
+D5  - pwm1/Motor A
+D6  - pwm2/Motor A
+D9  - pwm3/Motor B
+D10 - pwm4/Motor B
+
+D12 - bind button
+D13 - LED
+
+A6 - telemetry analog input A1
+A7 - telemetry analog input A2
+
 nRF24L01:
-* A0 - CE
-* A1 - CSN
-* A2 - SCK
-* A3 - MOSI
-* A4 - MISO
-* A5 - IRQ
+A0 - CE
+A1 - CSN
+A2 - SCK
+A3 - MOSI
+A4 - MISO
+A5 - IRQ
 
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
