@@ -70,8 +70,7 @@ When the receiver is restarted, it will start in Bind mode.
 * At fail-safe the channels are set to the fail-safe value.
 * When the receiver is switched on, the safety values are reset and all channels are in the middle.
 * The receiver also dis-arms if an RC signal is lost for 3 seconds.
-
-Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
+* Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
