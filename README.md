@@ -91,8 +91,7 @@ Always test the Fail-safe settings before flying. Turning off the transmitter sh
 ## Safety
 ## Fail-safe
 * At fail-safe the channels are set to the fail-safe value.
-* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
-When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
+* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point. The receiver also dis-arms if an RC signal is lost for 3 seconds.
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
