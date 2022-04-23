@@ -59,7 +59,7 @@ The protocol also assigns each model a different number so one model setting doe
 * Switch off the transmitter from bind mode and restart the receiver without bind mode.
 
 ## Unbinding Receiver
-In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter
+In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter.
 
 * Navigate to the model "SETUP" page.
 * Change the sub-protocol to "Unbind". The model-bound receiver is immediately disconnected.
