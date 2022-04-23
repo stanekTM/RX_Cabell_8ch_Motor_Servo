@@ -1,5 +1,5 @@
 # RX_Cabell_8ch_Motor_Servo
-It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [__Multiprotocol TX Module__](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+It is a modified firmware of the receiver with the **"Cabell"** protocol, which is supported by the RC transmitter [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [**Multiprotocol TX Module**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
 This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output. I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
@@ -9,6 +9,7 @@ The option to adjust the brake is included in the code.
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 
 ## Arduino pins
+```
 D2  - servo 1
 D3  - servo 2
 D4  - servo 3
@@ -34,6 +35,7 @@ A2 - SCK
 A3 - MOSI
 A4 - MISO
 A5 - IRQ
+```
 
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
@@ -64,7 +66,7 @@ Turn on the transmitter and have it send a bind packet. The receiver LED changes
 * When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 
 ## Customizing Fail-safe Values
-__Do not set fail-safe values while in flight!__ Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
+**Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values. This can be done one of two ways:
 * A set-Fail-Safe packet can be sent from the transmitter. The values from the first packet in a series for set-Fail-Safe packets are saved as the new fail-safe values. The LED is turned on when a set-Fail-Safe packet is received, and stays on as long as set-Fail-Safe packets continue to be received. The LED is turned off when set-Fail-Safe values stop being received.
@@ -73,7 +75,7 @@ Fail-safe set mode will set the fail-safe values. This can be done one of two wa
 When fail-safe set mode is entered, the LED is turned on and stays on until the failsafe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
 
 ## Safety
-When powered on the __receiver starts out in an armed state__. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
+When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
 
 Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
 
@@ -88,7 +90,7 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 When the receiver is restarted, it will start in Bind mode.
 
 ## Setting Failsafe Values
-__Do not set fail-safe values while in flight!__ Please see the Customizing Fail-safe Values section for more information.
+**Do not set fail-safe values while in flight!** Please see the Customizing Fail-safe Values section for more information.
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
@@ -109,7 +111,7 @@ In practice, the packet rate seems to stay high for a long range, then drop off 
 The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
 ## Analog Values
-Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause damage__, so care must be taken to ensure the voltage is in a safe range.
+Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. **A value on A6 or A7 that exceeds the Arduino VCC will cause damage**, so care must be taken to ensure the voltage is in a safe range.
 
 The values from pins A6 and A7 come to the transmitter with OpenTX or OpenAVRc as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
 
