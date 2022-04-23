@@ -51,7 +51,7 @@ There are several ways for the receiver to enter bind mode:
 * Connect the bind jumper, or press the bind button while the receiver powers on.
 * The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino.
 
-### Procedure:
+### Procedure
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
@@ -64,7 +64,7 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 * Change the sub-protocol to "Unbind". The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind".
 * The receiver LED will blink when the un-bind is successful.
 
-When the receiver is restarted, it will start in Bind mode.
+When the receiver is restarted, it will start in bind mode.
 
 ## Fail-safe
 * In the event of a failure, the channels are set to a fail-safe value, either the default (channels in the middle) or the value set by the user.
@@ -74,13 +74,13 @@ When the receiver is restarted, it will start in Bind mode.
 
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model.
 
-**You can set fail-safe values in one of two ways:**
+### You can set fail-safe values in one of two ways
 * A set fail-safe packet can be sent from the transmitter. The values from the first packet in a series for set fail-safe packets are saved as the new fail-safe values. The LED is turned on when a set fail-safe packet is received, and stays on as long as set fail-safe packets continue to be received. The LED is turned off when set fail-safe values stop being received.
 * After the receiver has initialized, the bind button (or bind jumper) can be held for one to 2 seconds until the LED is turned on. The values from the first packet received after the LED is turned on will be saved as the new fail-safe values. The LED will turn off when the button is released (or jumper removed).
  
 When fail-safe set mode is entered, the LED is turned on and stays on until the fail-safe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
 
-### Procedure:
+### Procedure
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
