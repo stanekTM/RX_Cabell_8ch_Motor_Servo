@@ -1,5 +1,5 @@
 # RX_Cabell_8ch_Motor_Servo
-It is a modified firmware of the receiver with the **"Cabell"** protocol, which is supported by the RC transmitter [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [**Multiprotocol TX Module**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+It is a modified firmware of the receiver with the **"Cabell"** protocol, which is supported by the RC transmitter [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
 This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output. I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
@@ -40,9 +40,9 @@ A5 - IRQ
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
 
-Each transmitter is assigned a random ID (this is handled by the Multiprotocol TX Module) based on this ID one of 362880 possible channel sequences is used for the frequency hopping. The hopping pattern algorithm ensures that each hop moves at least 9 channels from the previous channel. One packet is sent every 3 - 4 milliseconds (depending on options chosen), changing channels with each packet. All 45 channels are used equally.
+Each transmitter is assigned a random ID (this is handled by the Multiprotocol) based on this ID one of 362880 possible channel sequences is used for the frequency hopping. The hopping pattern algorithm ensures that each hop moves at least 9 channels from the previous channel. One packet is sent every 3 - 4 milliseconds (depending on options chosen), changing channels with each packet. All 45 channels are used equally.
 
-The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol TX Module transmitter software only does 16.
+The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol transmitter software only does 16.
 
 ## Binding receiver
 There are several ways for the receiver to enter bind mode:
@@ -59,7 +59,7 @@ There are several ways for the receiver to enter bind mode:
 * Switch off the transmitter from bind mode and restart the receiver without bind mode.
 
 ## Unbinding Receiver
-In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
+In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter:
 * Navigate to the model "SETUP" page.
 * Change the sub-protocol to "Unbind". The model-bound receiver is disconnected. This happens immediately when the subprotocol is set to "Unbind".
 * The receiver LED will blink when the un-bind is successful.
@@ -68,7 +68,8 @@ When the receiver is restarted, it will start in Bind mode.
 
 ## Fail-safe
 * At fail-safe the channels are set to the fail-safe value.
-* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point. The receiver also dis-arms if an RC signal is lost for 3 seconds.
+* When the receiver is switched on, the safety values are reset and all channels are in the middle.
+* The receiver also dis-arms if an RC signal is lost for 3 seconds.
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
