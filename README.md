@@ -15,18 +15,18 @@ The option to adjust the brake is included in the code.
 * D7  - servo 4
 * D8  - servo 5
 * D11 - servo 6
-
+*
 * D5  - pwm1/Motor A
 * D6  - pwm2/Motor A
 * D9  - pwm3/Motor B
 * D10 - pwm4/Motor B
-
+*
 * D12 - bind button
 * D13 - LED
-
+*
 * A6 - telemetry analog input A1
 * A7 - telemetry analog input A2
-
+*
 nRF24L01:
 * A0 - CE
 * A1 - CSN
