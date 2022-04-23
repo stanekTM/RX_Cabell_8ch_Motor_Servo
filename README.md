@@ -51,7 +51,7 @@ There are several ways for the receiver to enter bind mode:
 * Connect the bind jumper, or press the bind button while the receiver powers on.
 * The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino.
 
-### procedure:
+### Procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
@@ -67,8 +67,8 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 When the receiver is restarted, it will start in Bind mode.
 
 ## Fail-safe
-* At fail-safe the channels are set to the fail-safe value.
-* When the receiver is switched on, the safety values are reset and all channels are in the middle.
+* In the event of a failure, the channels are set to a fail-safe value, either the default (channels in the middle) or the value set by the user.
+* When the receiver is switched on, the default safety values are activated and all channels are in the middle.
 * The receiver also dis-arms if an RC signal is lost for 3 seconds.
 * Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
@@ -82,7 +82,7 @@ This can be done one of two ways:
  
 When fail-safe set mode is entered, the LED is turned on and stays on until the fail-safe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
 
-### procedure:
+### Procedure:
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
