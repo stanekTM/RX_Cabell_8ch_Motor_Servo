@@ -68,6 +68,12 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 
 When the receiver is restarted, it will start in Bind mode.
 
+## Fail-safe
+* At fail-safe the channels are set to the fail-safe value.
+* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point. The receiver also dis-arms if an RC signal is lost for 3 seconds.
+
+Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
+
 ## Customizing fail-safe values
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
@@ -87,13 +93,6 @@ When fail-safe set mode is entered, the LED is turned on and stays on until the 
 * Change the sub-protocol back to the original setting and the LED will turn off.
 
 Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a fail-safe after one second.
-
-## Safety
-## Fail-safe
-* At fail-safe the channels are set to the fail-safe value.
-* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point. The receiver also dis-arms if an RC signal is lost for 3 seconds.
-
-Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Telemetry
 When the sub-protocol is set to "V3 Telm", the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
