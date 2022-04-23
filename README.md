@@ -1,8 +1,7 @@
 ## RX_Cabell_8ch_Motor_Servo
 It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [__Multiprotocol__](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
-This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini.
-RX includes 2x motor controller with brake and has 6x servo output.
+This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output. I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, which uses 4x PWN input control signals.
 The option to adjust the brake is included in the code.
@@ -38,9 +37,7 @@ nRF24L01:
 ## The Protocol
 The protocol used is named CABELL_V3 (the third version, but the first version publicly released). It is a FHSS protocol using the NRF24L01+ 2.4 GHz transceiver. 45 channels are used from 2.403 through 2.447 GHz. The reason for using 45 channels is to keep operation within the overlap area between the 2.4 GHz ISM band (governed in the USA by FCC part 15) and the HAM portion of the band (governed in the USA by FCC part 97). This allows part 15 compliant use of the protocol, while allowing licensed amateur radio operators to operate under the less restrictive part 97 rules if desired.
 
-Each transmitter is assigned a random ID (this is handled by the Multi-protocol TX Module) based on this ID one of 362880 possible channel sequences is used for the frequency hopping. The hopping pattern algorithm ensures that each hop moves at least 9 channels from the previous channel. One packet is sent every 3 - 4 milliseconds (depending on options chosen), changing channels with each packet. All 45 channels are used equally.
-
-I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
+Each transmitter is assigned a random ID (this is handled by the Multiprotocol TX Module) based on this ID one of 362880 possible channel sequences is used for the frequency hopping. The hopping pattern algorithm ensures that each hop moves at least 9 channels from the previous channel. One packet is sent every 3 - 4 milliseconds (depending on options chosen), changing channels with each packet. All 45 channels are used equally.
 
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multi-Protocol transmitter software only does 16.
 
