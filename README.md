@@ -90,12 +90,9 @@ Always test the Fail-safe settings before flying. Turning off the transmitter sh
 
 ## Safety
 ## Fail-safe
-* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
 * At fail-safe the channels are set to the fail-safe value.
 * When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
-
-Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
