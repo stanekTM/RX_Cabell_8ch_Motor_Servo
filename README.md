@@ -53,7 +53,7 @@ The receiver must be bound to the transmitter. There are several ways for the re
 
 Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
 
-### procedure:
+### Procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
@@ -74,7 +74,6 @@ When the receiver is restarted, it will start in Bind mode.
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
-## Customizing fail-safe values
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values.
