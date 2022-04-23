@@ -41,14 +41,20 @@ Each transmitter is assigned a random ID (this is handled by the Multiprotocol T
 
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol TX Module transmitter software only does 16.
 
-## Receiver Setup
+## Binding Receiver
 The receiver must be bound to the transmitter. There are several ways for the receiver to enter Bind Mode. When a receiver is in bind mode the LED will be on.
 * A new Arduino will start in bind mode automatically. Only an Arduino that was flashed for the first time (not previously bound) does this. Re-flashing the software will retain the old binding unless the EEPROM has been erased.
 * Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
-* Connect the Bind Jumper, or press the Bind button while the receiver powers on.
-* The protocol has a Un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino. After an Unbind the LED will blink until the receiver is re-started.
+* Connect the bind jumper, or press the bind button while the receiver powers on.
+* The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino. After an un-bind the LED will blink until the receiver is re-started.
 
-Turn on the transmitter and have it send a Bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of Bind mode, then test the connection.
+Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
+
+* Turn on the receiver in bind mode.
+* Navigate to the model "SETUP" page.
+* Highlight bind "Bnd" and press enter.
+* When the pairing is successful, the LED of the receiver will flash slowly.
+* Restart the receiver.
 
 ## Fail-safe
 * The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
@@ -70,13 +76,6 @@ When powered on the __receiver starts out in an armed state__. However, if no si
 Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
 
 Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
-
-## Binding Receiver
-* Turn on the receiver in Bind Mode (see. receiver setup above).
-* Navigate to the model "SETUP" page.
-* Highlight bind "Bnd" and press enter.
-* When the pairing is successful, the LED of the receiver will flash slowly.
-* Restart the receiver.
 
 ## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
