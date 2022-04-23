@@ -9,24 +9,24 @@ The option to adjust the brake is included in the code.
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
 
 ## Arduino pins
-* D2  - servo 1    
-* D3  - servo 2 
+* D2  - servo 1
+* D3  - servo 2
 * D4  - servo 3
 * D7  - servo 4
 * D8  - servo 5
 * D11 - servo 6
-#
+
 * D5  - pwm1/Motor A
 * D6  - pwm2/Motor A
 * D9  - pwm3/Motor B
 * D10 - pwm4/Motor B
-#
+
 * D12 - bind button
 * D13 - LED
-# 
+
 * A6 - telemetry analog input A1
 * A7 - telemetry analog input A2
-#
+
 nRF24L01:
 * A0 - CE
 * A1 - CSN
