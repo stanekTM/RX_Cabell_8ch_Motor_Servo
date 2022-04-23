@@ -53,7 +53,7 @@ The receiver must be bound to the transmitter. There are several ways for the re
 
 Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
 
-### Procedure:
+### procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
