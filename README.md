@@ -75,6 +75,7 @@ When the receiver is restarted, it will start in Bind mode.
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
 Fail-safe set mode will set the fail-safe values.
+
 This can be done one of two ways:
 * A set fail-safe packet can be sent from the transmitter. The values from the first packet in a series for set fail-safe packets are saved as the new fail-safe values. The LED is turned on when a set fail-safe packet is received, and stays on as long as set fail-safe packets continue to be received. The LED is turned off when set fail-safe values stop being received.
 * After the receiver has initialized, the bind button (or bind jumper) can be held for one to 2 seconds until the LED is turned on. The values from the first packet received after the LED is turned on will be saved as the new fail-safe values. The LED will turn off when the button is released (or jumper removed).
