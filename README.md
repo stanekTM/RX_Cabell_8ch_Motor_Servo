@@ -45,7 +45,7 @@ Each transmitter is assigned a random ID (this is handled by the Multiprotocol) 
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol transmitter software only does 16.
 
 ## Binding receiver
-There are several ways for the receiver to enter bind mode:
+### There are several ways for the receiver to enter bind mode
 * A new Arduino will start in bind mode automatically. Only an Arduino that was flashed for the first time (not previously bound) does this. Re-flashing the software will retain the old binding unless the EEPROM has been erased.
 * Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
 * Connect the bind jumper, or press the bind button while the receiver powers on.
