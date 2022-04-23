@@ -45,20 +45,18 @@ Each transmitter is assigned a random ID (this is handled by the Multiprotocol T
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol TX Module transmitter software only does 16.
 
 ## Binding receiver
-The receiver must be bound to the transmitter. There are several ways for the receiver to enter Bind Mode. When a receiver is in bind mode the LED will be on.
+There are several ways for the receiver to enter bind mode:
 * A new Arduino will start in bind mode automatically. Only an Arduino that was flashed for the first time (not previously bound) does this. Re-flashing the software will retain the old binding unless the EEPROM has been erased.
 * Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
 * Connect the bind jumper, or press the bind button while the receiver powers on.
-* The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino. After an un-bind the LED will blink until the receiver is re-started.
-
-Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
+* The protocol has a un-bind command (it erases the EEPROM), after which a re-start will cause the receiver to enter bind mode just like a new Arduino.
 
 ### procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
 * When the pairing is successful, the LED of the receiver will flash slowly.
-* Restart the receiver.
+* Switch off the transmitter from bind mode and restart the receiver without bind mode.
 
 ## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
