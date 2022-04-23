@@ -1,4 +1,4 @@
-## RX_Cabell_8ch_Motor_Servo
+# RX_Cabell_8ch_Motor_Servo
 It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [__Multiprotocol TX Module__](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
 This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output. I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
@@ -7,7 +7,8 @@ The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302
 The option to adjust the brake is included in the code.
 
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
-### Arduino pins:
+
+## Arduino pins
 * D2  - servo 1    
 * D3  - servo 2 
 * D4  - servo 3
@@ -50,6 +51,7 @@ The receiver must be bound to the transmitter. There are several ways for the re
 
 Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
 
+### binding procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
@@ -107,7 +109,7 @@ In practice, the packet rate seems to stay high for a long range, then drop off 
 The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
 ## Analog Values
-Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause  damage__, so care must be taken to ensure the voltage is in a safe range.
+Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. __A value on A6 or A7 that exceeds the Arduino VCC will cause damage__, so care must be taken to ensure the voltage is in a safe range.
 
 The values from pins A6 and A7 come to the transmitter with OpenTX or OpenAVRc as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
 
