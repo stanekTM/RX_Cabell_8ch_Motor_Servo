@@ -93,14 +93,14 @@ Before flying a model, always test the fail-safe values after they have been set
 ## Telemetry
 When the sub-protocol is set to "V3 Telm", the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
 
-**RSSI**
+### RSSI
 Because the NRF24L01 does not have an RSSI feature, the RSSI value is simulated based on the packet rate. The base of the RSSI calculation is the packet success rate from 0 to 100. This value is re-calculated approximately every 1/2 second (every 152 expected packets). This success percentage is then modified in real time based on packets being missed, so that if multiple packets in a row are missed the RSSI value drops without having to wait for the next re-calculation of the packet rate.
 
 In practice, the packet rate seems to stay high for a long range, then drop off quickly as the receiver moves out of range. Typically, the telemetry lost warning happens before the RSSI low warning.
 
 The RSSI class encapsulates the RSSI calculations. If you are so inclined, feel free play with the calculation. If anyone finds an algorithm that works better, please contribute it.
 
-**A1, A2 analog values**
+### A1, A2 analog values
 Analog values are read on Arduino pins A6 and A7. Running on a, Arduino with VCC of 5V, only values up to 5V can be read. **A value on A6 or A7 that exceeds the Arduino VCC will cause damage**, so care must be taken to ensure the voltage is in a safe range.
 
 The values from pins A6 and A7 come to the transmitter with OpenTX or OpenAVRc as telemetry values A1 and A2. You can use either of these to read battery voltage or the output of current sensor. The following article explains how to input battery voltage to A2 on an Frsky receiver using a voltage divider. The same method can be used to read battery voltage on this receiver. [http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors](http://olex.biz/tips/lipo-voltage-monitoring-with-frsky-d-receivers-without-sensors).
