@@ -1,8 +1,11 @@
 ## RX_Cabell_8ch_Motor_Servo
 It is a modified firmware of the receiver with the __"Cabell"__ protocol, which is supported by the RC transmitter [__OpenAVRc__](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or in serial [__Multiprotocol__](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+
 This RX includes 2x motor controller with brake and has 6x servo output.
+
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, using 4x PWN input control signals.
 The option to adjust the brake is included in the code.
+
 The firmware will be used in the planned receivers of rc cars, tanks, boats, robots, aircraft.
 
 [Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
