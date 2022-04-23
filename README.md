@@ -68,11 +68,6 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 
 When the receiver is restarted, it will start in Bind mode.
 
-## Fail-safe
-* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
-* At fail-safe the channels are set to the fail-safe value.
-* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
-
 ## Customizing fail-safe values
 **Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
 
@@ -94,6 +89,10 @@ When fail-safe set mode is entered, the LED is turned on and stays on until the 
 Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a fail-safe after one second.
 
 ## Safety
+## Fail-safe
+* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
+* At fail-safe the channels are set to the fail-safe value.
+* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
 When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
 
 Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
