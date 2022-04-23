@@ -44,7 +44,7 @@ Each transmitter is assigned a random ID (this is handled by the Multiprotocol T
 
 The protocol also assigns each model a different number so one model setting does not control the wrong model. The protocol can distinguish up to 255 different models, but be aware that the Multiprotocol TX Module transmitter software only does 16.
 
-## Binding Receiver
+## Binding receiver
 The receiver must be bound to the transmitter. There are several ways for the receiver to enter Bind Mode. When a receiver is in bind mode the LED will be on.
 * A new Arduino will start in bind mode automatically. Only an Arduino that was flashed for the first time (not previously bound) does this. Re-flashing the software will retain the old binding unless the EEPROM has been erased.
 * Erasing the EEPROM on the Arduino will make it start up in bind mode just like a new Arduino. The Arduino sketch [here](https://github.com/soligen2010/Reset_EEPROM) will erase the EEPROM.
@@ -53,33 +53,12 @@ The receiver must be bound to the transmitter. There are several ways for the re
 
 Turn on the transmitter and have it send a bind packet. The receiver LED changes from always on to a slow blink when the bind is successful. Re-start the receiver after the bind and take the transmitter out of bind mode, then test the connection.
 
-### binding procedure:
+### procedure:
 * Turn on the receiver in bind mode.
 * Navigate to the model "SETUP" page.
 * Highlight bind "Bnd" and press enter.
 * When the pairing is successful, the LED of the receiver will flash slowly.
 * Restart the receiver.
-
-## Fail-safe
-* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
-* At fail-safe the channels are set to the failsafe value.
-* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
-
-## Customizing Fail-safe Values
-**Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
-
-Fail-safe set mode will set the fail-safe values. This can be done one of two ways:
-* A set-Fail-Safe packet can be sent from the transmitter. The values from the first packet in a series for set-Fail-Safe packets are saved as the new fail-safe values. The LED is turned on when a set-Fail-Safe packet is received, and stays on as long as set-Fail-Safe packets continue to be received. The LED is turned off when set-Fail-Safe values stop being received.
-* After the receiver has initialized, the bind button (or bind jumper) can be held for one to 2 seconds until the LED is turned on. The values from the first packet received after the LED is turned on will be saved as the new fail-safe values. The LED will turn off when the button is released (or jumper removed).
- 
-When fail-safe set mode is entered, the LED is turned on and stays on until the failsafe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
-
-## Safety
-When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
-
-Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
-
-Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Unbinding Receiver
 In order to un-bind a receiver using the transmitter, a model bound to the receiver must be configured in the transmitter. With a model selected that is bound to the receiver:
@@ -89,16 +68,37 @@ In order to un-bind a receiver using the transmitter, a model bound to the recei
 
 When the receiver is restarted, it will start in Bind mode.
 
-## Setting Failsafe Values
-**Do not set fail-safe values while in flight!** Please see the Customizing Fail-safe Values section for more information.
+## Fail-safe
+* The receiver fail-safes after 1 second when no packets are received. If a connection is not restored within 3 seconds then the receiver will disarm.
+* At fail-safe the channels are set to the fail-safe value.
+* When a receiver is bound the failsafe values are reset to the default values and all channels at mid-point.
+
+## Customizing fail-safe values
+**Do not set fail-safe values while in flight!** Due to the length of time it takes to write the new fail-safe values to EEPROM, the receiver may go into fail-safe mode while saving the values, causing loss of control of the model. Before flying a model, always test the fail-safe values after they have been set.
+
+Fail-safe set mode will set the fail-safe values.
+This can be done one of two ways:
+* A set fail-safe packet can be sent from the transmitter. The values from the first packet in a series for set fail-safe packets are saved as the new fail-safe values. The LED is turned on when a set fail-safe packet is received, and stays on as long as set fail-safe packets continue to be received. The LED is turned off when set fail-safe values stop being received.
+* After the receiver has initialized, the bind button (or bind jumper) can be held for one to 2 seconds until the LED is turned on. The values from the first packet received after the LED is turned on will be saved as the new fail-safe values. The LED will turn off when the button is released (or jumper removed).
+ 
+When fail-safe set mode is entered, the LED is turned on and stays on until the fail-safe set mode is exited. Only the values from the first packet received in fail-safe set mode are saved (this is to avoid accidentally using up all of the EEPROMs limited number of write operations).
+
+### procedure:
 * Navigate to the model "SETUP" page.
 * Place all switches in the desired fail-safe state.
 * Move the sticks to the desired fail-safe state. Hold them in this position until the fail-safe settings are recorded by the receiver.
 * While holding the sticks, change the sub-protocol to "F-Safe". DO not go past "F-Safe". If you even briefly go to "Unbind" the receiver will un-bind.
-* When the LED is turned on, the Fail-safe settings are recorded.
+* When the LED is turned on, the fail-safe settings are recorded.
 * Change the sub-protocol back to the original setting and the LED will turn off.
 
-Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a Fail-safe after one second.
+Always test the Fail-safe settings before flying. Turning off the transmitter should initiate a fail-safe after one second.
+
+## Safety
+When powered on the **receiver starts out in an armed state**. However, if no signal is detected within 3 seconds the receiver dis-arms. The receiver also dis-arms if an RC signal is lost for 3 seconds.
+
+Powering on the model before the transmitter will cause the receiver to dis-arm in 3 seconds as long as there is no RC signal.  During this power on time there is no output from the receiver until an RC signal is first received from the transmitter.
+
+Powering the transmitter off before the model will cause the receiver to dis-arm after 3 seconds.
 
 ## Telemetry
 When the sub-protocol is set to "V3 Telm", the receiver sends telemetry packets back to the transmitter. Three values are returned, a simulated RSSI, and the voltages on the Arduino pins A6 and A7 as telemetry values A1 and A2.
