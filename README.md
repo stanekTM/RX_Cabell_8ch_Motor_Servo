@@ -1,7 +1,9 @@
 # RX_Cabell_8ch_Motor_Servo
 It is a modified firmware of the receiver with the **"Cabell"** protocol, which is supported by the RC transmitter [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) in RF SPI mode or [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module) in serial mode.
 
-This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output. I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
+This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output.
+
+I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, which uses 4x PWN input control signals.
 The option to adjust the brake is included in the code.
