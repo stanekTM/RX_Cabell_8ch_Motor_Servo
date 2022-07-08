@@ -38,7 +38,7 @@ void My_RF24::csn(bool mode)
 	// Return, CSN toggle complete
 	return;
 	
-#elif defined(ARDUINO) && !defined (RF24_SPI_TRANSACTIONS)
+#elif defined (ARDUINO) && !defined (RF24_SPI_TRANSACTIONS)
 	// Minimum ideal SPI bus speed is 2x data rate
 	// If we assume 2Mbs data rate and 16Mhz clock, a
 	// divider of 4 is the minimum we want.
@@ -605,11 +605,11 @@ bool My_RF24::begin(void)
 
 	delay(100);
   
-  #elif defined(LITTLEWIRE)
+  #elif defined (LITTLEWIRE)
     pinMode(csn_pin,OUTPUT);
     _SPI.begin();
     csn(HIGH);
-  #elif defined(XMEGA_D3)
+  #elif defined (XMEGA_D3)
 	if (ce_pin != csn_pin) pinMode(ce_pin,OUTPUT);
 	_SPI.begin(csn_pin);
 	ce(LOW);
@@ -619,7 +619,7 @@ bool My_RF24::begin(void)
     // Initialize pins
     if (ce_pin != csn_pin) pinMode(ce_pin,OUTPUT);  
   
-    #if defined(RF24_TINY)
+    #if defined (RF24_TINY)
       if (ce_pin != csn_pin)
     #endif
         pinMode(csn_pin,OUTPUT);
@@ -716,7 +716,7 @@ bool My_RF24::isChipConnected()
 
 void My_RF24::startListening(void)
 {
- #if !defined (RF24_TINY) && ! defined(LITTLEWIRE)
+ #if !defined (RF24_TINY) && ! defined (LITTLEWIRE)
   powerUp();
  #endif
   write_register(NRF_CONFIG, read_register(NRF_CONFIG) | _BV(PRIM_RX));
@@ -964,7 +964,7 @@ void My_RF24::startWrite( const void* buf, uint8_t len, const bool multicast ){
   //write_payload( buf, len );
   write_payload( buf, len,multicast? W_TX_PAYLOAD_NO_ACK : W_TX_PAYLOAD ) ;
   ce(HIGH);
-  #if defined(CORE_TEENSY) || !defined(ARDUINO) || defined (RF24_SPIDEV) || defined (RF24_DUE)
+  #if defined (CORE_TEENSY) || !defined (ARDUINO) || defined (RF24_SPIDEV) || defined (RF24_DUE)
 	delayMicroseconds(10);
   #endif
   ce(LOW);
@@ -1453,7 +1453,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
   // HIGH and LOW '00' is 1Mbs - our default
   setup &= ~(_BV(RF_DR_LOW) | _BV(RF_DR_HIGH)) ;
   
-  #if defined(__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
+  #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
     txDelay=250;
   #else //16Mhz Arduino
     txDelay=85;
@@ -1463,7 +1463,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
     // Must set the RF_DR_LOW to 1; RF_DR_HIGH (used to be RF_DR) is already 0
     // Making it '10'.
     setup |= _BV( RF_DR_LOW ) ;
-  #if defined(__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
+  #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
     txDelay=450;
   #else //16Mhz Arduino
 	txDelay=155;
@@ -1476,7 +1476,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
     if ( speed == RF24_2MBPS )
     {
       setup |= _BV(RF_DR_HIGH);
-      #if defined(__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
+      #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
       txDelay=190;
       #else //16Mhz Arduino	  
 	  txDelay=65;
@@ -1580,27 +1580,27 @@ void My_RF24::setRetries(uint8_t delay, uint8_t count)
 
 //ATTiny support code pulled in from https://github.com/jscrane/RF24
 
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__)
+#if defined (__AVR_ATtiny25__) || defined (__AVR_ATtiny45__) || defined (__AVR_ATtiny85__)
 // see http://gammon.com.au/spi
 #	define DI   0  // D0, pin 5  Data In
 #	define DO   1  // D1, pin 6  Data Out (this is *not* MOSI)
 #	define USCK 2  // D2, pin 7  Universal Serial Interface clock
 #	define SS   3  // D3, pin 2  Slave Select
-#elif defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
+#elif defined (__AVR_ATtiny24__) || defined (__AVR_ATtiny44__) || defined (__AVR_ATtiny84__)
 // these depend on the core used (check pins_arduino.h)
 // this is for jeelabs' one (based on google-code core)
 #	define DI   4   // PA6
 #	define DO   5   // PA5
 #	define USCK 6   // PA4
 #	define SS   3   // PA7
-#elif defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny4313__)
+#elif defined (__AVR_ATtiny2313__) || defined (__AVR_ATtiny4313__)
 // these depend on the core used (check pins_arduino.h)
 // tested with google-code core
 #	define DI   14  // PB5
 #	define DO   15  // PB6
 #	define USCK 16  // PB7
 #	define SS   13  // PB4
-#elif defined(__AVR_ATtiny861__)
+#elif defined (__AVR_ATtiny861__)
 // these depend on the core used (check pins_arduino.h)
 // tested with google-code core
 #    define DI   9   // PB0
@@ -1609,7 +1609,7 @@ void My_RF24::setRetries(uint8_t delay, uint8_t count)
 #    define SS   6   // PB3
 #endif
 
-#if defined(RF24_TINY)
+#if defined (RF24_TINY)
 
 void SPIClass::begin() {
 
