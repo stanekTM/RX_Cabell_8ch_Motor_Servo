@@ -132,18 +132,19 @@ void outputPWM()
   
   int value_motorA = 0, value_motorB = 0;
   
-  //motorA --------------------------------------------------------------------------------------
-  if (channelValues[CHANNEL_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
+  //forward motorA
+  if (channelValues[CHANNEL_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
+    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
+    digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
+  }
+  //back motorA
+  else if (channelValues[CHANNEL_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
+  {
+    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
     analogWrite(PIN_PWM_1_MOTOR_A, value_motorA);
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
-  }
-  else if (channelValues[CHANNEL_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
-  {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, 255);
-    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA);
-    digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   else
   {
@@ -151,20 +152,21 @@ void outputPWM()
     analogWrite(PIN_PWM_2_MOTOR_A, BRAKE_MOTOR_A);
   }
   
-  //Serial.println(channelValues[CHANNEL_MOTOR_A]); //print value ​​on a serial monitor
+//  Serial.println(channelValues[CHANNEL_MOTOR_A]); //print value ​​on a serial monitor
   
-  //motorB --------------------------------------------------------------------------------------
-  if (channelValues[CHANNEL_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
+  //forward motorB
+  if (channelValues[CHANNEL_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, 255);
-    analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
-    digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
-  }
-  else if (channelValues[CHANNEL_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
-  {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, 255);
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
     analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
+  }
+  //back motorB
+  else if (channelValues[CHANNEL_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
+  {
+    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
+    analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
+    digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
   else
   {
