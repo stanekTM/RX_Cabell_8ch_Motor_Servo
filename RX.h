@@ -38,9 +38,17 @@
 //1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
 #define PWM_MOTOR_B  256
 
+//settings PWM (pin D3 or D11 are paired on timer2/8-bit, ServoTimer2 library)
+//1024 = 30Hz, 256 = 122Hz, 128 = 244Hz, 64 = 488Hz(default), 32 = 976Hz, 8 = 3906Hz
+//#define PWM_MOTOR_B  256
+
 //setting the reaction of the motor to be rotated after the lever has been moved (0-255)
 #define ACCELERATE_MOTOR_A  0
 #define ACCELERATE_MOTOR_B  0
+
+//setting the maximum engine power. Suitable for TX transmitters without endpoint setting (0-255)
+#define MAXIMUM_MOTOR_A  255
+#define MAXIMUM_MOTOR_B  255
 
 //brake setting, adjustment (0-255), no brake 0, max brake 255
 #define BRAKE_MOTOR_A  255
