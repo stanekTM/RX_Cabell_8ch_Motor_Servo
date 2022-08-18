@@ -47,8 +47,8 @@
 #define ACCELERATE_MOTOR_B  0
 
 //setting the maximum engine power. Suitable for TX transmitters without endpoint setting (0-255)
-#define MAXIMUM_MOTOR_A  255
-#define MAXIMUM_MOTOR_B  255
+#define MAX_MOTOR_A  255
+#define MAX_MOTOR_B  255
 
 //brake setting, adjustment (0-255), no brake 0, max brake 255
 #define BRAKE_MOTOR_A  255
@@ -57,14 +57,14 @@
 //setting the dead zone of poor quality joysticks TX for the motor controller
 #define DEAD_ZONE  15
 
-#define CHANNEL_MOTOR_A  0
-#define CHANNEL_MOTOR_B  1
-#define CHANNEL_SERVO_1  2
-#define CHANNEL_SERVO_2  3
-#define CHANNEL_SERVO_3  4
-#define CHANNEL_SERVO_4  5
-#define CHANNEL_SERVO_5  6
-#define CHANNEL_SERVO_6  7
+#define CH_MOTOR_A  0
+#define CH_MOTOR_B  1
+#define CH_SERVO_1  2
+#define CH_SERVO_2  3
+#define CH_SERVO_3  4
+#define CH_SERVO_4  5
+#define CH_SERVO_5  6
+#define CH_SERVO_6  7
 
 #define MIN_CONTROL_VAL  1000
 #define MID_CONTROL_VAL  ((MIN_CONTROL_VAL + MAX_CONTROL_VAL) / 2)
