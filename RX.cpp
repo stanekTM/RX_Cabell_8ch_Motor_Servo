@@ -91,12 +91,12 @@ void attachServoPins()
 
 void outputServo()
 {
-  servo1.write(channelValues[CHANNEL_SERVO_1]);
-  servo2.write(channelValues[CHANNEL_SERVO_2]);
-  servo3.write(channelValues[CHANNEL_SERVO_3]);
-  servo4.write(channelValues[CHANNEL_SERVO_4]);
-  servo5.write(channelValues[CHANNEL_SERVO_5]);
-  servo6.write(channelValues[CHANNEL_SERVO_6]);
+  servo1.write(channelValues[CH_SERVO_1]);
+  servo2.write(channelValues[CH_SERVO_2]);
+  servo3.write(channelValues[CH_SERVO_3]);
+  servo4.write(channelValues[CH_SERVO_4]);
+  servo5.write(channelValues[CH_SERVO_5]);
+  servo6.write(channelValues[CH_SERVO_6]);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -108,18 +108,18 @@ void outputPWM()
   int value_motorA = 0, value_motorB = 0;
   
   //forward motorA
-  if (channelValues[CHANNEL_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
+  if (channelValues[CH_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
+    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
+    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
     analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   //back motorA
-  else if (channelValues[CHANNEL_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
+  else if (channelValues[CH_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CHANNEL_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAXIMUM_MOTOR_A);
+    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
+    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
     analogWrite(PIN_PWM_1_MOTOR_A, value_motorA);
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
@@ -132,18 +132,18 @@ void outputPWM()
   
   
   //forward motorB
-  if (channelValues[CHANNEL_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
+  if (channelValues[CH_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
+    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
+    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
     analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
   //back motorB
-  else if (channelValues[CHANNEL_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
+  else if (channelValues[CH_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CHANNEL_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAXIMUM_MOTOR_B);
+    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
+    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
     analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
