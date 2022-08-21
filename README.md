@@ -3,7 +3,7 @@ It is a modified firmware of the receiver with the **"Cabell"** protocol, which 
 
 This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output.
 
-The motor driver IC is based on MX1208, MX1508, MX1515, MX1616L, TC1508S, SA8302 and others similar, which uses 4x PWM input control signals.
+The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
 The option to adjust the brake is included in the code.
 
 I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
