@@ -201,7 +201,7 @@ void setupReciever()
   {
     bindMode = true;
     radioPipeID = CABELL_BIND_RADIO_ADDR;
-    digitalWrite(PIN_LED, HIGH);    // Turn on LED to indicate bind mode
+    digitalWrite(PIN_LED, HIGH);      // Turn on LED to indicate bind mode
     radioNormalRxPipeID = 0x01 << 43; // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
   }
   else
@@ -484,7 +484,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
                             (((uint64_t)(tempHoldValues[12] - 1000)) << 24) +
                             (((uint64_t)(tempHoldValues[13] - 1000)) << 16) +
                             (((uint64_t)(tempHoldValues[14] - 1000)) << 8)  +
-                            (((uint64_t)(tempHoldValues[15] - 1000)));    // Address to use after binding
+                            (((uint64_t)(tempHoldValues[15] - 1000))); // Address to use after binding
                             
   if ((modelNum != currentModel) || (radioNormalRxPipeID != newRadioPipeID))
   {
@@ -583,6 +583,7 @@ bool readAndProcessPacket()
   CABELL_RxTxPacket_t RxPacket;
   
   Reciever->read(&RxPacket, sizeof(RxPacket));
+  
   int tx_channel = RxPacket.reserved & CABELL_RESERVED_MASK_CHANNEL;
   
   if (tx_channel != 0)

@@ -29,7 +29,7 @@
 
 
 //--------------------------------------------------------------------------------------------------------------------------
-RSSI::RSSI ()
+RSSI::RSSI()
 {
 }
 
@@ -37,7 +37,7 @@ RSSI::RSSI ()
 void RSSI::hit()
 {
   hitCount++;
-  sequentialMissTrack = constrain(sequentialMissTrack - RSSI_MISS_ADJUSTMENT_RECOVERY, TELEMETRY_RSSI_MIN_VALUE,TELEMETRY_RSSI_MAX_VALUE);
+  sequentialMissTrack = constrain(sequentialMissTrack - RSSI_MISS_ADJUSTMENT_RECOVERY, TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
   packetProcess();
 }
 
@@ -45,7 +45,7 @@ void RSSI::hit()
 void RSSI::miss()
 {
   missCount++;
-  sequentialMissTrack = constrain(sequentialMissTrack + RSSI_MISS_ADJUSTMENT, TELEMETRY_RSSI_MIN_VALUE,TELEMETRY_RSSI_MAX_VALUE);
+  sequentialMissTrack = constrain(sequentialMissTrack + RSSI_MISS_ADJUSTMENT, TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
   packetProcess();
 }
 
@@ -70,7 +70,7 @@ void RSSI::packetProcess()
   
   if (packetCount >= RSSI_CALC_INTERVAL)
   {
-    packetRate = constrain((int)((float)(hitCount - badPacketCount)*100.0/(float)(hitCount+missCount)), TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
+    packetRate = constrain((int)((float)(hitCount - badPacketCount) * 100.0 / (float)(hitCount + missCount)), TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
     resetCounters();
   }
 }
