@@ -8,7 +8,8 @@ The option to adjust the brake is included in the code.
 
 I recommend reducing the number of channels as much as possible based on what your model requires. Fewer channels will use a smaller packet size, which improves transmission reliability (fewer bytes sent means less opportunity for errors).
 
-[Video](https://www.youtube.com/watch?v=5skLsVCN05g) from testing.
+[Video](https://youtu.be/U3eYPZBC1NU) test with OpenAVRc.
+[Video](https://youtu.be/5skLsVCN05g) test with OpenTX Multiprotocol.
 
 ## Arduino pins
 ```
