@@ -111,16 +111,16 @@ void outputPWM()
   //forward motorA
   if (channelValues[CH_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
+    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
+    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
     analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   //back motorA
   else if (channelValues[CH_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_MOTOR_A);
+    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
+    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
     analogWrite(PIN_PWM_1_MOTOR_A, value_motorA);
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
@@ -135,16 +135,16 @@ void outputPWM()
   //forward motorB
   if (channelValues[CH_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
+    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
+    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
     analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
   //back motorB
   else if (channelValues[CH_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_MOTOR_B);
+    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
+    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
     analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
@@ -311,7 +311,7 @@ bool getPacket()
     // if timed out the packet was missed, go to the next channel
     if ((long)(micros() - nextAutomaticChannelSwitch) >= 0)
     {
-      //packet will be picked up on next loop through
+      // packet will be picked up on next loop through
       if (Reciever->available())
       {
         packetReady = true;
