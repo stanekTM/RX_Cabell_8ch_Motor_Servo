@@ -1,7 +1,7 @@
 # RC receiver with "Cabell" protocol
 ... works with [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) and [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
-This is a modified firmware, it contains 2x motor controller with brake and 6x servo output.
+This is a modified firmware, includes 2x motor controller with brake and 6x servo output.
 
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
 The option to adjust the brake is included in the code.
