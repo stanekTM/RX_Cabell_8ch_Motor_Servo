@@ -1,8 +1,9 @@
 # RC receiver with "Cabell" protocol
-It is a modified firmware of the receiver with the **"Cabell"** protocol.
-The RC receiver works with [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) and [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
+... works with [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) and [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
-This RX software accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output.
+It is a modified firmware.
+
+Receiver accepts 8 channels, which are conveniently located on the Arduino Nano or Pro Mini. RX includes 2x motor controller with brake and has 6x servo output.
 
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
 The option to adjust the brake is included in the code.
