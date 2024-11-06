@@ -3,6 +3,7 @@
 
 This is a modified firmware, includes 2x motor controller with brake and 6x servo output.
 
+The hardware includes a low-cost nRF24L01+ transceiver and an ATmega328P processor.
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
 The option to adjust the brake is included in the code.
 
