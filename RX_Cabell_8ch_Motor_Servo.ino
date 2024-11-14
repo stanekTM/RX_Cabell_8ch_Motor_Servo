@@ -1,3 +1,17 @@
+
+//*****************************************************************************************************************
+// Test RC receiver with "Cabell" protocol (motor-servo driver, telemetry) using OpenAVRc and OpenTX Multiprotocol
+//*****************************************************************************************************************
+// Simple RC receiver from my repository https://github.com/stanekTM/RX_Cabell_8ch_Motor_Servo
+//
+// The hardware includes nRF24L01+ transceiver and ATmega328P processor.
+// The firmware will be used for cars, boats, tanks, robots and aircraft. The code is Arduino.
+//
+// Works with RC transmitters:
+// OpenAVRc                   https://github.com/Ingwie/OpenAVRc_Dev
+// Multiprotocol from my fork https://github.com/stanekTM/TX_FW_Multi_Stane
+//*****************************************************************************************************************
+
 /*
  Copyright 2017 by Dennis Cabell
  KE8FZX
