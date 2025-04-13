@@ -77,7 +77,7 @@ uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM; // Initializes the channe
 RSSI rssi;
 
 
-//Create servo object ------------------------------------------------------------------------------------------------------
+// Create servo object -----------------------------------------------------------------------------------------------------
 ServoTimer2 servo1, servo2, servo3, servo4, servo5, servo6;
 
 void attachServoPins()
@@ -108,7 +108,7 @@ void outputPWM()
   
   int value_motorA = 0, value_motorB = 0;
   
-  //forward motorA
+  // Forward motorA
   if (channelValues[CH_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
     value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
@@ -116,7 +116,7 @@ void outputPWM()
     analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
-  //back motorA
+  // Back motorA
   else if (channelValues[CH_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
     value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
@@ -129,10 +129,10 @@ void outputPWM()
     analogWrite(PIN_PWM_1_MOTOR_A, BRAKE_MOTOR_A);
     analogWrite(PIN_PWM_2_MOTOR_A, BRAKE_MOTOR_A);
   }
-  //Serial.println(value_motorA); //print value on a serial monitor
+  //Serial.println(value_motorA);
   
   
-  //forward motorB
+  // Forward motorB
   if (channelValues[CH_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
     value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
@@ -140,7 +140,7 @@ void outputPWM()
     analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
-  //back motorB
+  // Back motorB
   else if (channelValues[CH_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
     value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
@@ -153,7 +153,7 @@ void outputPWM()
     analogWrite(PIN_PWM_3_MOTOR_B, BRAKE_MOTOR_B);
     analogWrite(PIN_PWM_4_MOTOR_B, BRAKE_MOTOR_B);
   }
-  //Serial.println(value_motorB); //print value on a serial monitor
+  //Serial.println(value_motorB);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ void ADC_Processing()
     
     adcPin = (adcPin == PIN_RX_BATT_A2) ? PIN_RX_BATT_A1 : PIN_RX_BATT_A2; // Choose next pin to read
     
-    ADCSRA  = bit (ADEN);                              // turn ADC on
+    ADCSRA  = bit (ADEN);                              // Turn ADC on
     ADCSRA |= bit (ADPS0) | bit (ADPS1) | bit (ADPS2); // Pre-scaler of 128
     ADMUX   = bit (REFS0) | (adcPin & 0x07);           // AVcc and select input port
     ADCSRA |= bit (ADSC);                              // Start next conversion
@@ -226,12 +226,12 @@ void setupReciever()
   Reciever->flush_rx();
   packetReady = false;
   
-  outputFailSafeValues(false); // initialize default values for output channels
+  outputFailSafeValues(false); // Initialize default values for output channels
   
   setNextRadioChannel(true);
   
-  // setup pin change interrupt
-  cli();         // switch interrupts off while messing with their settings
+  // Setup pin change interrupt
+  cli();         // Switch interrupts off while messing with their settings
   PCICR  = 0x02; // Enable PCINT1 interrupt
   PCMSK1 = RADIO_IRQ_PIN_MASK;
   sei();
@@ -242,7 +242,7 @@ void setupReciever()
   {
     if (IS_RADIO_IRQ_on)
     {
-      packetReady = true; // pulled low when packet is received
+      packetReady = true; // Pulled low when packet is received
     }
   }
 
@@ -256,7 +256,7 @@ void setNextRadioChannel(bool missedPacket)
   
   if (telemetryEnabled)
   {
-    // don't send the first 500 telemetry packets to avoid annoying warnings at startup
+    // Don't send the first 500 telemetry packets to avoid annoying warnings at startup
     if (initialTelemetrySkipPackets >= INITIAL_TELEMETRY_PACKETS_TO_SKIP)
     {
       expectedTransmitCompleteTime = sendTelemetryPacket();
@@ -308,10 +308,10 @@ bool getPacket()
   // Wait for the radio to get a packet, or the timeout for the current radio channel occurs
   if (!packetReady)
   {
-    // if timed out the packet was missed, go to the next channel
+    // If timed out the packet was missed, go to the next channel
     if ((long)(micros() - nextAutomaticChannelSwitch) >= 0)
     {
-      // packet will be picked up on next loop through
+      // Packet will be picked up on next loop through
       if (Reciever->available())
       {
         packetReady = true;
@@ -323,7 +323,7 @@ bool getPacket()
         sequentialHitCount = 0;
         sequentialMissCount++;
         rssi.miss();
-        setNextRadioChannel(true); // true indicates that packet was missed
+        setNextRadioChannel(true); // True indicates that packet was missed
         
         // if a long time passed, increase timeout duration to re-sync with the TX
         if ((long)(nextAutomaticChannelSwitch - lastRadioPacketeRecievedTime) > ((long)RESYNC_TIME_OUT))
@@ -349,7 +349,7 @@ bool getPacket()
   {
     lastRadioPacketeRecievedTime = micros(); // Use this time to calculate the next expected packet so when we miss packets we can change channels
     
-    // save this now while the value is latched. To save loop time only do this before initial lock as the initial lock process is the only thing that needs this
+    // Save this now while the value is latched. To save loop time only do this before initial lock as the initial lock process is the only thing that needs this
     if (!powerOnLock)
     {
       strongSignal = Reciever->testRPD();
@@ -357,7 +357,7 @@ bool getPacket()
     
     goodPacket_rx = readAndProcessPacket();
     
-    nextAutomaticChannelSwitch = lastRadioPacketeRecievedTime + packetInterval + INITIAL_PACKET_TIMEOUT_ADD; // must ne set after readAndProcessPacket because packetInterval may get adjusted
+    nextAutomaticChannelSwitch = lastRadioPacketeRecievedTime + packetInterval + INITIAL_PACKET_TIMEOUT_ADD; // Must ne set after readAndProcessPacket because packetInterval may get adjusted
     
     // During the initial power on lock process only consider the packet good if the signal was strong (better than -64 DBm)
     if (!powerOnLock && !strongSignal)
@@ -414,10 +414,10 @@ bool getPacket()
       hoppingLockedIn = true;
     }
     
-    // if more tnan 5 misses in a row assume it is a bad lock, or if after 100 packets there is still no lock
+    // If more tnan 5 misses in a row assume it is a bad lock, or if after 100 packets there is still no lock
     if ((sequentialMissCount > 5) || (sequentialMissCount + sequentialHitCount > 100))
     {
-      //if this happens then there is a bad lock and we should try to sync again.
+      // If this happens then there is a bad lock and we should try to sync again.
       lastRadioPacketeRecievedTime = millis() - (long)RESYNC_TIME_OUT;
       nextAutomaticChannelSwitch = millis() + RESYNC_WAIT_MICROS;
       telemetryEnabled = false;
@@ -472,6 +472,7 @@ void unbindReciever()
   }
   
   outputFailSafeValues(true);
+
   bool ledState = false;
   
   // Flash LED forever indicating unbound
@@ -511,6 +512,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     
     setFailSafeDefaultValues();
     outputFailSafeValues(true);
+
     bool ledState = false;
     
     // Flash LED forever indicating bound
@@ -565,7 +567,7 @@ void setFailSafeValues(uint16_t newFailsafeValues[])
 //--------------------------------------------------------------------------------------------------------------------------
 bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex)
 {
-  //caculate checksum and validate
+  // Caculate checksum and validate
   uint16_t packetSum = packet.modelNum + packet.option + packet.RxMode + packet.reserved;
   
   for (int x = 0; x < maxPayloadValueIndex; x++)
@@ -575,7 +577,7 @@ bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValue
   
   if (packetSum != ((((uint16_t)packet.checkSum_MSB) << 8) + (uint16_t)packet.checkSum_LSB))
   {
-    return false; // don't take packet if checksum bad
+    return false; // Don't take packet if checksum bad
   }
   else
   {
@@ -584,7 +586,7 @@ bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValue
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-//only call when a packet is available on the radio
+// Only call when a packet is available on the radio
 bool readAndProcessPacket()
 {
   CABELL_RxTxPacket_t RxPacket;
@@ -612,7 +614,7 @@ bool readAndProcessPacket()
   bool packet_rx = false;
   uint16_t tempHoldValues[CABELL_NUM_CHANNELS];
   uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS - CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
-  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction %2)) / 2)) * 3); // reduce 3 bytes per 2 channels, but not last channel if it is odd
+  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction % 2)) / 2)) * 3); // reduce 3 bytes per 2 channels, but not last channel if it is odd
   uint8_t maxPayloadValueIndex = sizeof(RxPacket.payloadValue) - (sizeof(RxPacket) - packetSize);
   uint8_t channelsRecieved = CABELL_NUM_CHANNELS - channelReduction;
   
@@ -742,7 +744,7 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
     tempHoldValues[b] |= ((uint16_t)RxPacket.payloadValue[payloadIndex]) << 8;
     
     //channel number is ODD
-    if (b %2)
+    if (b % 2)
     {
       tempHoldValues[b] = tempHoldValues[b] >> 4;
       payloadIndex++;

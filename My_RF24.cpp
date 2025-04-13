@@ -1,7 +1,6 @@
-//
+
 // Copied from https://github.com/nRF24/RF24 library and changed to streamline
 // operations specific to this application
-//
 
 /*
  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
@@ -9,113 +8,111 @@
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  version 2 as published by the Free Software Foundation.
- */
+*/
 
 #include "My_nRF24L01.h"
 #include "My_RF24_config.h"
 #include "My_RF24.h"
 
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::csn(bool mode)
 {
-
 #if defined (RF24_TINY)
-	if (ce_pin != csn_pin) {
+  if (ce_pin != csn_pin)
+  {
 		digitalWrite(csn_pin,mode);
-	} 
-	else {
-		if (mode == HIGH) {
+	}
+	else
+  {
+    if (mode == HIGH)
+    {
 			PORTB |= (1<<PINB2);  	// SCK->CSN HIGH
-			delayMicroseconds(100); // allow csn to settle.
+			delayMicroseconds(100); // Allow csn to settle.
 		} 
-		else {
-			PORTB &= ~(1<<PINB2);	// SCK->CSN LOW
-			delayMicroseconds(11);  // allow csn to settle
+		else
+    {
+			PORTB &= ~(1<<PINB2);	 // SCK->CSN LOW
+			delayMicroseconds(11); // Allow csn to settle
 		}
 	}
 	// Return, CSN toggle complete
 	return;
 	
 #elif defined (ARDUINO) && !defined (RF24_SPI_TRANSACTIONS)
-	// Minimum ideal SPI bus speed is 2x data rate
-	// If we assume 2Mbs data rate and 16Mhz clock, a
-	// divider of 4 is the minimum we want.
-	// CLK:BUS 8Mhz:2Mhz, 16Mhz:4Mhz, or 20Mhz:5Mhz
+// Minimum ideal SPI bus speed is 2x data rate
+// If we assume 2Mbs data rate and 16Mhz clock, a
+// divider of 4 is the minimum we want.
+// CLK:BUS 8Mhz:2Mhz, 16Mhz:4Mhz, or 20Mhz:5Mhz
 	
-      #if !defined (SOFTSPI)	
-		_SPI.setBitOrder(MSBFIRST);
-		_SPI.setDataMode(SPI_MODE0);
-		_SPI.setClockDivider(SPI_CLOCK_DIV2);
-      #endif
+#if !defined (SOFTSPI)
+  _SPI.setBitOrder(MSBFIRST);
+	_SPI.setDataMode(SPI_MODE0);
+	_SPI.setClockDivider(SPI_CLOCK_DIV2);
+#endif
+
 #elif defined (RF24_RPi)
-      if(!mode)
-	    _SPI.chipSelect(csn_pin);
+  if(!mode) _SPI.chipSelect(csn_pin);
 #endif
 
 #if !defined (RF24_LINUX)
 	digitalWrite(csn_pin,mode);
 	delayMicroseconds(csDelay);
 #endif
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::ce(bool level)
 {
-  //Allow for 3-pin use on ATTiny
+  // Allow for 3-pin use on ATTiny
   if (ce_pin != csn_pin) digitalWrite(ce_pin,level);
 }
 
-/****************************************************************************/
-
-  inline void My_RF24::beginTransaction() {
-    #if defined (RF24_SPI_TRANSACTIONS)
-    _SPI.beginTransaction(SPISettings(RF24_SPI_SPEED, MSBFIRST, SPI_MODE0));
+//*********************************************************************************************************************
+inline void My_RF24::beginTransaction()
+{
+  #if defined (RF24_SPI_TRANSACTIONS) _SPI.beginTransaction(SPISettings(RF24_SPI_SPEED, MSBFIRST, SPI_MODE0));
 	#endif
-    csn(LOW);
-  }
 
-/****************************************************************************/
+  csn(LOW);
+}
 
-  inline void My_RF24::endTransaction() {
-    csn(HIGH);
-	#if defined (RF24_SPI_TRANSACTIONS)
-    _SPI.endTransaction();
+//*********************************************************************************************************************
+inline void My_RF24::endTransaction()
+{
+  csn(HIGH);
+
+	#if defined (RF24_SPI_TRANSACTIONS) _SPI.endTransaction();
 	#endif
-  }
+}
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
 {
   uint8_t status;
 
-  #if defined (RF24_LINUX)
-  beginTransaction(); //configures the spi settings for RPi, locks mutex and setting csn low
+#if defined (RF24_LINUX)
+  beginTransaction(); // Configures the spi settings for RPi, locks mutex and setting csn low
   uint8_t * prx = spi_rxbuff;
   uint8_t * ptx = spi_txbuff;
   uint8_t size = len + 1; // Add register value to transmit buffer
 
-  *ptx++ = ( R_REGISTER | ( REGISTER_MASK & reg ) );
+  *ptx++ = ( R_REGISTER | ( REGISTER_MASK & reg ));
 
-  while (len--){ *ptx++ = NOP; } // Dummy operation, just for reading
+  while (len--) { *ptx++ = NOP; } // Dummy operation, just for reading
   
-  _SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, size);
+  _SPI.transfernb((char *) spi_txbuff, (char *) spi_rxbuff, size);
   
-  status = *prx++; // status is 1st byte of receive buffer
+  status = *prx++; // Status is 1st byte of receive buffer
 
-  // decrement before to skip status byte
-  while ( --size ){ *buf++ = *prx++; } 
-  endTransaction(); //unlocks mutex and setting csn high
-
+  // Decrement before to skip status byte
+  while (--size ) { *buf++ = *prx++; } 
+  endTransaction(); // Unlocks mutex and setting csn high
 #else
-
   beginTransaction();
-  status = _SPI.transfer( R_REGISTER | ( REGISTER_MASK & reg ) );
-  while ( len-- ){
+  status = _SPI.transfer( R_REGISTER | ( REGISTER_MASK & reg ));
+  while ( len-- )
+  {
     *buf++ = _SPI.transfer(0xff);
   }
   endTransaction();
@@ -125,8 +122,7 @@ uint8_t My_RF24::read_register(uint8_t reg, uint8_t* buf, uint8_t len)
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::read_register(uint8_t reg)
 {
   uint8_t result;
@@ -137,17 +133,17 @@ uint8_t My_RF24::read_register(uint8_t reg)
   
   uint8_t * prx = spi_rxbuff;
   uint8_t * ptx = spi_txbuff;	
-  *ptx++ = ( R_REGISTER | ( REGISTER_MASK & reg ) );
+  *ptx++ = ( R_REGISTER | ( REGISTER_MASK & reg ));
   *ptx++ = NOP ; // Dummy operation, just for reading
   
   _SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, 2);
-  result = *++prx;   // result is 2nd byte of receive buffer
+  result = *++prx;   // Result is 2nd byte of receive buffer
   
   endTransaction();
   #else
 
   beginTransaction();
-  _SPI.transfer( R_REGISTER | ( REGISTER_MASK & reg ) );
+  _SPI.transfer( R_REGISTER | ( REGISTER_MASK & reg ));
   result = _SPI.transfer(0xff);
   endTransaction();
 
@@ -156,8 +152,7 @@ uint8_t My_RF24::read_register(uint8_t reg)
   return result;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
 {
   uint8_t status;
@@ -173,7 +168,7 @@ uint8_t My_RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
     *ptx++ = *buf++;
   
   _SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, size);
-  status = *prx; // status is 1st byte of receive buffer
+  status = *prx; // Status is 1st byte of receive buffer
   endTransaction();
   #else
 
@@ -188,8 +183,7 @@ uint8_t My_RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::write_register(uint8_t reg, uint8_t value)
 {
   uint8_t status;
@@ -204,7 +198,7 @@ uint8_t My_RF24::write_register(uint8_t reg, uint8_t value)
 	*ptx = value ;	
   	
 	_SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, 2);
-	status = *prx++; // status is 1st byte of receive buffer
+	status = *prx++; // Status is 1st byte of receive buffer
 	endTransaction();
   #else
 
@@ -218,8 +212,7 @@ uint8_t My_RF24::write_register(uint8_t reg, uint8_t value)
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::write_payload(const void* buf, uint8_t data_len, const uint8_t writeType)
 {
   uint8_t status;
@@ -245,7 +238,7 @@ uint8_t My_RF24::write_payload(const void* buf, uint8_t data_len, const uint8_t 
 	  *ptx++ =  0;
 	
 	_SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, size);
-	status = *prx; // status is 1st byte of receive buffer
+	status = *prx; // Status is 1st byte of receive buffer
 	endTransaction();
 
   #else
@@ -265,8 +258,7 @@ uint8_t My_RF24::write_payload(const void* buf, uint8_t data_len, const uint8_t 
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::read_payload(void* buf, uint8_t data_len)
 {
   uint8_t status;
@@ -320,22 +312,19 @@ uint8_t My_RF24::read_payload(void* buf, uint8_t data_len)
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::flush_rx(void)
 {
   return spiTrans( FLUSH_RX );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::flush_tx(void)
 {
   return spiTrans( FLUSH_TX );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::spiTrans(uint8_t cmd){
 
   uint8_t status;
@@ -347,14 +336,13 @@ uint8_t My_RF24::spiTrans(uint8_t cmd){
   return status;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::get_status(void)
 {
   return spiTrans(NOP);
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 #if !defined (MINIMAL)
 void My_RF24::print_status(uint8_t status)
 {
@@ -368,8 +356,7 @@ void My_RF24::print_status(uint8_t status)
           );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::print_observe_tx(uint8_t value)
 {
   printf_P(PSTR("OBSERVE_TX=%02x: POLS_CNT=%x ARC_CNT=%x\r\n"),
@@ -379,8 +366,7 @@ void My_RF24::print_observe_tx(uint8_t value)
           );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::print_byte_register(const char* name, uint8_t reg, uint8_t qty)
 {
   //char extra_tab = strlen_P(name) < 8 ? '\t' : 0;
@@ -395,8 +381,7 @@ void My_RF24::print_byte_register(const char* name, uint8_t reg, uint8_t qty)
   printf_P(PSTR("\r\n"));
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::print_address_register(const char* name, uint8_t reg, uint8_t qty)
 {
 
@@ -419,28 +404,26 @@ void My_RF24::print_address_register(const char* name, uint8_t reg, uint8_t qty)
   printf_P(PSTR("\r\n"));
 }
 #endif
-/****************************************************************************/
 
+//*********************************************************************************************************************
 My_RF24::My_RF24(uint16_t _cepin, uint16_t _cspin):
   ce_pin(_cepin), csn_pin(_cspin), p_variant(false),
-  payload_size(32), dynamic_payloads_enabled(false), addr_width(5),csDelay(5)//,pipe0_reading_address(0)
+  payload_size(32), dynamic_payloads_enabled(false), addr_width(5),csDelay(5) //,pipe0_reading_address(0)
 {
   pipe0_reading_address[0]=0;
 }
 
-/****************************************************************************/
-
-#if defined (RF24_LINUX) && !defined (MRAA)//RPi constructor
+//*********************************************************************************************************************
+#if defined (RF24_LINUX) && !defined (MRAA) //RPi constructor
 
 My_RF24::My_RF24(uint16_t _cepin, uint16_t _cspin, uint32_t _spi_speed):
-  ce_pin(_cepin),csn_pin(_cspin),spi_speed(_spi_speed),p_variant(false), payload_size(32), dynamic_payloads_enabled(false),addr_width(5)//,pipe0_reading_address(0) 
+  ce_pin(_cepin),csn_pin(_cspin),spi_speed(_spi_speed),p_variant(false), payload_size(32), dynamic_payloads_enabled(false),addr_width(5) //,pipe0_reading_address(0) 
 {
   pipe0_reading_address[0]=0;
 }
 #endif
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::setChannel(uint8_t channel)
 {
   const uint8_t max_channel = 125;
@@ -452,22 +435,20 @@ uint8_t My_RF24::getChannel()
   
   return read_register(RF_CH);
 }
-/****************************************************************************/
 
+//*********************************************************************************************************************
 void My_RF24::setPayloadSize(uint8_t size)
 {
   payload_size = rf24_min(size,32);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::getPayloadSize(void)
 {
   return payload_size;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 #if !defined (MINIMAL)
 
 static const char rf24_datarate_e_str_0[] PROGMEM = "1MBPS";
@@ -516,6 +497,7 @@ static const char * const rf24_csn_e_str_P[] = {
 };
 #endif
 
+//*********************************************************************************************************************
 void My_RF24::printDetails(void)
 {
 
@@ -549,7 +531,7 @@ void My_RF24::printDetails(void)
 	}
 	printf("\n================ NRF Configuration ================\n");
  
-#endif //Linux
+#endif // Linux
 
   print_status(get_status());
 
@@ -573,8 +555,8 @@ void My_RF24::printDetails(void)
 }
 
 #endif
-/****************************************************************************/
 
+//*********************************************************************************************************************
 bool My_RF24::begin(void)
 {
 
@@ -588,7 +570,7 @@ bool My_RF24::begin(void)
 	#endif
 	
     #ifdef RF24_RPi
-	  switch(csn_pin){     //Ensure valid hardware CS pin
+	  switch(csn_pin){     // Ensure valid hardware CS pin
 	    case 0: break;
 	    case 1: break;
 	    // Allow BCM2835 enums for RPi
@@ -630,7 +612,7 @@ bool My_RF24::begin(void)
   	#if defined (__ARDUINO_X86__)
 		delay(100);
   	#endif
-  #endif //Linux
+  #endif // Linux
 
   // Must allow the radio time to settle else configuration bits will not necessarily stick.
   // This is actually only required following power up but some settling time also appears to
@@ -651,20 +633,18 @@ bool My_RF24::begin(void)
   // Reset value is MAX
   //setPALevel( RF24_PA_MAX ) ;
 
-  // check for connected module and if this is a p nRF24l01 variant
-  //
+  // Check for connected module and if this is a p nRF24l01 variant
   if( setDataRate( RF24_250KBPS ) )
   {
     p_variant = true ;
   }
   setup = read_register(RF_SETUP);
-  /*if( setup == 0b00001110 )     // register default for nRF24L01P
+  /*if( setup == 0b00001110 )     // Register default for nRF24L01P
   {
     p_variant = true ;
   }*/
   
-  // Then set the data rate to the slowest (and most reliable) speed supported by all
-  // hardware.
+  // Then set the data rate to the slowest (and most reliable) speed supported by all hardware
   setDataRate( RF24_1MBPS ) ;
 
   // Initialize CRC and request 2-byte (16bit) CRC
@@ -681,15 +661,14 @@ bool My_RF24::begin(void)
   write_register(NRF_STATUS,_BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );
 
   // Set up default configuration.  Callers can always change it later.
-  // This channel should be universally safe and not bleed over into adjacent
-  // spectrum.
+  // This channel should be universally safe and not bleed over into adjacent spectrum
   setChannel(76);
 
   // Flush buffers
   flush_rx();
   flush_tx();
 
-  powerUp(); //Power up by default when begin() is called
+  powerUp(); // Power up by default when begin() is called
 
   // Enable PTX, do not write CE high so radio will remain in standby I mode ( 130us max to transition to RX or TX instead of 1500us from powerUp )
   // PTX should use only 22uA of power
@@ -699,8 +678,7 @@ bool My_RF24::begin(void)
   return ( setup != 0 && setup != 0xff );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::isChipConnected()
 {
   uint8_t setup = read_register(SETUP_AW);
@@ -712,8 +690,7 @@ bool My_RF24::isChipConnected()
   return false;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::startListening(void)
 {
  #if !defined (RF24_TINY) && ! defined (LITTLEWIRE)
@@ -739,12 +716,13 @@ void My_RF24::startListening(void)
   //delayMicroseconds(100);
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 static const uint8_t child_pipe_enable[] PROGMEM =
 {
   ERX_P0, ERX_P1, ERX_P2, ERX_P3, ERX_P4, ERX_P5
 };
 
+//*********************************************************************************************************************
 void My_RF24::stopListening(void)
 {  
   ce(LOW);
@@ -752,7 +730,7 @@ void My_RF24::stopListening(void)
   delayMicroseconds(txDelay);
   
   if(read_register(FEATURE) & _BV(EN_ACK_PAY)){
-    delayMicroseconds(txDelay); //200
+    delayMicroseconds(txDelay); // 200
 	flush_tx();
   }
   //flush_rx();
@@ -768,20 +746,18 @@ void My_RF24::stopListening(void)
   write_register(EN_RXADDR,read_register(EN_RXADDR) | _BV(pgm_read_byte(&child_pipe_enable[0]))); // Enable RX on pipe0
   
   //delayMicroseconds(100);
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::powerDown(void)
 {
   ce(LOW); // Guarantee CE is low on powerDown
   write_register(NRF_CONFIG,read_register(NRF_CONFIG) & ~_BV(PWR_UP));
 }
 
-/****************************************************************************/
-
-//Power up now. Radio will not power down unless instructed by MCU for config changes etc.
+//*********************************************************************************************************************
+// Power up now. Radio will not power down unless instructed by MCU for config changes etc.
+//*********************************************************************************************************************
 void My_RF24::powerUp(void)
 {
    uint8_t cfg = read_register(NRF_CONFIG);
@@ -790,14 +766,14 @@ void My_RF24::powerUp(void)
    if (!(cfg & _BV(PWR_UP))){
       write_register(NRF_CONFIG, cfg | _BV(PWR_UP));
 
-      // For nRF24L01+ to go from power down mode to TX or RX mode it must first pass through stand-by mode.
+    // For nRF24L01+ to go from power down mode to TX or RX mode it must first pass through stand-by mode.
 	  // There must be a delay of Tpd2stby (see Table 16.) after the nRF24L01+ leaves power down mode before
 	  // the CEis set high. - Tpd2stby can be up to 5ms per the 1.0 datasheet
       delay(5);
    }
 }
 
-/******************************************************************/
+//*********************************************************************************************************************
 #if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 void My_RF24::errNotify(){
 	#if defined (SERIAL_DEBUG) || defined (RF24_LINUX)
@@ -810,15 +786,16 @@ void My_RF24::errNotify(){
 	#endif
 }
 #endif
-/******************************************************************/
 
-//Similar to the previous write, clears the interrupt flags
+//*********************************************************************************************************************
+// Similar to the previous write, clears the interrupt flags
+//*********************************************************************************************************************
 bool My_RF24::write( const void* buf, uint8_t len, const bool multicast )
 {
-	//Start Writing
+	// Start Writing
 	startFastWrite(buf,len,multicast);
 
-	//Wait until complete or failed
+	// Wait until complete or failed
 	#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 		uint32_t timer = millis();
 	#endif 
@@ -840,35 +817,37 @@ bool My_RF24::write( const void* buf, uint8_t len, const bool multicast )
 
 	uint8_t status = write_register(NRF_STATUS,_BV(RX_DR) | _BV(TX_DS) | _BV(MAX_RT) );
 
-  //Max retries exceeded
+  // Max retries exceeded
   if( status & _BV(MAX_RT)){
-  	flush_tx(); //Only going to be 1 packet int the FIFO at a time using this method, so just flush
+  	flush_tx(); // Only going to be 1 packet int the FIFO at a time using this method, so just flush
   	return 0;
   }
-	//TX OK 1 or 0
+	// TX OK 1 or 0
   return 1;
 }
 
+//*********************************************************************************************************************
 bool My_RF24::write( const void* buf, uint8_t len ){
 	return write(buf,len,0);
 }
-/****************************************************************************/
 
-//For general use, the interrupt flags are not important to clear
+//*********************************************************************************************************************
+// For general use, the interrupt flags are not important to clear
+//*********************************************************************************************************************
 bool My_RF24::writeBlocking( const void* buf, uint8_t len, uint32_t timeout )
 {
-	//Block until the FIFO is NOT full.
-	//Keep track of the MAX retries and set auto-retry if seeing failures
-	//This way the FIFO will fill up and allow blocking until packets go through
-	//The radio will auto-clear everything in the FIFO as long as CE remains high
+	// Block until the FIFO is NOT full.
+	// Keep track of the MAX retries and set auto-retry if seeing failures
+	// This way the FIFO will fill up and allow blocking until packets go through
+	// The radio will auto-clear everything in the FIFO as long as CE remains high
 
-	uint32_t timer = millis();							  //Get the time that the payload transmission started
+	uint32_t timer = millis(); // Get the time that the payload transmission started
 
-	while( ( get_status()  & ( _BV(TX_FULL) ))) {		  //Blocking only if FIFO is full. This will loop and block until TX is successful or timeout
+	while( ( get_status()  & ( _BV(TX_FULL) ))) { // Blocking only if FIFO is full. This will loop and block until TX is successful or timeout
 
-		if( get_status() & _BV(MAX_RT)){					  //If MAX Retries have been reached
-			reUseTX();										  //Set re-transmit and clear the MAX_RT interrupt flag
-			if(millis() - timer > timeout){ return 0; }		  //If this payload has exceeded the user-defined timeout, exit and return 0
+		if( get_status() & _BV(MAX_RT)){ // If MAX Retries have been reached
+			reUseTX();				             // Set re-transmit and clear the MAX_RT interrupt flag
+			if(millis() - timer > timeout){ return 0; } // If this payload has exceeded the user-defined timeout, exit and return 0
 		}
 		#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 			if(millis() - timer > (timeout+95) ){			
@@ -881,41 +860,39 @@ bool My_RF24::writeBlocking( const void* buf, uint8_t len, uint32_t timeout )
 
   	}
 
-  	//Start Writing
-	startFastWrite(buf,len,0);								  //Write the payload if a buffer is clear
+  // Start Writing
+	startFastWrite(buf,len,0); // Write the payload if a buffer is clear
 
-	return 1;												  //Return 1 to indicate successful transmission
+	return 1;                  // Return 1 to indicate successful transmission
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::reUseTX(){
-		write_register(NRF_STATUS,_BV(MAX_RT) );			  //Clear max retry flag
+		write_register(NRF_STATUS,_BV(MAX_RT) ); // Clear max retry flag
 		spiTrans( REUSE_TX_PL );
-		ce(LOW);										  //Re-Transfer packet
+		ce(LOW); // Re-Transfer packet
 		ce(HIGH);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::writeFast( const void* buf, uint8_t len, const bool multicast )
 {
-	//Block until the FIFO is NOT full.
-	//Keep track of the MAX retries and set auto-retry if seeing failures
-	//Return 0 so the user can control the retrys and set a timer or failure counter if required
-	//The radio will auto-clear everything in the FIFO as long as CE remains high
+	// Block until the FIFO is NOT full.
+	// Keep track of the MAX retries and set auto-retry if seeing failures
+	// Return 0 so the user can control the retrys and set a timer or failure counter if required
+	// The radio will auto-clear everything in the FIFO as long as CE remains high
 
 	#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 		uint32_t timer = millis();
 	#endif
 	
-	while( ( get_status()  & ( _BV(TX_FULL) ))) {			  //Blocking only if FIFO is full. This will loop and block until TX is successful or fail
+	while( ( get_status()  & ( _BV(TX_FULL) ))) { // Blocking only if FIFO is full. This will loop and block until TX is successful or fail
 
 		if( get_status() & _BV(MAX_RT)){
-			//reUseTX();										  //Set re-transmit
-			write_register(NRF_STATUS,_BV(MAX_RT) );			  //Clear max retry flag
-			return 0;										  //Return 0. The previous payload has been retransmitted
-															  //From the user perspective, if you get a 0, just keep trying to send the same payload
+			//reUseTX(); // Set re-transmit
+			write_register(NRF_STATUS,_BV(MAX_RT) ); // Clear max retry flag
+			return 0; // Return 0. The previous payload has been retransmitted
+			// From the user perspective, if you get a 0, just keep trying to send the same payload
 		}
 		#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
 			if(millis() - timer > 95 ){			
@@ -926,24 +903,25 @@ bool My_RF24::writeFast( const void* buf, uint8_t len, const bool multicast )
 			}
 		#endif
   	}
-		     //Start Writing
+	// Start Writing
 	startFastWrite(buf,len,multicast);
 
 	return 1;
 }
 
+//*********************************************************************************************************************
 bool My_RF24::writeFast( const void* buf, uint8_t len ){
 	return writeFast(buf,len,0);
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
+// Per the documentation, we want to set PTX Mode when not listening. Then all we do is write data and set CE high
+// In this mode, if we can keep the FIFO buffers loaded, packets will transmit immediately (no 130us delay)
+// Otherwise we enter Standby-II mode, which is still faster than standby mode
+// Also, we remove the need to keep writing the config register over and over and delaying for 150 us each time if sending a stream of data
+//*********************************************************************************************************************
 
-//Per the documentation, we want to set PTX Mode when not listening. Then all we do is write data and set CE high
-//In this mode, if we can keep the FIFO buffers loaded, packets will transmit immediately (no 130us delay)
-//Otherwise we enter Standby-II mode, which is still faster than standby mode
-//Also, we remove the need to keep writing the config register over and over and delaying for 150 us each time if sending a stream of data
-
-void My_RF24::startFastWrite( const void* buf, uint8_t len, const bool multicast, bool startTx){ //TMRh20
+void My_RF24::startFastWrite( const void* buf, uint8_t len, const bool multicast, bool startTx){ // TMRh20
 
 	//write_payload( buf,len);
 	write_payload( buf, len,multicast ? W_TX_PAYLOAD_NO_ACK : W_TX_PAYLOAD ) ;
@@ -953,14 +931,13 @@ void My_RF24::startFastWrite( const void* buf, uint8_t len, const bool multicast
 
 }
 
-/****************************************************************************/
-
-//Added the original startWrite back in so users can still use interrupts, ack payloads, etc
-//Allows the library to pass all tests
+//*********************************************************************************************************************
+// Added the original startWrite back in so users can still use interrupts, ack payloads, etc
+// Allows the library to pass all tests
+//*********************************************************************************************************************
 void My_RF24::startWrite( const void* buf, uint8_t len, const bool multicast ){
 
   // Send the payload
-
   //write_payload( buf, len );
   write_payload( buf, len,multicast? W_TX_PAYLOAD_NO_ACK : W_TX_PAYLOAD ) ;
   ce(HIGH);
@@ -968,17 +945,14 @@ void My_RF24::startWrite( const void* buf, uint8_t len, const bool multicast ){
 	delayMicroseconds(10);
   #endif
   ce(LOW);
-
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::rxFifoFull(){
 	return read_register(FIFO_STATUS) & _BV(RX_FULL);
 }
-/****************************************************************************/
 
+//*********************************************************************************************************************
 bool My_RF24::txStandBy(){
 
     #if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
@@ -988,7 +962,7 @@ bool My_RF24::txStandBy(){
 		if( get_status() & _BV(MAX_RT)){
 			write_register(NRF_STATUS,_BV(MAX_RT) );
 			ce(LOW);
-			flush_tx();    //Non blocking, flush the data
+			flush_tx(); // Non blocking, flush the data
 			return 0;
 		}
 		#if defined (FAILURE_HANDLING) || defined (RF24_LINUX)
@@ -1001,14 +975,13 @@ bool My_RF24::txStandBy(){
 		#endif
 	}
 
-	ce(LOW);			   //Set STANDBY-I mode
+	ce(LOW); // Set STANDBY-I mode
 	return 1;
 }
 
-/****************************************************************************/
-
-bool My_RF24::txStandBy(uint32_t timeout, bool startTx){
-
+//*********************************************************************************************************************
+bool My_RF24::txStandBy(uint32_t timeout, bool startTx)
+{
     if(startTx){
 	  stopListening();
 	  ce(HIGH);
@@ -1018,7 +991,7 @@ bool My_RF24::txStandBy(uint32_t timeout, bool startTx){
 	while( ! (read_register(FIFO_STATUS) & _BV(TX_EMPTY)) ){
 		if( get_status() & _BV(MAX_RT)){
 			write_register(NRF_STATUS,_BV(MAX_RT) );
-				ce(LOW);										  //Set re-transmit
+				ce(LOW); // Set re-transmit
 				ce(HIGH);
 				if(millis() - start >= timeout){
 					ce(LOW); flush_tx(); return 0;
@@ -1034,26 +1007,22 @@ bool My_RF24::txStandBy(uint32_t timeout, bool startTx){
 		#endif
 	}
 
-	
-	ce(LOW);				   //Set STANDBY-I mode
+	ce(LOW); // Set STANDBY-I mode
 	return 1;
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::maskIRQ(bool tx, bool fail, bool rx){
 
 	uint8_t config = read_register(NRF_CONFIG);
-	/* clear the interrupt flags */
+	// Clear the interrupt flags
 	config &= ~(1 << MASK_MAX_RT | 1 << MASK_TX_DS | 1 << MASK_RX_DR);
-	/* set the specified interrupt flags */
+	// Set the specified interrupt flags
 	config |= fail << MASK_MAX_RT | tx << MASK_TX_DS | rx << MASK_RX_DR;
 	write_register(NRF_CONFIG, config);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::getDynamicPayloadSize(void)
 {
   uint8_t result = 0;
@@ -1076,15 +1045,13 @@ uint8_t My_RF24::getDynamicPayloadSize(void)
   return result;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::available(void)
 {
   return available(NULL);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::available(uint8_t* pipe_num)
 {
   if (!( read_register(FIFO_STATUS) & _BV(RX_EMPTY) )){
@@ -1097,14 +1064,10 @@ bool My_RF24::available(uint8_t* pipe_num)
   	return 1;
   }
 
-
   return 0;
-
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::read( void* buf, uint8_t len ){
 
   // Fetch the payload
@@ -1115,8 +1078,7 @@ void My_RF24::read( void* buf, uint8_t len ){
 
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::whatHappened(bool& tx_ok,bool& tx_fail,bool& rx_ready)
 {
   // Read the status & reset the status in one easy call
@@ -1129,8 +1091,7 @@ void My_RF24::whatHappened(bool& tx_ok,bool& tx_fail,bool& rx_ready)
   rx_ready = status & _BV(RX_DR);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::openWritingPipe(uint64_t value)
 {
   // Note that AVR 8-bit uC's store this LSB first, and the NRF24L01(+)
@@ -1145,7 +1106,7 @@ void My_RF24::openWritingPipe(uint64_t value)
   write_register(RX_PW_P0,payload_size);
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 void My_RF24::openWritingPipe(const uint8_t *address)
 {
   // Note that AVR 8-bit uC's store this LSB first, and the NRF24L01(+)
@@ -1159,17 +1120,19 @@ void My_RF24::openWritingPipe(const uint8_t *address)
   write_register(RX_PW_P0,payload_size);
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 static const uint8_t child_pipe[] PROGMEM =
 {
   RX_ADDR_P0, RX_ADDR_P1, RX_ADDR_P2, RX_ADDR_P3, RX_ADDR_P4, RX_ADDR_P5
 };
+
+//*********************************************************************************************************************
 static const uint8_t child_payload_size[] PROGMEM =
 {
   RX_PW_P0, RX_PW_P1, RX_PW_P2, RX_PW_P3, RX_PW_P4, RX_PW_P5
 };
 
-
+//*********************************************************************************************************************
 void My_RF24::openReadingPipe(uint8_t child, uint64_t address)
 {
   // If this is pipe 0, cache the address.  This is needed because
@@ -1196,7 +1159,7 @@ void My_RF24::openReadingPipe(uint8_t child, uint64_t address)
   }
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 void My_RF24::setAddressWidth(uint8_t a_width){
 
 	if(a_width -= 2){
@@ -1209,8 +1172,7 @@ void My_RF24::setAddressWidth(uint8_t a_width){
 
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::openReadingPipe(uint8_t child, const uint8_t *address)
 {
   // If this is pipe 0, cache the address.  This is needed because
@@ -1237,15 +1199,13 @@ void My_RF24::openReadingPipe(uint8_t child, const uint8_t *address)
   }
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::closeReadingPipe( uint8_t pipe )
 {
   write_register(EN_RXADDR,read_register(EN_RXADDR) & ~_BV(pgm_read_byte(&child_pipe_enable[pipe])));
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::toggle_features(void)
 {
     beginTransaction();
@@ -1254,14 +1214,13 @@ void My_RF24::toggle_features(void)
 	endTransaction();
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::enableDynamicPayloads(void)
 {
   // Enable dynamic payload throughout the system
 
-    //toggle_features();
-    write_register(FEATURE,read_register(FEATURE) | _BV(EN_DPL) );
+  //toggle_features();
+  write_register(FEATURE,read_register(FEATURE) | _BV(EN_DPL) );
 
 
   IF_SERIAL_DEBUG(printf("FEATURE=%i\r\n",read_register(FEATURE)));
@@ -1275,10 +1234,10 @@ void My_RF24::enableDynamicPayloads(void)
   dynamic_payloads_enabled = true;
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 void My_RF24::disableDynamicPayloads(void)
 {
-  // Disables dynamic payload throughout the system.  Also disables Ack Payloads
+  // Disables dynamic payload throughout the system. Also disables Ack Payloads
 
   //toggle_features();
   write_register(FEATURE, 0);
@@ -1295,43 +1254,31 @@ void My_RF24::disableDynamicPayloads(void)
   dynamic_payloads_enabled = false;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::enableAckPayload(void)
 {
-  //
-  // enable ack payload and dynamic payload features
-  //
-
-    //toggle_features();
-    write_register(FEATURE,read_register(FEATURE) | _BV(EN_ACK_PAY) | _BV(EN_DPL) );
+  // Enable ack payload and dynamic payload features
+  //toggle_features();
+  write_register(FEATURE,read_register(FEATURE) | _BV(EN_ACK_PAY) | _BV(EN_DPL) );
 
   IF_SERIAL_DEBUG(printf("FEATURE=%i\r\n",read_register(FEATURE)));
 
-  //
   // Enable dynamic payload on pipes 0 & 1
-  //
-
   write_register(DYNPD,read_register(DYNPD) | _BV(DPL_P1) | _BV(DPL_P0));
   dynamic_payloads_enabled = true;
 }
 
-/****************************************************************************/
-
-void My_RF24::enableDynamicAck(void){
-  //
+//*********************************************************************************************************************
+void My_RF24::enableDynamicAck(void)
+{
   // enable dynamic ack features
-  //
-    //toggle_features();
-    write_register(FEATURE,read_register(FEATURE) | _BV(EN_DYN_ACK) );
+  //toggle_features();
+  write_register(FEATURE,read_register(FEATURE) | _BV(EN_DYN_ACK) );
 
   IF_SERIAL_DEBUG(printf("FEATURE=%i\r\n",read_register(FEATURE)));
-
-
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::writeAckPayload(uint8_t pipe, const void* buf, uint8_t len)
 {
   const uint8_t* current = reinterpret_cast<const uint8_t*>(buf);
@@ -1357,26 +1304,22 @@ void My_RF24::writeAckPayload(uint8_t pipe, const void* buf, uint8_t len)
     _SPI.transfer(*current++);
   endTransaction();
   	
-  #endif  
-
+  #endif
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::isAckPayloadAvailable(void)
 {
   return ! (read_register(FIFO_STATUS) & _BV(RX_EMPTY));
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::isPVariant(void)
 {
   return p_variant ;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::setAutoAck(bool enable)
 {
   if ( enable )
@@ -1385,8 +1328,7 @@ void My_RF24::setAutoAck(bool enable)
     write_register(EN_AA, 0);
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::setAutoAck( uint8_t pipe, bool enable )
 {
   if ( pipe <= 6 )
@@ -1404,47 +1346,41 @@ void My_RF24::setAutoAck( uint8_t pipe, bool enable )
   }
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::testCarrier(void)
 {
   return ( read_register(CD) & 1 );
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::testRPD(void)
 {
   return ( read_register(RPD) & 1 ) ;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::setPALevel(uint8_t level)
 {
 
   uint8_t setup = read_register(RF_SETUP) & 0xF8;
 
-  if(level > 3){  						// If invalid level, go to max PA
-	  level = (RF24_PA_MAX << 1) + 1;		// +1 to support the SI24R1 chip extra bit
+  if(level > 3){  						      // If invalid level, go to max PA
+	  level = (RF24_PA_MAX << 1) + 1; // +1 to support the SI24R1 chip extra bit
   }else{
-	  level = (level << 1) + 1;	 		// Else set level as requested
+	  level = (level << 1) + 1;	 		  // Else set level as requested
   }
 
-
-  write_register( RF_SETUP, setup |= level ) ;	// Write it to the chip
+  write_register( RF_SETUP, setup |= level ); // Write it to the chip
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 uint8_t My_RF24::getPALevel(void)
 {
 
   return (read_register(RF_SETUP) & (_BV(RF_PWR_LOW) | _BV(RF_PWR_HIGH))) >> 1 ;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 bool My_RF24::setDataRate(rf24_datarate_e speed)
 {
   bool result = false;
@@ -1455,7 +1391,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
   
   #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
     txDelay=250;
-  #else //16Mhz Arduino
+  #else // 16Mhz Arduino
     txDelay=85;
   #endif
   if( speed == RF24_250KBPS )
@@ -1465,7 +1401,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
     setup |= _BV( RF_DR_LOW ) ;
   #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
     txDelay=450;
-  #else //16Mhz Arduino
+  #else // 16Mhz Arduino
 	txDelay=155;
   #endif
   }
@@ -1478,7 +1414,7 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
       setup |= _BV(RF_DR_HIGH);
       #if defined (__arm__) || defined (RF24_LINUX) || defined (__ARDUINO_X86__)
       txDelay=190;
-      #else //16Mhz Arduino	  
+      #else // 16Mhz Arduino	  
 	  txDelay=65;
 	  #endif
     }
@@ -1493,14 +1429,13 @@ bool My_RF24::setDataRate(rf24_datarate_e speed)
   return result;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 rf24_datarate_e My_RF24::getDataRate( void )
 {
   rf24_datarate_e result ;
   uint8_t dr = read_register(RF_SETUP) & (_BV(RF_DR_LOW) | _BV(RF_DR_HIGH));
 
-  // switch uses RAM (evil!)
+  // Switch uses RAM (evil!)
   // Order matters in our case below
   if ( dr == _BV(RF_DR_LOW) )
   {
@@ -1520,8 +1455,7 @@ rf24_datarate_e My_RF24::getDataRate( void )
   return result ;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::setCRCLength(rf24_crclength_e length)
 {
   uint8_t config = read_register(NRF_CONFIG) & ~( _BV(CRCO) | _BV(EN_CRC)) ;
@@ -1543,8 +1477,7 @@ void My_RF24::setCRCLength(rf24_crclength_e length)
   write_register( NRF_CONFIG, config ) ;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 rf24_crclength_e My_RF24::getCRCLength(void)
 {
   rf24_crclength_e result = RF24_CRC_DISABLED;
@@ -1563,23 +1496,22 @@ rf24_crclength_e My_RF24::getCRCLength(void)
   return result;
 }
 
-/****************************************************************************/
-
+//*********************************************************************************************************************
 void My_RF24::disableCRC( void )
 {
   uint8_t disable = read_register(NRF_CONFIG) & ~_BV(EN_CRC) ;
   write_register( NRF_CONFIG, disable ) ;
 }
 
-/****************************************************************************/
+//*********************************************************************************************************************
 void My_RF24::setRetries(uint8_t delay, uint8_t count)
 {
  write_register(SETUP_RETR,(delay&0xf)<<ARD | (count&0xf)<<ARC);
 }
 
-
-//ATTiny support code pulled in from https://github.com/jscrane/RF24
-
+//*********************************************************************************************************************
+// ATTiny support code pulled in from https://github.com/jscrane/RF24
+//*********************************************************************************************************************
 #if defined (__AVR_ATtiny25__) || defined (__AVR_ATtiny45__) || defined (__AVR_ATtiny85__)
 // see http://gammon.com.au/spi
 #	define DI   0  // D0, pin 5  Data In
@@ -1587,22 +1519,22 @@ void My_RF24::setRetries(uint8_t delay, uint8_t count)
 #	define USCK 2  // D2, pin 7  Universal Serial Interface clock
 #	define SS   3  // D3, pin 2  Slave Select
 #elif defined (__AVR_ATtiny24__) || defined (__AVR_ATtiny44__) || defined (__AVR_ATtiny84__)
-// these depend on the core used (check pins_arduino.h)
-// this is for jeelabs' one (based on google-code core)
+// These depend on the core used (check pins_arduino.h)
+// This is for jeelabs' one (based on google-code core)
 #	define DI   4   // PA6
 #	define DO   5   // PA5
 #	define USCK 6   // PA4
 #	define SS   3   // PA7
 #elif defined (__AVR_ATtiny2313__) || defined (__AVR_ATtiny4313__)
-// these depend on the core used (check pins_arduino.h)
-// tested with google-code core
+// These depend on the core used (check pins_arduino.h)
+// Tested with google-code core
 #	define DI   14  // PB5
 #	define DO   15  // PB6
 #	define USCK 16  // PB7
 #	define SS   13  // PB4
 #elif defined (__AVR_ATtiny861__)
-// these depend on the core used (check pins_arduino.h)
-// tested with google-code core
+// These depend on the core used (check pins_arduino.h)
+// Tested with google-code core
 #    define DI   9   // PB0
 #    define DO   8   // PB1
 #    define USCK 7   // PB2
@@ -1611,26 +1543,27 @@ void My_RF24::setRetries(uint8_t delay, uint8_t count)
 
 #if defined (RF24_TINY)
 
-void SPIClass::begin() {
-
+//*********************************************************************************************************************
+void SPIClass::begin()
+{
   pinMode(USCK, OUTPUT);
   pinMode(DO, OUTPUT);
   pinMode(DI, INPUT);
   USICR = _BV(USIWM0);
-
 }
 
-byte SPIClass::transfer(byte b) {
-
+//*********************************************************************************************************************
+byte SPIClass::transfer(byte b)
+{
   USIDR = b;
   USISR = _BV(USIOIF);
   do
     USICR = _BV(USIWM0) | _BV(USICS1) | _BV(USICLK) | _BV(USITC);
   while ((USISR & _BV(USIOIF)) == 0);
   return USIDR;
-
 }
 
+//*********************************************************************************************************************
 void SPIClass::end() {}
 void SPIClass::setDataMode(uint8_t mode){}
 void SPIClass::setBitOrder(uint8_t bitOrder){}
