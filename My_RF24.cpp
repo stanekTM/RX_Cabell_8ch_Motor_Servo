@@ -52,7 +52,8 @@ void My_RF24::csn(bool mode)
 #endif
 
 #elif defined (RF24_RPi)
-  if(!mode) _SPI.chipSelect(csn_pin);
+  if(!mode)
+  _SPI.chipSelect(csn_pin);
 #endif
 
 #if !defined (RF24_LINUX)
@@ -71,7 +72,8 @@ void My_RF24::ce(bool level)
 //*********************************************************************************************************************
 inline void My_RF24::beginTransaction()
 {
-  #if defined (RF24_SPI_TRANSACTIONS) _SPI.beginTransaction(SPISettings(RF24_SPI_SPEED, MSBFIRST, SPI_MODE0));
+  #if defined (RF24_SPI_TRANSACTIONS)
+  _SPI.beginTransaction(SPISettings(RF24_SPI_SPEED, MSBFIRST, SPI_MODE0));
 	#endif
 
   csn(LOW);
@@ -82,7 +84,8 @@ inline void My_RF24::endTransaction()
 {
   csn(HIGH);
 
-	#if defined (RF24_SPI_TRANSACTIONS) _SPI.endTransaction();
+	#if defined (RF24_SPI_TRANSACTIONS)
+  _SPI.endTransaction();
 	#endif
 }
 
@@ -163,7 +166,7 @@ uint8_t My_RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
   uint8_t * ptx = spi_txbuff;
   uint8_t size = len + 1; // Add register value to transmit buffer
 
-  *ptx++ = ( W_REGISTER | ( REGISTER_MASK & reg ) );
+  *ptx++ = ( W_REGISTER | ( REGISTER_MASK & reg ));
   while ( len-- )
     *ptx++ = *buf++;
   
@@ -173,9 +176,9 @@ uint8_t My_RF24::write_register(uint8_t reg, const uint8_t* buf, uint8_t len)
   #else
 
   beginTransaction();
-  status = _SPI.transfer( W_REGISTER | ( REGISTER_MASK & reg ) );
+  status = _SPI.transfer( W_REGISTER | ( REGISTER_MASK & reg ));
   while ( len-- )
-    _SPI.transfer(*buf++);
+  _SPI.transfer(*buf++);
   endTransaction();
 
   #endif
@@ -194,7 +197,7 @@ uint8_t My_RF24::write_register(uint8_t reg, uint8_t value)
     beginTransaction();
 	uint8_t * prx = spi_rxbuff;
 	uint8_t * ptx = spi_txbuff;
-	*ptx++ = ( W_REGISTER | ( REGISTER_MASK & reg ) );
+	*ptx++ = ( W_REGISTER | ( REGISTER_MASK & reg ));
 	*ptx = value ;	
   	
 	_SPI.transfernb( (char *) spi_txbuff, (char *) spi_rxbuff, 2);
@@ -245,10 +248,12 @@ uint8_t My_RF24::write_payload(const void* buf, uint8_t data_len, const uint8_t 
 
   beginTransaction();
   status = _SPI.transfer( writeType );
-  while ( data_len-- ) {
+  while ( data_len-- )
+  {
     _SPI.transfer(*current++);
   }
-  while ( blank_len-- ) {
+  while ( blank_len-- )
+  {
     _SPI.transfer(0);
   }  
   endTransaction();
