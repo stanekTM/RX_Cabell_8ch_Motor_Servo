@@ -4,8 +4,7 @@
 //*********************************************************************************************************************
 // Simple RC receiver from my repository https://github.com/stanekTM/RX_Cabell_8ch_Motor_Servo
 //
-// The hardware includes nRF24L01+ transceiver and ATmega328P processor.
-// The firmware will be used for cars, boats, tanks, robots and aircraft. The code is Arduino.
+// Includes nRF24L01+ transceiver and ATmega328P processor, 2x motor controller with brake and 6x servo output.
 //
 // Works with RC transmitters:
 // OpenAVRc                   https://github.com/Ingwie/OpenAVRc_Dev
