@@ -1,17 +1,16 @@
-//
-// Copied from https://github.com/nRF24/RF24 library and changed to streamline
-// operations specific to this application
-//
+/*
+  Copied from https://github.com/nRF24/RF24 library and changed to streamline
+  operations specific to this application
+  
+  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
+  
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  version 2 as published by the Free Software Foundation.
+*/
 
 /*
- Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- version 2 as published by the Free Software Foundation.
- */
- 
- /* spaniakos <spaniakos@gmail.com>
+  spaniakos <spaniakos@gmail.com>
   Added __ARDUINO_X86__ support
 */
 
@@ -75,7 +74,6 @@
 		#define _SPI uspi
 	  #elif defined SOFTSPI
 	  // change these pins to your liking
-      //
       const uint8_t SOFT_SPI_MISO_PIN = 18; // A4
       const uint8_t SOFT_SPI_MOSI_PIN = 17; // A3
       const uint8_t SOFT_SPI_SCK_PIN  = 16; // A2

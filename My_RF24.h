@@ -1,15 +1,13 @@
-//
-// Copied from https://github.com/nRF24/RF24 library and changed to streamline
-// operations specific to this application
-//
-
 /*
- Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
-
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- version 2 as published by the Free Software Foundation.
- */
+  Copied from https://github.com/nRF24/RF24 library and changed to streamline
+  operations specific to this application
+  
+  Copyright (C) 2011 J. Coliz <maniacbug@ymail.com>
+  
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  version 2 as published by the Free Software Foundation.
+*/
 
 /**
  * @file RF24.h
