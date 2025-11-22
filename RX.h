@@ -30,17 +30,48 @@
 #include "My_RF24.h"
 
 
-//settings PWM motorA (pin D5 or D6 are paired on timer0, functions delay(), millis(), micros() and delayMicroseconds())
-//1024 = 61Hz, 256 = 244Hz, 64 = 976Hz(default), 8 = 7812Hz
+// Setting PWM
+// Pin D5 and D6 (8-bit Timer/Counter 0, functions delay, millis, micros and delayMicroseconds)
+// 1024 = 61Hz
+// 256 = 244Hz
+// 64 = 976Hz(default)
+// 8 = 7812Hz
+// 1 = 62500Hz
 #define PWM_MOTOR_A  256
 
-//settings PWM motorB (pin D9 or D10 are paired on timer1, Servo library)
-//1024 = 30Hz, 256 = 122Hz, 64 = 488Hz(default), 8 = 3906Hz
+// Pin D9 and D10 (16-bit Timer/Counter 1, Servo library)
+// 1024 = 30Hz
+// 256 = 122Hz
+// 64 = 488Hz(default)
+// 8 = 3906Hz
+// 1 = 31250Hz
 #define PWM_MOTOR_B  256
 
-//settings PWM (pin D3 or D11 are paired on timer2/8-bit, ServoTimer2 library)
-//1024 = 30Hz, 256 = 122Hz, 128 = 244Hz, 64 = 488Hz(default), 32 = 976Hz, 8 = 3906Hz
+// Pin D3 and D11 (8-bit Timer/Counter 2, ServoTimer2, Tone library)
+// 1024 = 30Hz
+// 256 = 122Hz
+// 128 = 244Hz
+// 64 = 488Hz(default)
+// 32 = 976Hz
+// 8 = 3906Hz
+// 1 = 31250Hz
 //#define PWM_MOTOR_B  256
+
+// Pin D0(RX) (328PB 16-bit Timer/Counter 3)
+// 1024 = 30Hz
+// 256 = 122Hz
+// 64 = 488Hz(default)
+// 8 = 3906Hz
+// 1 = 31250Hz
+//#define PWM_MOTOR_A  64
+
+// Pin D1(TX) and D2 (328PB 16-bit Timer/Counter 4)
+// 1024 = 30Hz
+// 256 = 122Hz
+// 64 = 488Hz(default)
+// 8 = 3906Hz
+// 1 = 31250Hz
+//#define PWM_MOTOR_B  64
 
 //setting the reaction of the motor to be rotated after the lever has been moved. Settings (0-255)
 #define ACCELERATE_MOTOR_A  0

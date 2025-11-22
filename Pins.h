@@ -35,10 +35,10 @@
 //pin                          1
 
 //pins for nRF24L01
-#define PIN_CE                 14     // A0
-#define PIN_CSN                15     // A1
+#define PIN_CE                 14 // A0
+#define PIN_CSN                15 // A1
 
-//software SPI https://nrf24.github.io/RF24/md_docs_arduino.html
+// Software SPI https://nrf24.github.io/RF24/md_docs_2arduino.html
 //----- SCK                    16 - A2
 //----- MOSI                   17 - A3
 //----- MISO                   18 - A4

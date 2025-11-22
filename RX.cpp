@@ -31,7 +31,7 @@
 #include "RSSI.h"
 #include "Rx_Tx_Util.h"
 #include <EEPROM.h>
-#include "PWMFrequency.h"
+#include "PWM_Frequency.h"
 #include "ServoTimer2.h"
 #include <DigitalIO.h> // v1.0.1
 

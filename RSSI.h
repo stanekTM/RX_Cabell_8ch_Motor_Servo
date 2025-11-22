@@ -27,7 +27,8 @@
 #ifndef __have__RSSI_h__
 #define __have__RSSI_h__
 
-#include "Arduino.h"
+#include <Arduino.h>
+
 
 #define RSSI_CALC_INTERVAL             152 // The number of expected packets between calculating the base RSSI. Approximately 1/2 second
 #define TELEMETRY_RSSI_MIN_VALUE       0   // The lowest possible RSSI value = zero packet rate
