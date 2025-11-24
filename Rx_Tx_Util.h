@@ -29,7 +29,6 @@
 
 #include <Arduino.h>
 
-
 void getChannelSequence (uint8_t outArray[], uint8_t numChannels, uint64_t permutation);
 uint8_t getNextChannel (uint8_t seqArray[], uint8_t seqArraySize, uint8_t prevChannel);
 

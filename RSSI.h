@@ -29,7 +29,6 @@
 
 #include <Arduino.h>
 
-
 #define RSSI_CALC_INTERVAL             152 // The number of expected packets between calculating the base RSSI. Approximately 1/2 second
 #define TELEMETRY_RSSI_MIN_VALUE       0   // The lowest possible RSSI value = zero packet rate
 #define TELEMETRY_RSSI_MAX_VALUE       100 // The highest possible RSSI value = 100% packet rate

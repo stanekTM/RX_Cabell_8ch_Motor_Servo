@@ -27,8 +27,8 @@
 #ifndef __have__RC_RX_PINS_h__
 #define __have__RC_RX_PINS_h__
 
+#include <Arduino.h>
 #include "RX.h"
-
 
 //free pins
 //pin                          0

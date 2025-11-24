@@ -21,11 +21,10 @@
 #include "My_RF24_config.h"
 
 #if defined (RF24_LINUX) || defined (LITTLEWIRE)
-  #include "utility/includes.h"
+  #include <utility/includes.h>
 #elif defined SOFTSPI
   #include <DigitalIO.h>
 #endif
-
 
 /**
  * Power Amplifier level.

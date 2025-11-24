@@ -24,6 +24,7 @@
   along with RC_RX_CABELL_V3_FHSS.  If not, see http://www.gnu.org/licenses.
 */
 
+#include <Arduino.h>
 #include "RX.h"
 #include "Pins.h"
 #include "My_RF24.h"
@@ -34,7 +35,6 @@
 #include "PWM_Frequency.h"
 #include "ServoTimer2.h"
 #include <DigitalIO.h> // v1.0.1
-
 
 My_RF24 radio(PIN_CE, PIN_CSN);
 

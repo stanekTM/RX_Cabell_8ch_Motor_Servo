@@ -28,7 +28,6 @@
 #include "Rx_Tx_Util.h"
 #include "RX.h"
 
-
 //--------------------------------------------------------------------------------------------------------------------------
 uint8_t getNextChannel (uint8_t seqArray[], uint8_t seqArraySize, uint8_t prevChannel)
 {
