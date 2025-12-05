@@ -50,6 +50,7 @@
 
 #include "RX.h"
 #include "Pins.h"
+#include "PWM_Frequency.h"
 
 //*********************************************************************************************************************
 void setup(void)
@@ -65,6 +66,10 @@ void setup(void)
   
   pinMode(PIN_LED, OUTPUT);
   digitalWrite(PIN_LED, LOW);
+  
+  // Setting the motor frequency
+  setPWMPrescaler(PIN_PWM_1_MOTOR_A, PWM_MOTOR_A);
+  setPWMPrescaler(PIN_PWM_3_MOTOR_B, PWM_MOTOR_B);
   
   // Initial analog reads for A6/A7. Initial call returns bad value so call 3 times to get a good starting value from each pin
   ADC_Processing();

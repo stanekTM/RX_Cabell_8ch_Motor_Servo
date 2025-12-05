@@ -32,7 +32,6 @@
 #include "RSSI.h"
 #include "Rx_Tx_Util.h"
 #include <EEPROM.h>
-#include "PWM_Frequency.h"
 #include "ServoTimer2.h"
 #include <DigitalIO.h> // v1.0.1
 
@@ -103,9 +102,6 @@ void outputServo()
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM()
 {
-  setPWMPrescaler(PIN_PWM_1_MOTOR_A, PWM_MOTOR_A);
-  setPWMPrescaler(PIN_PWM_3_MOTOR_B, PWM_MOTOR_B);
-  
   int value_motorA = 0, value_motorB = 0;
   
   // Forward motorA
