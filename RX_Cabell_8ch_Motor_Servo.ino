@@ -94,8 +94,8 @@ void loop()
     {
       outputChannels();
     }
-    // Process ADC to asynchronously read A6 and A7 for telemetry analog values. Non-blocking read
-    ADC_Processing();
+    
+    ADC_Processing(); // Process ADC to asynchronously read A6/A7 for telemetry analog values. Non-blocking read
   }
 }
  

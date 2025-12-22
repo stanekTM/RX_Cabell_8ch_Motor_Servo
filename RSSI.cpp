@@ -57,7 +57,7 @@ void RSSI::secondaryHit()
 //--------------------------------------------------------------------------------------------------------------------------
 void RSSI::badPacket()
 {
-  // bad packets generally don't happen, but it will also count as a hit since the error was likely introduced on the SPI bus since it passed the NRF24L01 internal checksum
+  // Bad packets generally don't happen, but it will also count as a hit since the error was likely introduced on the SPI bus since it passed the NRF24L01 internal checksum
   badPacketCount++;
   hit();
 }

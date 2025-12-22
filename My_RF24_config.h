@@ -33,7 +33,7 @@
   #endif
  
  
-//ATXMega
+// ATXMega
 #if defined (__AVR_ATxmega64D3__) || defined (__AVR_ATxmega128D3__) || defined (__AVR_ATxmega192D3__) || defined (__AVR_ATxmega256D3__) || defined (__AVR_ATxmega384D3__) // In order to be available both in windows and linux this should take presence here.
   #define XMEGA
   #define XMEGA_D3
@@ -45,22 +45,22 @@
   // The includes.h file defines either RF24_RPi, MRAA, LITTLEWIRE or RF24_SPIDEV and includes the correct RF24_arch_config.h file
   #include "utility/includes.h"
 
-//ATTiny  
+// ATTiny  
 #elif defined (__AVR_ATtiny25__) || defined (__AVR_ATtiny45__) || defined (__AVR_ATtiny85__) || defined (__AVR_ATtiny24__) || defined (__AVR_ATtiny44__) || defined (__AVR_ATtiny84__) || defined (__AVR_ATtiny2313__) || defined (__AVR_ATtiny4313__) || defined (__AVR_ATtiny861__)  
   #define RF24_TINY
   #include "utility/ATTiny/RF24_arch_config.h"
 
 
-//LittleWire  
+// LittleWire  
 #elif defined (LITTLEWIRE)
   
   #include "utility/LittleWire/RF24_arch_config.h"
 
-//Teensy  
+// Teensy  
 #elif defined (TEENSYDUINO)
 
   #include "utility/Teensy/RF24_arch_config.h"  
-//Everything else
+// Everything else
 #else 
 
   #include <Arduino.h>
@@ -73,7 +73,7 @@
 		#include <SPI_UART.h>
 		#define _SPI uspi
 	  #elif defined SOFTSPI
-	  // change these pins to your liking
+	  // Change these pins to your liking
       const uint8_t SOFT_SPI_MISO_PIN = 18; // A4
       const uint8_t SOFT_SPI_MOSI_PIN = 17; // A3
       const uint8_t SOFT_SPI_SCK_PIN  = 16; // A2

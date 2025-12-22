@@ -88,7 +88,7 @@
 #define PIN_RX_BATT_A1         6  // A6 - 20
 #define PIN_RX_BATT_A2         7  // A7 - 21
 
-// configure A5 for radio IRQ 
+// Configure A5 for radio IRQ 
 #define RADIO_IRQ_PIN          A5 // 19
 #define RADIO_IRQ_PIN_bit      5  // PC5
 #define RADIO_IRQ_port         PORTC

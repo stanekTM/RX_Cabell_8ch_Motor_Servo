@@ -56,7 +56,7 @@ const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + siz
 
 uint16_t failSafeChannelValues[CABELL_NUM_CHANNELS];
 
-bool bindMode = false; // when true send bind command to cause receiver to bind enter bind mode
+bool bindMode = false; // When true send bind command to cause receiver to bind enter bind mode
 bool failSafeMode = false;
 bool failSafeNoPulses = false;
 bool packetMissed = false;
@@ -321,7 +321,7 @@ bool getPacket()
         rssi.miss();
         setNextRadioChannel(true); // True indicates that packet was missed
         
-        // if a long time passed, increase timeout duration to re-sync with the TX
+        // If a long time passed, increase timeout duration to re-sync with the TX
         if ((long)(nextAutomaticChannelSwitch - lastRadioPacketeRecievedTime) > ((long)RESYNC_TIME_OUT))
         {
           telemetryEnabled = false;
@@ -337,7 +337,7 @@ bool getPacket()
           nextAutomaticChannelSwitch += packetInterval;
         }
         
-        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // at each timeout, check for failsafe and disarm
+        checkFailsafeDisarmTimeout(lastPacketTime, inititalGoodPacketRecieved); // At each timeout, check for failsafe and disarm
       }
     }
   }
@@ -483,7 +483,7 @@ void unbindReciever()
 //--------------------------------------------------------------------------------------------------------------------------
 void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket_t :: RxMode_t RxMode)
 {
-  // new radio address is in channels 11 to 15
+  // New radio address is in channels 11 to 15
   uint64_t newRadioPipeID = (((uint64_t)(tempHoldValues[11] - 1000)) << 32) +
                             (((uint64_t)(tempHoldValues[12] - 1000)) << 24) +
                             (((uint64_t)(tempHoldValues[13] - 1000)) << 16) +
@@ -602,23 +602,23 @@ bool readAndProcessPacket()
   // Remove 8th bit from RxMode because this is a toggle bit that is not included in the checksum
   // This toggle with each xmit so consecutive payloads are not identical. This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
   uint8_t* p = reinterpret_cast<uint8_t*>(&RxPacket.RxMode);
-  *p &= 0x7F;  // ensure 8th bit is not set. This bit is not included in checksum
+  *p &= 0x7F;  // Ensure 8th bit is not set. This bit is not included in checksum
   
-  // putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
+  // Putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
   telemetryEnabled = (RxPacket.RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry) ? true : false;
   
   bool packet_rx = false;
   uint16_t tempHoldValues[CABELL_NUM_CHANNELS];
   uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS - CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
-  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction % 2)) / 2)) * 3); // reduce 3 bytes per 2 channels, but not last channel if it is odd
+  uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction % 2)) / 2)) * 3); // Reduce 3 bytes per 2 channels, but not last channel if it is odd
   uint8_t maxPayloadValueIndex = sizeof(RxPacket.payloadValue) - (sizeof(RxPacket) - packetSize);
   uint8_t channelsRecieved = CABELL_NUM_CHANNELS - channelReduction;
   
-  // putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
+  // Putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
   if (telemetryEnabled)
   {
     setTelemetryPowerMode(RxPacket.option);
-    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((int16_t)channelsRecieved - (int16_t)6), (int16_t)0, (int16_t)10) * (int16_t)100); // increase packet period by 100 us for each channel over 6
+    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((int16_t)channelsRecieved - (int16_t)6), (int16_t)0, (int16_t)10) * (int16_t)100); // Increase packet period by 100 us for each channel over 6
   }
   else
   {
@@ -635,12 +635,12 @@ bool readAndProcessPacket()
     packet_rx = processRxMode(RxPacket.RxMode, RxPacket.modelNum, tempHoldValues);
   }
   
-  // if packet is good, copy the channel values
+  // If packet is good, copy the channel values
   if (packet_rx)
   {
     for (int b = 0 ; b < CABELL_NUM_CHANNELS; b++)
     {
-      channelValues[b] = (b < channelsRecieved) ? tempHoldValues[b] : MID_CONTROL_VAL; // use the mid value for channels not received
+      channelValues[b] = (b < channelsRecieved) ? tempHoldValues[b] : MID_CONTROL_VAL; // Use the mid value for channels not received
     }
   }
   
@@ -653,7 +653,7 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
   static bool failSafeValuesHaveBeenSet = false;
   bool packet_rx = true;
   
-  // fail safe settings can come in on a failsafe packet, but also use a normal packed if bind mode button is pressed after start up
+  // Fail safe settings can come in on a failsafe packet, but also use a normal packed if bind mode button is pressed after start up
   if (failSafeButtonHeld())
   {
     if (RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normal || RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry)
@@ -683,7 +683,7 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     {
       digitalWrite(PIN_LED, HIGH);
       
-      // only set the values first time through
+      // Only set the values first time through
       if (!failSafeValuesHaveBeenSet)
       {
         failSafeValuesHaveBeenSet = true;
@@ -732,20 +732,20 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
   bool packet_rx = true;
   int payloadIndex = 0;
   
-  // decode the 12 bit numbers to temp array
+  // Decode the 12 bit numbers to temp array
   for (int b = 0; (b < channelsRecieved); b++)
   {
     tempHoldValues[b]  = RxPacket.payloadValue[payloadIndex];
     payloadIndex++;
     tempHoldValues[b] |= ((uint16_t)RxPacket.payloadValue[payloadIndex]) << 8;
     
-    //channel number is ODD
+    // Channel number is ODD
     if (b % 2)
     {
       tempHoldValues[b] = tempHoldValues[b] >> 4;
       payloadIndex++;
     }
-    //channel number is EVEN
+    // Channel number is EVEN
     else
     {
       tempHoldValues[b] &= 0x0FFF;
@@ -753,7 +753,7 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
     
     if ((tempHoldValues[b] > MAX_CONTROL_VAL) || (tempHoldValues[b] < MIN_CONTROL_VAL))
     {
-      packet_rx = false; // throw out entire packet if any value out of range
+      packet_rx = false; // Throw out entire packet if any value out of range
     }
   }
   
@@ -763,11 +763,11 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
 //--------------------------------------------------------------------------------------------------------------------------
 unsigned long sendTelemetryPacket()
 {
-  static int8_t packetCounter = 0; // this is only used for toggling bit
+  static int8_t packetCounter = 0; // This is only used for toggling bit
   uint8_t sendPacket[4] = {CABELL_RxTxPacket_t :: RxMode_t :: telemetryResponse};
  
   packetCounter++;
-  sendPacket[0] &= 0x7F;               // clear 8th bit
+  sendPacket[0] &= 0x7F;               // Clear 8th bit
   sendPacket[0] |= packetCounter << 7; // This causes the 8th bit of the first byte to toggle with each xmit so consecutive payloads are not identical. This is a work around for a reported bug in clone NRF24L01 chips that mis-took this case for a re-transmit of the same packet.
   sendPacket[1]  = rssi.getRSSI();
   sendPacket[2]  = analogValue[0] / 4; // Send a 8 bit value (0 to 255) of the analog input. Can be used for LiPo voltage or other analog input for telemetry
@@ -777,7 +777,7 @@ unsigned long sendTelemetryPacket()
   
   Reciever->startFastWrite(&sendPacket[0], packetSize, 0);
   
-  // calculate transmit time based on packet size and data rate of 1MB per sec
+  // Calculate transmit time based on packet size and data rate of 1MB per sec
   // This is done because polling the status register during xmit to see when xmit is done causes issues sometimes.
   // bits = packet-size * 8  +  73 bits overhead
   // at 250 kbps per sec, one bit is 4 uS
@@ -787,12 +787,12 @@ unsigned long sendTelemetryPacket()
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-// use the bind button because bind mode is only checked at startup. Once RX is started and not in bind mode it is the set failsafe button
+// Use the bind button because bind mode is only checked at startup. Once RX is started and not in bind mode it is the set failsafe button
 bool failSafeButtonHeld()
 {
   static unsigned long heldTriggerTime = 0;
   
-  // invert because pin is pulled up so low means pressed
+  // Invert because pin is pulled up so low means pressed
   if (!bindMode && !digitalRead(PIN_BUTTON_BIND))
   {
     if (heldTriggerTime == 0)
@@ -844,7 +844,7 @@ void initializeRadio(My_RF24* radioPointer)
   radioPointer->maskIRQ(true, true, true);     // Mask all interrupts. RX interrupt (the only one we use) gets turned on after channel change
   radioPointer->enableDynamicPayloads();
   radioPointer->setDataRate(RF24_250KBPS);
-  radioPointer->setChannel(0);                 // start out on a channel we don't use so we don't start receiving packets yet. It will get changed when the looping starts
+  radioPointer->setChannel(0);                 // Start out on a channel we don't use so we don't start receiving packets yet. It will get changed when the looping starts
   radioPointer->setAutoAck(0);
   radioPointer->openWritingPipe(~radioPipeID); // Invert bits for writing pipe so that telemetry packets transmit with a different pipe ID.
   radioPointer->openReadingPipe(1, radioPipeID);
