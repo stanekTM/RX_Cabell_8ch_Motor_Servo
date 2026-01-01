@@ -2,7 +2,7 @@
 ... works with [**OpenAVRc**](https://github.com/Ingwie/OpenAVRc_Dev) and [**Multiprotocol**](https://github.com/pascallanger/DIY-Multiprotocol-TX-Module).
 
 This is a modified firmware.
-Includes nRF24L01+ transceiver and ATmega328P/PB processor for PWM motor control or PWM for servo outputs and telemetry.
+Includes nRF24L01+ transceiver and ATmega328P/PB processor for PWM motor control or servo outputs and telemetry.
 The code is Arduino.
 
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
