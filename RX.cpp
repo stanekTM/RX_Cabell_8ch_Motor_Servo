@@ -91,33 +91,33 @@ void attachServoPins()
 
 void outputServo()
 {
-  servo1.write(channelValues[CH_SERVO_1]);
-  servo2.write(channelValues[CH_SERVO_2]);
-  servo3.write(channelValues[CH_SERVO_3]);
-  servo4.write(channelValues[CH_SERVO_4]);
-  servo5.write(channelValues[CH_SERVO_5]);
-  servo6.write(channelValues[CH_SERVO_6]);
+  servo1.write(channelValues[CH3_SERVO]);
+  servo2.write(channelValues[CH4_SERVO]);
+  servo3.write(channelValues[CH5_SERVO]);
+  servo4.write(channelValues[CH6_SERVO]);
+  servo5.write(channelValues[CH7_SERVO]);
+  servo6.write(channelValues[CH8_SERVO]);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
 void outputPWM()
 {
-  int value_motorA = 0, value_motorB = 0;
+  int motorA_val = 0, motorB_val = 0;
   
   // Forward motorA
-  if (channelValues[CH_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
+  if (channelValues[CH1_MOTOR_A] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
-    analogWrite(PIN_PWM_2_MOTOR_A, value_motorA); 
+    motorA_val = map(channelValues[CH1_MOTOR_A], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
+    motorA_val = constrain(motorA_val, ACCELERATE_MOTOR_A, MAX_FORW_MOTOR_A);
+    analogWrite(PIN_PWM_2_MOTOR_A, motorA_val); 
     digitalWrite(PIN_PWM_1_MOTOR_A, LOW);
   }
   // Back motorA
-  else if (channelValues[CH_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
+  else if (channelValues[CH1_MOTOR_A] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorA = map(channelValues[CH_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
-    value_motorA = constrain(value_motorA, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
-    analogWrite(PIN_PWM_1_MOTOR_A, value_motorA);
+    motorA_val = map(channelValues[CH1_MOTOR_A], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
+    motorA_val = constrain(motorA_val, ACCELERATE_MOTOR_A, MAX_BACK_MOTOR_A);
+    analogWrite(PIN_PWM_1_MOTOR_A, motorA_val);
     digitalWrite(PIN_PWM_2_MOTOR_A, LOW);
   }
   else
@@ -125,23 +125,23 @@ void outputPWM()
     analogWrite(PIN_PWM_1_MOTOR_A, BRAKE_MOTOR_A);
     analogWrite(PIN_PWM_2_MOTOR_A, BRAKE_MOTOR_A);
   }
-  //Serial.println(value_motorA);
+  //Serial.println(motorA_val);
   
   
   // Forward motorB
-  if (channelValues[CH_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
+  if (channelValues[CH2_MOTOR_B] > MID_CONTROL_VAL + DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
-    analogWrite(PIN_PWM_4_MOTOR_B, value_motorB);
+    motorB_val = map(channelValues[CH2_MOTOR_B], MID_CONTROL_VAL + DEAD_ZONE, MAX_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
+    motorB_val = constrain(motorB_val, ACCELERATE_MOTOR_B, MAX_FORW_MOTOR_B);
+    analogWrite(PIN_PWM_4_MOTOR_B, motorB_val);
     digitalWrite(PIN_PWM_3_MOTOR_B, LOW);
   }
   // Back motorB
-  else if (channelValues[CH_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
+  else if (channelValues[CH2_MOTOR_B] < MID_CONTROL_VAL - DEAD_ZONE)
   {
-    value_motorB = map(channelValues[CH_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
-    value_motorB = constrain(value_motorB, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
-    analogWrite(PIN_PWM_3_MOTOR_B, value_motorB);
+    motorB_val = map(channelValues[CH2_MOTOR_B], MID_CONTROL_VAL - DEAD_ZONE, MIN_CONTROL_VAL, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
+    motorB_val = constrain(motorB_val, ACCELERATE_MOTOR_B, MAX_BACK_MOTOR_B);
+    analogWrite(PIN_PWM_3_MOTOR_B, motorB_val);
     digitalWrite(PIN_PWM_4_MOTOR_B, LOW);
   }
   else
@@ -149,7 +149,7 @@ void outputPWM()
     analogWrite(PIN_PWM_3_MOTOR_B, BRAKE_MOTOR_B);
     analogWrite(PIN_PWM_4_MOTOR_B, BRAKE_MOTOR_B);
   }
-  //Serial.println(value_motorB);
+  //Serial.println(motorB_val);
 }
 
 //--------------------------------------------------------------------------------------------------------------------------

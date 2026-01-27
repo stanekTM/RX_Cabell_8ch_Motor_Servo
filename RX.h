@@ -90,14 +90,14 @@
 // Setting the dead zone of poor quality joysticks TX for the motor controller
 #define DEAD_ZONE  15
 
-#define CH_MOTOR_A  0
-#define CH_MOTOR_B  1
-#define CH_SERVO_1  2
-#define CH_SERVO_2  3
-#define CH_SERVO_3  4
-#define CH_SERVO_4  5
-#define CH_SERVO_5  6
-#define CH_SERVO_6  7
+#define CH1_MOTOR_A  0
+#define CH2_MOTOR_B  1
+#define CH3_SERVO    2
+#define CH4_SERVO    3
+#define CH5_SERVO    4
+#define CH6_SERVO    5
+#define CH7_SERVO    6
+#define CH8_SERVO    7
 
 #define MIN_CONTROL_VAL  1000
 #define MID_CONTROL_VAL  ((MIN_CONTROL_VAL + MAX_CONTROL_VAL) / 2)
