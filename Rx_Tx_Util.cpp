@@ -37,7 +37,7 @@ uint8_t getNextChannel (uint8_t seqArray[], uint8_t seqArraySize, uint8_t prevCh
   // Each time the channel is changes, bands change in a way so that the next channel will be in a
   // different non-adjacent band. Both the band changes and the index in seqArray is incremented.
   
-  prevChannel -= CABELL_RADIO_MIN_CHANNEL_NUM;                 // Subtract CABELL_RADIO_MIN_CHANNEL_NUM because it was added to the return value
+  prevChannel -= MIN_RF_CHANNEL;                 // Subtract MIN_RF_CHANNEL because it was added to the return value
   prevChannel = constrain(prevChannel, 0, (seqArraySize * 5)); // Constrain the values just in case something bogus was sent in.
   
   uint8_t currBand = prevChannel / seqArraySize;             
@@ -59,7 +59,7 @@ uint8_t getNextChannel (uint8_t seqArray[], uint8_t seqArraySize, uint8_t prevCh
   
   if (nextChannalSeqArrayPosition >= seqArraySize) nextChannalSeqArrayPosition = 0;
   
-  return (seqArraySize * nextBand) + seqArray[nextChannalSeqArrayPosition] + CABELL_RADIO_MIN_CHANNEL_NUM; // Add CABELL_RADIO_MIN_CHANNEL_NUM so we don't use channel 0 as it may bleed below 2.400 GHz
+  return (seqArraySize * nextBand) + seqArray[nextChannalSeqArrayPosition] + MIN_RF_CHANNEL; // Add MIN_RF_CHANNEL so we don't use channel 0 as it may bleed below 2.400 GHz
 }
 
 //--------------------------------------------------------------------------------------------------------------------------

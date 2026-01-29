@@ -43,7 +43,7 @@ uint8_t radioConfigRegisterForTX = 0;
 uint8_t radioConfigRegisterForRX_IRQ_Masked = 0;
 uint8_t radioConfigRegisterForRX_IRQ_On = 0;
   
-uint16_t channelValues[CABELL_NUM_CHANNELS];
+uint16_t channelValues[RC_CHANNELS];
 
 uint8_t currentModel = 0;
 uint64_t radioPipeID;
@@ -54,7 +54,7 @@ const int radioPipeEEPROMAddress = currentModelEEPROMAddress + sizeof(currentMod
 const int softRebindFlagEEPROMAddress = radioPipeEEPROMAddress + sizeof(radioNormalRxPipeID);
 const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t); // uint8_t is the sifr of the rebind flag
 
-uint16_t failSafeChannelValues[CABELL_NUM_CHANNELS];
+uint16_t failSafeChannelValues[RC_CHANNELS];
 
 bool bindMode = false; // When true send bind command to cause receiver to bind enter bind mode
 bool failSafeMode = false;
@@ -62,7 +62,7 @@ bool failSafeNoPulses = false;
 bool packetMissed = false;
 uint32_t packetInterval = DEFAULT_PACKET_INTERVAL;
 
-uint8_t radioChannel[CABELL_RADIO_CHANNELS];
+uint8_t radioChannel[RF_CHANNELS];
 
 volatile bool packetReady = false;
 
@@ -71,7 +71,7 @@ int16_t analogValue[2] = {0, 0};
 
 uint16_t initialTelemetrySkipPackets = 0;
 
-uint8_t currentChannel = CABELL_RADIO_MIN_CHANNEL_NUM; // Initializes the channel sequence
+uint8_t currentChannel = MIN_RF_CHANNEL; // Initializes the channel sequence
 
 RSSI rssi;
 
@@ -197,9 +197,9 @@ void setupReciever()
   if ((digitalRead(PIN_BUTTON_BIND) == LOW) || (softRebindFlag != DO_NOT_SOFT_REBIND))
   {
     bindMode = true;
-    radioPipeID = CABELL_BIND_RADIO_ADDR;
-    digitalWrite(PIN_LED, HIGH);          // Turn on LED to indicate bind mode
-    radioNormalRxPipeID = 0x01 << 43;     // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
+    radioPipeID = BIND_RF_ADDR;
+    digitalWrite(PIN_LED, HIGH);      // Turn on LED to indicate bind mode
+    radioNormalRxPipeID = 0x01 << 43; // This is a number bigger than the max possible pipe ID, which only uses 40 bits. This makes sure the bind routine writes to EEPROM
   }
   else
   {
@@ -207,7 +207,7 @@ void setupReciever()
     radioPipeID = radioNormalRxPipeID;
   }
   
-  getChannelSequence(radioChannel, CABELL_RADIO_CHANNELS, radioPipeID);
+  getChannelSequence(radioChannel, RF_CHANNELS, radioPipeID);
   
   radio.begin();
   Reciever = &radio;
@@ -217,7 +217,7 @@ void setupReciever()
   
   initializeRadio(Reciever);
   
-  setTelemetryPowerMode(CABELL_OPTION_MASK_MAX_POWER_OVERRIDE);
+  setTelemetryPowerMode(OPTION_MASK_MAX_RF_POWER_OVERRIDE);
   
   Reciever->flush_rx();
   packetReady = false;
@@ -263,7 +263,7 @@ void setNextRadioChannel(bool missedPacket)
     }
   }
   
-  currentChannel = getNextChannel(radioChannel, CABELL_RADIO_CHANNELS, currentChannel);
+  currentChannel = getNextChannel(radioChannel, RF_CHANNELS, currentChannel);
   
   if (expectedTransmitCompleteTime != 0)
   {
@@ -399,7 +399,7 @@ bool getPacket()
       goodPacket_rx = false; // Always consider a bad packet until initial lock is obtained so no control signals are output
       
       // Ensure strong signal on all channels
-      if (sequentialHitCount > (CABELL_RADIO_CHANNELS * 5))
+      if (sequentialHitCount > (RF_CHANNELS * 5))
       {
         powerOnLock = true;
         hoppingLockedIn = true;
@@ -440,7 +440,7 @@ void outputFailSafeValues(bool callOutputChannels)
 {
   loadFailSafeDefaultValues();
   
-  for (uint8_t x = 0; x < CABELL_NUM_CHANNELS; x++)
+  for (uint8_t x = 0; x < RC_CHANNELS; x++)
   {
     channelValues[x] = failSafeChannelValues[x];
   }
@@ -481,7 +481,7 @@ void unbindReciever()
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket_t :: RxMode_t RxMode)
+void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], RxTxPacket_t :: RxMode_t RxMode)
 {
   // New radio address is in channels 11 to 15
   uint64_t newRadioPipeID = (((uint64_t)(tempHoldValues[11] - 1000)) << 32) +
@@ -497,7 +497,7 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
     EEPROM.put(radioPipeEEPROMAddress, radioNormalRxPipeID);
     digitalWrite(PIN_LED, LOW); // Turn off LED to indicate successful bind
     
-    if (RxMode == CABELL_RxTxPacket_t :: RxMode_t :: bindFalesafeNoPulse)
+    if (RxMode == RxTxPacket_t :: RxMode_t :: bindFalesafeNoPulse)
     {
       EEPROM.put(softRebindFlagEEPROMAddress, (uint8_t)BOUND_WITH_FAILSAFE_NO_PULSES);
     }
@@ -524,9 +524,9 @@ void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket
 //--------------------------------------------------------------------------------------------------------------------------
 void setFailSafeDefaultValues()
 {
-  uint16_t defaultFailSafeValues[CABELL_NUM_CHANNELS];
+  uint16_t defaultFailSafeValues[RC_CHANNELS];
   
-  for (int x = 0; x < CABELL_NUM_CHANNELS; x++)
+  for (int x = 0; x < RC_CHANNELS; x++)
   {
     defaultFailSafeValues[x] = MID_CONTROL_VAL;
   }
@@ -539,7 +539,7 @@ void loadFailSafeDefaultValues()
 {
   EEPROM.get(failSafeChannelValuesEEPROMAddress, failSafeChannelValues);
   
-  for (int x = 0; x < CABELL_NUM_CHANNELS; x++)
+  for (int x = 0; x < RC_CHANNELS; x++)
   {
     // Make sure failsafe values are valid
     if (failSafeChannelValues[x] < MIN_CONTROL_VAL || failSafeChannelValues[x] > MAX_CONTROL_VAL)
@@ -552,7 +552,7 @@ void loadFailSafeDefaultValues()
 //--------------------------------------------------------------------------------------------------------------------------
 void setFailSafeValues(uint16_t newFailsafeValues[])
 {
-  for (int x = 0; x < CABELL_NUM_CHANNELS; x++)
+  for (int x = 0; x < RC_CHANNELS; x++)
   {
     failSafeChannelValues[x] = newFailsafeValues[x];
   }
@@ -561,7 +561,7 @@ void setFailSafeValues(uint16_t newFailsafeValues[])
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex)
+bool validateChecksum(RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex)
 {
   // Caculate checksum and validate
   uint16_t packetSum = packet.modelNum + packet.option + packet.RxMode + packet.reserved;
@@ -585,11 +585,11 @@ bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValue
 // Only call when a packet is available on the radio
 bool readAndProcessPacket()
 {
-  CABELL_RxTxPacket_t RxPacket;
+  RxTxPacket_t RxPacket;
   
   Reciever->read(&RxPacket, sizeof(RxPacket));
   
-  int tx_channel = RxPacket.reserved & CABELL_RESERVED_MASK_CHANNEL;
+  int tx_channel = RxPacket.reserved & RESERVED_MASK_RF_CHANNEL;
   
   if (tx_channel != 0)
   {
@@ -605,14 +605,14 @@ bool readAndProcessPacket()
   *p &= 0x7F;  // Ensure 8th bit is not set. This bit is not included in checksum
   
   // Putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
-  telemetryEnabled = (RxPacket.RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry) ? true : false;
+  telemetryEnabled = (RxPacket.RxMode == RxTxPacket_t :: RxMode_t :: normalWithTelemetry) ? true : false;
   
   bool packet_rx = false;
-  uint16_t tempHoldValues[CABELL_NUM_CHANNELS];
-  uint8_t channelReduction = constrain((RxPacket.option & CABELL_OPTION_MASK_CHANNEL_REDUCTION), 0, CABELL_NUM_CHANNELS - CABELL_MIN_CHANNELS); // Must be at least 4 channels, so cap at 12
+  uint16_t tempHoldValues[RC_CHANNELS];
+  uint8_t channelReduction = constrain((RxPacket.option & OPTION_MASK_RF_CHANNEL_REDUCTION), 0, RC_CHANNELS - MIN_RC_CHANNELS); // Must be at least 4 channels, so cap at 12
   uint8_t packetSize = sizeof(RxPacket) - ((((channelReduction - (channelReduction % 2)) / 2)) * 3); // Reduce 3 bytes per 2 channels, but not last channel if it is odd
   uint8_t maxPayloadValueIndex = sizeof(RxPacket.payloadValue) - (sizeof(RxPacket) - packetSize);
-  uint8_t channelsRecieved = CABELL_NUM_CHANNELS - channelReduction;
+  uint8_t channelsRecieved = RC_CHANNELS - channelReduction;
   
   // Putting this after setNextRadioChannel will lag by one telemetry packet, but by doing this the telemetry can be sent sooner, improving the timing
   if (telemetryEnabled)
@@ -638,7 +638,7 @@ bool readAndProcessPacket()
   // If packet is good, copy the channel values
   if (packet_rx)
   {
-    for (int b = 0 ; b < CABELL_NUM_CHANNELS; b++)
+    for (int b = 0 ; b < RC_CHANNELS; b++)
     {
       channelValues[b] = (b < channelsRecieved) ? tempHoldValues[b] : MID_CONTROL_VAL; // Use the mid value for channels not received
     }
@@ -656,16 +656,16 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
   // Fail safe settings can come in on a failsafe packet, but also use a normal packed if bind mode button is pressed after start up
   if (failSafeButtonHeld())
   {
-    if (RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normal || RxMode == CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry)
+    if (RxMode == RxTxPacket_t :: RxMode_t :: normal || RxMode == RxTxPacket_t :: RxMode_t :: normalWithTelemetry)
     {
-      RxMode = CABELL_RxTxPacket_t :: RxMode_t :: setFailSafe;
+      RxMode = RxTxPacket_t :: RxMode_t :: setFailSafe;
     }
   }
   
   switch (RxMode)
   {
-    case CABELL_RxTxPacket_t :: RxMode_t :: bindFalesafeNoPulse :
-    case CABELL_RxTxPacket_t :: RxMode_t :: bind :
+    case RxTxPacket_t :: RxMode_t :: bindFalesafeNoPulse :
+    case RxTxPacket_t :: RxMode_t :: bind :
     
     if (bindMode)
     {
@@ -677,7 +677,7 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     }
     break;
     
-    case CABELL_RxTxPacket_t :: RxMode_t :: setFailSafe :
+    case RxTxPacket_t :: RxMode_t :: setFailSafe :
     
     if (modelNum == currentModel)
     {
@@ -696,8 +696,8 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     }
     break;
     
-    case CABELL_RxTxPacket_t :: RxMode_t :: normalWithTelemetry :
-    case CABELL_RxTxPacket_t :: RxMode_t :: normal :
+    case RxTxPacket_t :: RxMode_t :: normalWithTelemetry :
+    case RxTxPacket_t :: RxMode_t :: normal :
     
     if (modelNum == currentModel)
     {
@@ -710,7 +710,7 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
     }
     break;
     
-    case CABELL_RxTxPacket_t :: RxMode_t :: unBind :
+    case RxTxPacket_t :: RxMode_t :: unBind :
     
     if (modelNum == currentModel)
     {
@@ -727,7 +727,7 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
 }
 
 //--------------------------------------------------------------------------------------------------------------------------
-bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[])
+bool decodeChannelValues(RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[])
 {
   bool packet_rx = true;
   int payloadIndex = 0;
@@ -764,7 +764,7 @@ bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRe
 unsigned long sendTelemetryPacket()
 {
   static int8_t packetCounter = 0; // This is only used for toggling bit
-  uint8_t sendPacket[4] = {CABELL_RxTxPacket_t :: RxMode_t :: telemetryResponse};
+  uint8_t sendPacket[4] = {RxTxPacket_t :: RxMode_t :: telemetryResponse};
  
   packetCounter++;
   sendPacket[0] &= 0x7F;               // Clear 8th bit
@@ -822,7 +822,7 @@ void setTelemetryPowerMode(uint8_t option)
   
   // Set transmit power to max or high based on the option byte in the incoming packet.
   // This should set the power the same as the transmitter module
-  if ((option & CABELL_OPTION_MASK_MAX_POWER_OVERRIDE) == 0)
+  if ((option & OPTION_MASK_MAX_RF_POWER_OVERRIDE) == 0)
   {
     newPower = RF24_PA_HIGH;
   }

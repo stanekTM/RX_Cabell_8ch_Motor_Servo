@@ -103,29 +103,29 @@
 #define MID_CONTROL_VAL  ((MIN_CONTROL_VAL + MAX_CONTROL_VAL) / 2)
 #define MAX_CONTROL_VAL  2000
 
-#define CABELL_BIND_RADIO_ADDR  0xA4B7C123F7LL
+#define BIND_RF_ADDR      0xA4B7C123F7LL
 
-#define CABELL_NUM_CHANNELS   16 // The maximum number of RC channels that can be sent in one packet
-#define CABELL_MIN_CHANNELS   4  // The minimum number of channels that must be included in a packet
+#define RC_CHANNELS       16 // The maximum number of RC channels that can be sent in one packet
+#define MIN_RC_CHANNELS   4  // The minimum number of channels that must be included in a packet
 
-#define CABELL_PAYLOAD_BYTES  24 // 12 bits per value * 16 channels
+#define RF_PAYLOAD_BYTES  24 // 12 bits per value * 16 channels
 
-#define CABELL_RADIO_CHANNELS         9 // This is 1/5 of the total number of radio channels used for FHSS
-#define CABELL_RADIO_MIN_CHANNEL_NUM  3 // Channel 0 is right on the boarder of allowed frequency range, so move up to avoid bleeding over
+#define RF_CHANNELS       9 // This is 1/5 of the total number of radio channels used for FHSS
+#define MIN_RF_CHANNEL    3 // Channel 0 is right on the boarder of allowed frequency range, so move up to avoid bleeding over
 
-#define CABELL_RESERVED_MASK_CHANNEL  0x3F
+#define RESERVED_MASK_RF_CHANNEL  0x3F
 
-#define CABELL_OPTION_MASK_MAX_POWER_OVERRIDE  0x40
-#define CABELL_OPTION_MASK_CHANNEL_REDUCTION   0x0F
+#define OPTION_MASK_MAX_RF_POWER_OVERRIDE  0x40
+#define OPTION_MASK_RF_CHANNEL_REDUCTION   0x0F
 
 #define RX_CONNECTION_TIMEOUT  1000000 // If no packet received in this time frame apply failsafe settings. In microseconds
 
 // FHSS parameters
-#define DEFAULT_PACKET_INTERVAL     ((uint32_t)3000) 
-#define MAX_PACKET_INTERVAL         ((uint32_t)4000) // Max packet interval - used with telemetry and 16 channels
+#define DEFAULT_PACKET_INTERVAL     ((uint32_t) 3000) 
+#define MAX_PACKET_INTERVAL         ((uint32_t) 4000) // Max packet interval - used with telemetry and 16 channels
 #define INITIAL_PACKET_TIMEOUT_ADD  200ul
-#define RESYNC_TIME_OUT             ((uint32_t)2000000) // Go to re-sync if no packet received in 3 seconds
-#define RESYNC_WAIT_MICROS          (((((uint32_t)CABELL_RADIO_CHANNELS) * 5ul) + 8ul) * MAX_PACKET_INTERVAL) // when syncing listen on each channel for slightly longer than the time it takes to cycle through all channels
+#define RESYNC_TIME_OUT             ((uint32_t) 2000000) // Go to re-sync if no packet received in 3 seconds
+#define RESYNC_WAIT_MICROS          (((((uint32_t) RF_CHANNELS) * 5ul) + 8ul) * MAX_PACKET_INTERVAL) // when syncing listen on each channel for slightly longer than the time it takes to cycle through all channels
 
 #define INITIAL_TELEMETRY_PACKETS_TO_SKIP  1000 // Dont send initial telemetry packets to avoid anoying warnings at startup
 
@@ -159,10 +159,10 @@ typedef struct
   uint8_t  modelNum;
   uint8_t  checkSum_LSB;  // Checksum least significant byte
   uint8_t  checkSum_MSB;  // Checksum most significant byte
-  uint8_t  payloadValue[CABELL_PAYLOAD_BYTES] = {0}; // 12 bits per channel value, unsigned
+  uint8_t  payloadValue[RF_PAYLOAD_BYTES] = {0}; // 12 bits per channel value, unsigned
   
 }
-CABELL_RxTxPacket_t;   
+RxTxPacket_t;   
 
 
 void attachServoPins();
@@ -176,14 +176,14 @@ bool getPacket();
 void checkFailsafeDisarmTimeout(unsigned long lastPacketTime, bool inititalGoodPacketRecieved);
 void outputFailSafeValues(bool callOutputChannels);
 void unbindReciever();
-void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], CABELL_RxTxPacket_t :: RxMode_t RxMode);
+void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], RxTxPacket_t :: RxMode_t RxMode);
 void setFailSafeDefaultValues();
 void loadFailSafeDefaultValues();
 void setFailSafeValues(uint16_t newFailsafeValues[]);
-bool validateChecksum(CABELL_RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex);
+bool validateChecksum(RxTxPacket_t const& packet, uint8_t maxPayloadValueIndex);
 bool readAndProcessPacket();
 bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[]);
-bool decodeChannelValues(CABELL_RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[]);
+bool decodeChannelValues(RxTxPacket_t const& RxPacket, uint8_t channelsRecieved, uint16_t tempHoldValues[]);
 unsigned long sendTelemetryPacket(); // Returns micros of when the transmit is expected to be complete
 bool failSafeButtonHeld();
 void setTelemetryPowerMode(uint8_t option);
