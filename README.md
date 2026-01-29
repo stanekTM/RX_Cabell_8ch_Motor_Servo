@@ -147,7 +147,7 @@ typedef struct
   uint8_t  checkSum_MSB; // Checksum most significant byte
   uint8_t  payloadValue [24] = {0}; // 12 bits per channel value, unsigned
 }
-CABELL_RxTxPacket_t;
+RxTxPacket_t;
 ```
 Each 12 bits in payloadValue is the value of one channel. Valid values are in the range 1000 to 2000. The values are stored big endian. Using channel reduction reduces the number of bytes sent, thereby trimming off the end of the payloadValue array.
 
