@@ -1,12 +1,14 @@
 /*
   *******************************************************************************************************************
-  Test RC receiver with "Cabell" protocol (motor and servo driver, telemetry) using OpenAVRc and OpenTX Multiprotocol
-  *******************************************************************************************************************
-  Simple RC receiver from my repository https://github.com/stanekTM/RX_Cabell_8ch_Motor_Servo
+  RC receiver with "Cabell" protocol
+  **********************************
+  RC receiver from my repository https://github.com/stanekTM/RX_Cabell_8ch_Motor_Servo
+  
+  Includes nRF24L01+ transceiver and ATmega328P/PB processor for PWM motor control or servo outputs and telemetry.
   
   Works with RC transmitters:
-  OpenAVRc                   https://github.com/Ingwie/OpenAVRc_Dev
-  Multiprotocol from my fork https://github.com/stanekTM/TX_FW_Multi_Stane
+  OpenAVRc      https://github.com/Ingwie/OpenAVRc_Dev
+  Multiprotocol https://github.com/pascallanger/DIY-Multiprotocol-TX-Module
   *******************************************************************************************************************
 */
 
