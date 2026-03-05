@@ -7,7 +7,7 @@ Servo servo[SERVO_CHANNELS]; // Class driver
 void servo_setup()
 {
 #if defined(SERVO_12CH) || defined(SERVO_10CH_MOTOR1) || defined(SERVO_8CH_MOTOR1_2PB)
-  for (byte i = 0; i < SERVO_CHANNELS; i++)
+  for (uint8_t i = 0; i < SERVO_CHANNELS; i++)
   {
     servo[i].attach(pins_servo[i]);
   }
@@ -19,24 +19,10 @@ void servo_setup()
 //*********************************************************************************************************************
 void servo_control()
 {
-#if defined(SERVO_12CH)
-  for (byte i = 0; i < SERVO_CHANNELS; i++)
+#if defined(SERVO_12CH) || defined(SERVO_10CH_MOTOR1) || defined(SERVO_8CH_MOTOR1_2PB)
+  for (uint8_t i = 0; i < SERVO_CHANNELS; i++)
   {
-    servo[i].writeMicroseconds(rc_channel[i]);
-  }
-#endif
-
-#if defined(SERVO_10CH_MOTOR1)
-  for (byte i = 0; i < SERVO_CHANNELS; i++)
-  {
-    servo[i].writeMicroseconds(rc_channel[i + 1]);
-  }
-#endif
-
-#if defined(SERVO_8CH_MOTOR1_2PB)
-  for (byte i = 0; i < SERVO_CHANNELS; i++)
-  {
-    servo[i].writeMicroseconds(rc_channel[i + 2]);
+    servo[i].writeMicroseconds(rc_channel[MOTOR_CHANNELS + i]);
   }
 #endif
 }

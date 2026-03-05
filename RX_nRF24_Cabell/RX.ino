@@ -112,7 +112,7 @@ void setNextRadioChannel(bool)
   radio.write_register(NRF_CONFIG, radioConfigRegisterForTX); // This is in place of stop listening to make the change to TX more quickly. Also sets all interrupts to mask
   radio.flush_rx();
   
-  unsigned long expectedTransmitCompleteTime = 0;
+  uint32_t expectedTransmitCompleteTime = 0;
   
   if (telemetryEnabled)
   {
@@ -131,7 +131,7 @@ void setNextRadioChannel(bool)
   
   if (expectedTransmitCompleteTime != 0)
   {
-    long waitTimeLeft = (long)(expectedTransmitCompleteTime - micros());
+    uint32_t waitTimeLeft = (uint32_t)(expectedTransmitCompleteTime - micros());
     
     // Wait here for the telemetry packet to finish transmitting
     if (waitTimeLeft > 0)
@@ -156,10 +156,10 @@ void setNextRadioChannel(bool)
 //*********************************************************************************************************************
 bool getPacket()
 {
-  static unsigned long lastPacketTime = 0;
+  static uint32_t lastPacketTime = 0;
   static bool inititalGoodPacketRecieved = false;
-  static unsigned long nextAutomaticChannelSwitch = micros() + RESYNC_WAIT_MICROS;
-  static unsigned long lastRadioPacketeRecievedTime = millis() - (long)RESYNC_TIME_OUT;
+  static uint32_t nextAutomaticChannelSwitch = micros() + RESYNC_WAIT_MICROS;
+  static uint32_t lastRadioPacketeRecievedTime = millis() - (uint32_t)RESYNC_TIME_OUT;
   static bool hoppingLockedIn = false;
   static uint16_t sequentialHitCount = 0;
   static uint16_t sequentialMissCount = 0;
@@ -171,7 +171,7 @@ bool getPacket()
   if (!packetReady)
   {
     // If timed out the packet was missed, go to the next channel
-    if ((long)(micros() - nextAutomaticChannelSwitch) >= 0)
+    if ((int32_t)(micros() - nextAutomaticChannelSwitch) >= 0)
     {
       // Packet will be picked up on next loop through
       if (radio.available())
@@ -188,7 +188,7 @@ bool getPacket()
         setNextRadioChannel(true); // True indicates that packet was missed
         
         // If a long time passed, increase timeout duration to re-sync with the TX
-        if ((long)(nextAutomaticChannelSwitch - lastRadioPacketeRecievedTime) > ((long)RESYNC_TIME_OUT))
+        if ((uint32_t)(nextAutomaticChannelSwitch - lastRadioPacketeRecievedTime) > ((uint32_t)RESYNC_TIME_OUT))
         {
           telemetryEnabled = false;
           hoppingLockedIn = false;
@@ -280,7 +280,7 @@ bool getPacket()
     if ((sequentialMissCount > 5) || (sequentialMissCount + sequentialHitCount > 100))
     {
       // If this happens then there is a bad lock and we should try to sync again.
-      lastRadioPacketeRecievedTime = millis() - (long)RESYNC_TIME_OUT;
+      lastRadioPacketeRecievedTime = millis() - (uint32_t)RESYNC_TIME_OUT;
       nextAutomaticChannelSwitch = millis() + RESYNC_WAIT_MICROS;
       telemetryEnabled = false;
       setNextRadioChannel(true); // Getting the next channel ensures radios are flushed and properly waiting for a packet
@@ -293,11 +293,11 @@ bool getPacket()
 //*********************************************************************************************************************
 // Check fail safe disarm timeout
 //*********************************************************************************************************************
-void checkFailsafeDisarmTimeout(unsigned long lastPacketTime, bool)
+void checkFailsafeDisarmTimeout(uint32_t lastPacketTime, bool)
 {
-  unsigned long holdMicros = micros();
+  uint32_t holdMicros = micros();
   
-  if ((long)(holdMicros - lastPacketTime) > ((long)RX_CONNECTION_TIMEOUT))
+  if ((uint32_t)(holdMicros - lastPacketTime) > ((uint32_t)RX_CONNECTION_TIMEOUT))
   {
     outputFailSafeValues(true);
   }
@@ -310,7 +310,7 @@ void outputFailSafeValues(bool callOutputChannels)
 {
   loadFailSafeDefaultValues();
   
-  for (byte i = 0; i < RC_CHANNELS; i++)
+  for (uint8_t i = 0; i < RC_CHANNELS; i++)
   {
     rc_channel[i] = failSafeChannelValues[i];
   }
@@ -334,7 +334,7 @@ void unbindReciever()
   uint8_t value = 0xFF;
   
   // Reset all of flash memory to unbind receiver
-  for (int i = 0; i < 1024; i++)
+  for (uint16_t i = 0; i < 1024; i++)
   {
     EEPROM.put(i, value);
   }
@@ -401,7 +401,7 @@ void setFailSafeDefaultValues()
 {
   uint16_t defaultFailSafeValues[RC_CHANNELS];
   
-  for (byte i = 0; i < RC_CHANNELS; i++)
+  for (uint8_t i = 0; i < RC_CHANNELS; i++)
   {
     defaultFailSafeValues[i] = MID_CONTROL_VAL;
   }
@@ -416,7 +416,7 @@ void loadFailSafeDefaultValues()
 {
   EEPROM.get(failSafeChannelValuesEEPROMAddress, failSafeChannelValues);
   
-  for (byte i = 0; i < RC_CHANNELS; i++)
+  for (uint8_t i = 0; i < RC_CHANNELS; i++)
   {
     // Make sure failsafe values are valid
     if (failSafeChannelValues[i] < MIN_CONTROL_VAL || failSafeChannelValues[i] > MAX_CONTROL_VAL)
@@ -431,7 +431,7 @@ void loadFailSafeDefaultValues()
 //*********************************************************************************************************************
 void setFailSafeValues(uint16_t newFailsafeValues[])
 {
-  for (byte i = 0; i < RC_CHANNELS; i++)
+  for (uint8_t i = 0; i < RC_CHANNELS; i++)
   {
     failSafeChannelValues[i] = newFailsafeValues[i];
   }
@@ -447,7 +447,7 @@ bool validateChecksum(const RxTxPacket_t &rc_packet, uint8_t max_rc_packet_size)
   // Caculate checksum and validate
   uint16_t packetSum = rc_packet.modelNum + rc_packet.option + rc_packet.RxMode + rc_packet.reserved;
   
-  for (byte i = 0; i < max_rc_packet_size; i++)
+  for (uint8_t i = 0; i < max_rc_packet_size; i++)
   {
     packetSum = packetSum + rc_packet.payloadValue[i];
   }
@@ -471,7 +471,7 @@ bool readAndProcessPacket()
   
   radio.read(&rc_packet, sizeof(rc_packet));
   
-  int tx_channel = rc_packet.reserved & RESERVED_MASK_RF_CHANNEL;
+  uint8_t tx_channel = rc_packet.reserved & RESERVED_MASK_RF_CHANNEL;
   
   if (tx_channel != 0)
   {
@@ -499,7 +499,7 @@ bool readAndProcessPacket()
   if (telemetryEnabled)
   {
     setTelemetryPowerMode(rc_packet.option);
-    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((int16_t)channelsRecieved - (int16_t)6), (int16_t)0, (int16_t)10) * (int16_t)100); // Increase packet period by 100 us for each channel over 6
+    packetInterval = DEFAULT_PACKET_INTERVAL + (constrain(((uint8_t)channelsRecieved - (uint8_t)6), (uint8_t)0, (uint8_t)10) * (uint8_t)100); // Increase packet period by 100 us for each channel over 6
   }
   else
   {
@@ -523,7 +523,7 @@ bool readAndProcessPacket()
   // If packet is good, copy the channel values
   if (packet_rx)
   {
-    for (byte i = 0; i < RC_CHANNELS; i++)
+    for (uint8_t i = 0; i < RC_CHANNELS; i++)
     {
       rc_channel[i] = (i < channelsRecieved) ? tempHoldValues[i] : MID_CONTROL_VAL; // Use the mid value for channels not received
     }
@@ -615,10 +615,10 @@ bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[])
 bool decodeChannelValues(const RxTxPacket_t &rc_packet, uint8_t channelsRecieved, uint16_t tempHoldValues[])
 {
   bool packet_rx = true;
-  int payloadIndex = 0;
+  uint8_t payloadIndex = 0;
   
   // Decode the 12 bit numbers to temp array
-  for (byte i = 0; i < channelsRecieved; i++)
+  for (uint8_t i = 0; i < channelsRecieved; i++)
   {
     tempHoldValues[i]  = rc_packet.payloadValue[payloadIndex];
     payloadIndex++;
@@ -648,7 +648,7 @@ bool decodeChannelValues(const RxTxPacket_t &rc_packet, uint8_t channelsRecieved
 //*********************************************************************************************************************
 // Send telemetry packet
 //*********************************************************************************************************************
-unsigned long sendTelemetryPacket()
+uint32_t sendTelemetryPacket()
 {
   static int8_t packet_counter = 0; // This is only used for toggling bit
   uint8_t telemetry_packet[4] = {RxTxPacket_t :: RxMode_t :: telemetryResponse};
@@ -671,7 +671,7 @@ unsigned long sendTelemetryPacket()
   // at 250 kbps per sec, one bit is 4 uS
   // then add 140 uS which is 130 uS to begin the xmit and 10 uS fudge factor
   // Add this to micros() to return when the transmit is expected to be complete
-  return micros() + (((((unsigned long)telemetry_packet_size * 8ul)  +  73ul) * 4ul) + 140ul);
+  return micros() + (((((uint32_t)telemetry_packet_size * 8ul)  +  73ul) * 4ul) + 140ul);
 }
 
 //*********************************************************************************************************************
@@ -680,7 +680,7 @@ unsigned long sendTelemetryPacket()
 //*********************************************************************************************************************
 bool failSafeButtonHeld()
 {
-  static unsigned long heldTriggerTime = 0;
+  static uint32_t heldTriggerTime = 0;
   
   // Invert because pin is pulled up so low means pressed
   if (!bindMode && !digitalRead(PIN_BUTTON_BIND))
@@ -690,7 +690,7 @@ bool failSafeButtonHeld()
       heldTriggerTime = micros() + 1000000ul; // Held state achieved after button is pressed for 1 second
     }
     
-    if ((long)(micros() - heldTriggerTime) >= 0)
+    if ((int32_t)(micros() - heldTriggerTime) >= 0)
     {
       return true;
     }

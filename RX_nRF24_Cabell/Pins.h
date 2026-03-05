@@ -3,6 +3,7 @@
 #define __Pins_h__
 
 #include <Arduino.h>
+#include <stdint.h>
 #include "Config.h"
 
 // ATmega328P/PB pins overview
@@ -38,38 +39,38 @@
 
 // PWM pins for motor 1
 #if defined(MOTOR1)
-  const byte pins_motor1[2] = {3, 11};
+  const uint8_t pins_motor1[2] = {3, 11};
 #endif
 
 // PWM pins for motor 2
 #if defined(MOTOR2)
-  const byte pins_motor2[2] = {9, 10};
+  const uint8_t pins_motor2[2] = {9, 10};
 #endif
 
 // PWM pins for motor 2 ATmega328PB
 #if defined(MOTOR2PB)
-  const byte pins_motor2PB[2] = {1, 2};
+  const uint8_t pins_motor2PB[2] = {1, 2};
 #endif
 
 // PWM pins for motor 1 and 2
 #if defined(MIX_TANK_MOTOR1_2)
-  const byte pins_motor1[2] = {3, 11};
-  const byte pins_motor2[2] = {9, 10};
+  const uint8_t pins_motor1[2] = {3, 11};
+  const uint8_t pins_motor2[2] = {9, 10};
 #endif
 
 // Pins for servos (possible combination, max. 12)
 #if defined(SERVO_12CH)
-  const byte pins_servo[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+  const uint8_t pins_servo[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 #endif
 
 // Pins for servos (possible combination, max. 10)
 #if defined(SERVO_10CH_MOTOR1)
-  const byte pins_servo[10] = {0, 1, 2, 4, 5, 6, 7, 8, 9, 10};
+  const uint8_t pins_servo[10] = {0, 1, 2, 4, 5, 6, 7, 8, 9, 10};
 #endif
 
 // Pins for servos (possible combination, max. 8)
 #if defined(SERVO_8CH_MOTOR1_2PB)
-  const byte pins_servo[8] = {0, 4, 5, 6, 7, 8, 9, 10};
+  const uint8_t pins_servo[8] = {0, 4, 5, 6, 7, 8, 9, 10};
 #endif
 
 #define PIN_BUTTON_BIND       12
@@ -82,7 +83,7 @@
 #define PIN_CE                A0
 #define PIN_CSN               A1
 
-// Software SPI https://nrf24.github.io/RF24/md_docs_2arduino.html
+// Software SPI
 //          SCK               A2
 //          MOSI              A3
 //          MISO              A4

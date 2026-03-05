@@ -68,7 +68,7 @@ void RSSI::packetProcess()
   
   if (packetCount >= RSSI_CALC_INTERVAL)
   {
-    packetRate = constrain((int)((float)(hitCount - badPacketCount) * 100.0 / (float)(hitCount + missCount)), TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
+    packetRate = constrain((int16_t)((float)(hitCount - badPacketCount) * 100.0 / (float)(hitCount + missCount)), TELEMETRY_RSSI_MIN_VALUE, TELEMETRY_RSSI_MAX_VALUE);
     resetCounters();
   }
 }

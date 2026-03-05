@@ -28,6 +28,7 @@
 #define __RSSI_h__
 
 #include <Arduino.h>
+#include <stdint.h>
 
 #define RSSI_CALC_INTERVAL             152 // The number of expected packets between calculating the base RSSI. Approximately 1/2 second
 #define TELEMETRY_RSSI_MIN_VALUE       0   // The lowest possible RSSI value = zero packet rate
@@ -52,13 +53,13 @@ class RSSI
   void packetProcess();
   void resetCounters();
   
-  int hitCount = 0;
-  int missCount = 0;
-  int secondaryHitCount = 0;
-  int badPacketCount = 0;
-  int packetCount = 0;
+  int16_t hitCount = 0;
+  int16_t missCount = 0;
+  int16_t secondaryHitCount = 0;
+  int16_t badPacketCount = 0;
+  int16_t packetCount = 0;
 
-  int packetRate = 0.0;
+  int16_t packetRate = 0.0;
   int8_t sequentialMissTrack = 0;
 };
 

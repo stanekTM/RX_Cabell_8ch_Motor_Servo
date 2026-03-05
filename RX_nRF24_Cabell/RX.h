@@ -1,4 +1,3 @@
-
 /*
   Copyright 2017 by Dennis Cabell
   KE8FZX
@@ -29,6 +28,7 @@
 #define __RX_h__
 
 #include <Arduino.h>
+#include <stdint.h>
 #include "My_RF24.h"
 #include "Pins.h"
 #include "RSSI.h"
@@ -75,12 +75,12 @@ uint16_t rc_channel[RC_CHANNELS];
 uint8_t currentModel = 0;
 uint64_t radioPipeID;
 uint64_t radioNormalRxPipeID;
-const int currentModelEEPROMAddress = 0;
-const int radioPipeEEPROMAddress = currentModelEEPROMAddress + sizeof(currentModel);
-const int softRebindFlagEEPROMAddress = radioPipeEEPROMAddress + sizeof(radioNormalRxPipeID);
+const uint16_t currentModelEEPROMAddress = 0;
+const uint16_t radioPipeEEPROMAddress = currentModelEEPROMAddress + sizeof(currentModel);
+const uint16_t softRebindFlagEEPROMAddress = radioPipeEEPROMAddress + sizeof(radioNormalRxPipeID);
 
 // Load fail safe default values
-const int failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t); // uint8_t is the sifr of the rebind flag
+const uint16_t failSafeChannelValuesEEPROMAddress = softRebindFlagEEPROMAddress + sizeof(uint8_t); // uint8_t is the sifr of the rebind flag
 
 // Output fail safe values
 uint16_t failSafeChannelValues[RC_CHANNELS];
@@ -97,8 +97,8 @@ volatile bool packetReady = false;
 bool failSafeNoPulses = false;
 
 // Battery voltage monitoring
-unsigned long adc_time = 0;
-int16_t analogValue[2] = {0, 0};
+uint32_t adc_time = 0;
+uint8_t analogValue[2] = {0, 0};
 
 // Set next radio channel
 uint8_t currentChannel = MIN_RF_CHANNEL; // Initializes the channel sequence
@@ -147,7 +147,7 @@ void batt_monitoring();
 void radio_setup();
 void setNextRadioChannel(bool);
 bool getPacket();
-void checkFailsafeDisarmTimeout(unsigned long lastPacketTime, bool);
+void checkFailsafeDisarmTimeout(uint32_t lastPacketTime, bool);
 void outputFailSafeValues(bool callOutputChannels);
 void unbindReciever();
 void bindReciever(uint8_t modelNum, uint16_t tempHoldValues[], uint8_t RxMode);
@@ -158,7 +158,7 @@ bool validateChecksum(const RxTxPacket_t &rc_packet, uint8_t max_rc_packet_size)
 bool readAndProcessPacket();
 bool processRxMode(uint8_t RxMode, uint8_t modelNum, uint16_t tempHoldValues[]);
 bool decodeChannelValues(const RxTxPacket_t &rc_packet, uint8_t channelsRecieved, uint16_t tempHoldValues[]);
-unsigned long sendTelemetryPacket(); // Returns micros of when the transmit is expected to be complete
+uint32_t sendTelemetryPacket(); // Returns micros of when the transmit is expected to be complete
 bool failSafeButtonHeld();
 void setTelemetryPowerMode(uint8_t option);
 void radio_init();
