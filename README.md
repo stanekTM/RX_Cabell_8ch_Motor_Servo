@@ -1,7 +1,10 @@
 ## RC receiver with "Cabell" protocol
 This is a modified firmware.
+
 Hardware includes nRF24L01+ transceiver, ATmega328P/PB processor and motor driver.
+
 The motor driver IC is based on MX1208, MX1508, MX1515, MX1616, MX1919 and others similar, which uses 4x PWM input control signals.
+
 The code is Arduino.
 
 ### Works with RC transmitters
